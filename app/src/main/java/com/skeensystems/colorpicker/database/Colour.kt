@@ -4,6 +4,8 @@ interface Colour {
 
     fun getColour(): Int
 
+    fun getName(): String
+
     fun getR(): Int
 
     fun getG(): Int
@@ -21,6 +23,4 @@ interface Colour {
     fun getHSLString(): String
 
     fun getCMYKString(): String
-
-    fun getName(): String
 }
