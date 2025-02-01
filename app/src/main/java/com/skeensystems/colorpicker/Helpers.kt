@@ -7,10 +7,8 @@ import kotlin.math.min
 import kotlin.math.pow
 
 // Dark and light text colours (to be used on light and dark backgrounds respectively)
-@JvmField
-var DARK_TEXT_COLOUR = Color.BLACK
-@JvmField
-var LIGHT_TEXT_COLOUR = -0x222223
+const val DARK_TEXT_COLOUR = Color.BLACK
+const val LIGHT_TEXT_COLOUR = Color.LTGRAY
 
 /**
  * Calculates whether text should be light or dark when inputted colour is the background
