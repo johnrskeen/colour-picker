@@ -692,7 +692,7 @@ public class MainActivity extends AppCompatActivity {
         // Needs min API 23 (current min is 21)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Set status bar text colour to white
-            if (Helpers.backgroundRequiresLightText(r, g, b)) {
+            if (HelpersKt.backgroundRequiresLightText(r, g, b)) {
                 window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility() & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
             // Set status bar text colour to black

@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.skeensystems.colorpicker.Helpers;
+import com.skeensystems.colorpicker.HelpersKt;
 import com.skeensystems.colorpicker.R;
 import com.skeensystems.colorpicker.database.DatabaseColour;
 import com.skeensystems.colorpicker.database.SavedColour;
@@ -332,7 +332,7 @@ public class ManualPickerFragment extends Fragment {
             // Set colour of outline of target to white/black, depending on currently selected colour
             // (uses same algorithm that determines text colour to decide this)
             int pickerOutlineColour = Color.BLACK;
-            if (Helpers.backgroundRequiresLightText(Color.red(newColour), Color.green(newColour), Color.blue(newColour))) pickerOutlineColour = Color.WHITE;
+            if (HelpersKt.backgroundRequiresLightText(Color.red(newColour), Color.green(newColour), Color.blue(newColour))) pickerOutlineColour = Color.WHITE;
             ColorStateList outlineColourStateList = ColorStateList.valueOf(pickerOutlineColour);
             binding.pickerOutline.setBackgroundTintList(outlineColourStateList);
         };

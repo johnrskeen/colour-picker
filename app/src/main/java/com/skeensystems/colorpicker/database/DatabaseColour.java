@@ -5,7 +5,7 @@ import android.graphics.Color;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.skeensystems.colorpicker.Helpers;
+import com.skeensystems.colorpicker.HelpersKt;
 
 public class DatabaseColour implements Colour {
 
@@ -63,38 +63,38 @@ public class DatabaseColour implements Colour {
     }
 
     private void updateTextColour() {
-        requiresLightText = Helpers.backgroundRequiresLightText(r, g, b);
+        requiresLightText = HelpersKt.backgroundRequiresLightText(r, g, b);
     }
 
     @Override
     public int getTextColour() {
-        if (requiresLightText) return Helpers.LIGHT_TEXT_COLOUR;
-        else return Helpers.DARK_TEXT_COLOUR;
+        if (requiresLightText) return HelpersKt.LIGHT_TEXT_COLOUR;
+        else return HelpersKt.DARK_TEXT_COLOUR;
     }
 
     @Override
     public String getHEXString() {
-        return Helpers.getHEXString(r, g, b);
+        return HelpersKt.getHEXString(r, g, b);
     }
 
     @Override
     public String getRGBString() {
-        return Helpers.getRGBString(r, g, b);
+        return HelpersKt.getRGBString(r, g, b);
     }
 
     @Override
     public String getHSVString() {
-        return Helpers.getHSVString(r, g, b);
+        return HelpersKt.getHSVString(r, g, b);
     }
 
     @Override
     public String getHSLString() {
-        return Helpers.getHSLString(r, g, b);
+        return HelpersKt.getHSLString(r, g, b);
     }
 
     @Override
     public String getCMYKString() {
-        return Helpers.getCMYKString(r, g, b);
+        return HelpersKt.getCMYKString(r, g, b);
     }
 
 

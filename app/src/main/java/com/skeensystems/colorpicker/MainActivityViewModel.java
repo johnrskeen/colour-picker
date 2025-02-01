@@ -253,7 +253,7 @@ public class MainActivityViewModel extends ViewModel {
      */
     private void updateHSVfromRGB() {
         // Get new HSV values from current RGB values
-        Triple<Double, Double, Double> newHSV = Helpers.RGBtoHSV(r, g, b);
+        Triple<Double, Double, Double> newHSV = HelpersKt.RGBtoHSV(r, g, b);
         // Update HSV variables with the new values
         // no need to update other colour systems as RGB values already convert to HSV values
         setH(Math.toIntExact(Math.round(newHSV.component1())), false);
@@ -266,7 +266,7 @@ public class MainActivityViewModel extends ViewModel {
      */
     private void updateRGBfromHSV() {
         // Get new RGB values from current HSV values
-        Triple<Double, Double, Double> newRGB = Helpers.HSVtoRGB(h, s / 100.0f, v / 100.0f);
+        Triple<Double, Double, Double> newRGB = HelpersKt.HSVtoRGB(h, s / 100.0f, v / 100.0f);
         // Update RGB variables with the new values
         // no need to update other colour systems as HSV values already convert to RGB values
         setR(Math.toIntExact(Math.round(newRGB.component1())), false);
