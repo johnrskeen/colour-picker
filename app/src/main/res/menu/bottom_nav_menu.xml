@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_saved_colours"
+        android:icon="@drawable/ic_navigation_saved_colours_filled"
+        android:title="@string/title_saved_colours" />
+
+    <item
+        android:id="@+id/navigation_camera"
+        android:icon="@drawable/ic_navigation_camera_filled"
+        android:title="@string/title_camera" />
+
+    <item
+        android:id="@+id/navigation_manual_picker"
+        android:icon="@drawable/ic_navigation_manual_picker_filled"
+        android:title="@string/title_manual_picker" />
+
+</menu>

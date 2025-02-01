@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?mainColour"
+    tools:context=".ui.picker.ManualPickerFragment">
+
+    <LinearLayout
+        android:id="@+id/manualPickerMainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?mainColour"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/pickerGradientsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4.25">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/manual_picker_white"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:clickable="false"
+                android:stateListAnimator="@null"/>
+
+            <Button
+                android:id="@+id/manualPickerMainColour"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/manual_picker_colour"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:clickable="false"
+                android:stateListAnimator="@null"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/manualPickerSelector"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/manual_picker_black"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:stateListAnimator="@null"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/pickerOutline"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/circle_outline"
+                android:backgroundTint="#000"
+                android:clickable="false"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/pickerInside"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/circle_inner"
+                android:clickable="false"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/sliderLayout"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp">
+
+            <TextView
+                android:id="@+id/manualPickerBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/manual_picker_slider_background"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"/>
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/manualPickerSlider"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:valueFrom="0"
+                android:valueTo="360"
+                android:translationZ="10dp"
+                android:layout_centerInParent="true"
+                app:trackColor="#00000000"
+                app:thumbColor="#ff0000"
+                app:labelBehavior="gone"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/editTextsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.5"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/setModeRGB"
+                    android:text="RGB"
+                    style="@style/DefaultButtonStyleVertical"/>
+
+                <Button
+                    android:id="@+id/setModeHEX"
+                    android:text="HEX"
+                    style="@style/DefaultButtonStyleVertical"/>
+
+                <Button
+                    android:id="@+id/setModeHSV"
+                    android:text="HSV"
+                    style="@style/DefaultButtonStyleVertical"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="4dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp">
+
+                <Button
+                    android:id="@+id/tabScrollBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="?defaultTextColour"/>
+
+            </RelativeLayout>
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/pager"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="vertical"/>
+
+        </LinearLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+            <TextView
+                android:id="@+id/previewColour"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:background="@drawable/manual_picker_preview_fade"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/editPreviewColour"/>
+
+            <TextView
+                android:id="@+id/editPreviewColour"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:background="@drawable/manual_picker_preview_fade"
+                app:layout_constraintStart_toEndOf="@id/previewColour"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/saveManualPickedColour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_save_outline"
+        android:backgroundTint="?mainColour"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Widget.Material3.FloatingActionButton.Large.Primary"/>
+
+    <LinearLayout
+        android:id="@+id/editingColourSaveLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/saveCopyOfEditingColour"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/saveCopy"
+            app:icon="@drawable/ic_copy"
+            android:padding="5dp"
+            android:layout_marginEnd="5dp"
+            android:textColor="?defaultTextColour"
+            android:backgroundTint="?mainColour"
+            style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Primary"/>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/overwriteEditingColour"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/confirm"
+            app:icon="@drawable/ic_overwrite"
+            android:padding="5dp"
+            android:layout_marginStart="5dp"
+            android:textColor="?defaultTextColour"
+            android:backgroundTint="?mainColour"
+            style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Primary"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

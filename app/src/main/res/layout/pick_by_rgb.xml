@@ -1,0 +1,110 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <Button
+            android:text="Red"
+            style="@style/DefaultButtonStyleHorizontal"/>
+
+        <Button
+            android:text="Green"
+            style="@style/DefaultButtonStyleHorizontal"/>
+
+        <Button
+            android:text="Blue"
+            style="@style/DefaultButtonStyleHorizontal"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
+
+        <EditText
+            android:id="@+id/entry1"
+            style="@style/DefaultEditTextStyle.Number"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/up1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/ic_up"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/down1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/ic_down"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/entry2"
+            style="@style/DefaultEditTextStyle.Number"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/up2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/ic_up"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/down2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/ic_down"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/entry3"
+            style="@style/DefaultEditTextStyle.Number"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/up3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/ic_up"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/down3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/ic_down"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

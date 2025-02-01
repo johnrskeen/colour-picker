@@ -1,0 +1,31 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.ColourPicker" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/material_dynamic_neutral_variant20</item>
+        <item name="colorPrimaryVariant">@color/grey_light</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/white</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+
+        <item name="mainColour">@color/material_dynamic_neutral_variant10</item>
+        <item name="mainColourAccent">@color/material_dynamic_neutral_variant20</item>
+        <item name="reversedColour">@color/material_dynamic_neutral80</item>
+        <item name="reversedColourAccent">@color/material_dynamic_neutral_variant40</item>
+        <item name="mainShade">@color/black</item>
+        <item name="reversedShade">@color/white</item>
+        <item name="defaultTextColour">@color/grey_light</item>
+        <item name="navigationUnselectedColour">@color/material_dynamic_neutral50</item>
+        <item name="navigationSelectedColour">@color/material_dynamic_primary90</item>
+        <item name="highlightColour">@color/material_dynamic_neutral_variant70</item>
+    </style>
+</resources>
