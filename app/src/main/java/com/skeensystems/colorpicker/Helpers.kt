@@ -145,7 +145,7 @@ fun HSVtoRGB(h: Float, s: Float, v: Float): Triple<Double, Double, Double> {
  * @param b blue value, 0 <= b <= 255
  * @return HEX string of inputted RGB colour
  */
-fun getHEXString(r: Int, g: Int, b: Int): String {
+fun getHEXStringHelper(r: Int, g: Int, b: Int): String {
     return String.format("#%06X", (0xFFFFFF and Color.rgb(r, g, b)))
 }
 
@@ -156,7 +156,7 @@ fun getHEXString(r: Int, g: Int, b: Int): String {
  * @param b blue value, 0 <= b <= 255
  * @return RGB string of inputted RGB colour
  */
-fun getRGBString(r: Int, g: Int, b: Int): String {
+fun getRGBStringHelper(r: Int, g: Int, b: Int): String {
     return "$r, $g, $b"
 }
 
@@ -167,7 +167,7 @@ fun getRGBString(r: Int, g: Int, b: Int): String {
  * @param b blue value, 0 <= b <= 255
  * @return HSV string of inputted RGB colour
  */
-fun getHSVString(r: Int, g: Int, b: Int): String {
+fun getHSVStringHelper(r: Int, g: Int, b: Int): String {
     // Convert RGB values to HSV values
     val hsv = FloatArray(3)
     Color.RGBToHSV(r, g, b, hsv)
@@ -184,7 +184,7 @@ fun getHSVString(r: Int, g: Int, b: Int): String {
  * @param b blue value, 0 <= b <= 255
  * @return HSL string of inputted RGB colour
  */
-fun getHSLString(r: Int, g: Int, b: Int): String {
+fun getHSLStringHelper(r: Int, g: Int, b: Int): String {
     // Convert RGB values to HSV values
     val hsv = FloatArray(3)
     Color.RGBToHSV(r, g, b, hsv)
@@ -206,7 +206,7 @@ fun getHSLString(r: Int, g: Int, b: Int): String {
  * @param b blue value, 0 <= b <= 255
  * @return CMYK string of inputted RGB colour
  */
-fun getCMYKString(r: Int, g: Int, b: Int): String {
+fun getCMYKStringHelper(r: Int, g: Int, b: Int): String {
     // Convert RGB values to CMYK values
     val rP = (r / 255.0f).toDouble()
     val gP = (g / 255.0f).toDouble()
