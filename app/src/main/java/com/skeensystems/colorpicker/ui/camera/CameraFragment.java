@@ -18,7 +18,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.skeensystems.colorpicker.Helpers;
+import com.skeensystems.colorpicker.HelpersKt;
 import com.skeensystems.colorpicker.MainActivity;
 import com.skeensystems.colorpicker.database.DatabaseColour;
 import com.skeensystems.colorpicker.database.SavedColour;
@@ -50,7 +50,7 @@ public class CameraFragment extends Fragment {
             // Update cross colour
             int crossColour = Color.BLACK;
             // If central colour is dark enough, change cross colour to white
-            if (Helpers.backgroundRequiresLightText(Color.red(newColour), Color.green(newColour),Color.blue(newColour))) {
+            if (HelpersKt.backgroundRequiresLightText(Color.red(newColour), Color.green(newColour),Color.blue(newColour))) {
                 crossColour = Color.WHITE;
             }
             // Set colour of cross (made up of these 4 views)
