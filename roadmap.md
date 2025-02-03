@@ -10,10 +10,10 @@
 - view colour database
 - some sort of search (don't really know how best to implement this at the moment)
 - make inspect colour preview have rounded corners when expanding from rounded corner saved colour button (saved colour buttons are no longer square but are rounded square)
-- (introduced in v2.2.0) sometimes favorite colour indicator doesn't show for all colours
+- (bug introduced in v2.2.0) sometimes favorite colour indicator doesn't show for all colours
 
 ### v2.2.1
-- (introduced in v2.2.0) fix un-clickable favorite colours bug (after some buttons have been selected)
+- (bug introduced in v2.2.0) fix un-clickable favorite colours bug (after some buttons have been selected)
 
 ### v2.2.0
 - sorting by colour (maybe offer a few different options of sorting by colour)
@@ -24,7 +24,7 @@
 - copying colours
 
 ### v2.1.0
-- colour database (rework this from v1)
+- colour database (reworked from v1)
 - make preview look better, rather than just text on a background
 - add support for colours to be viewed in HSL and CMYK
 - see similar colours in expanded preview
@@ -70,6 +70,9 @@
 - add loading screen while camera is loading (not needed for fast devices but would improve user experience on slower devices)
 - add support for RYB, Pantone colours? (and any other colour systems)
 - pick from picture in phone (then new bottom navigation: Colour Database - Saved Colours - Camera Picker - Image Picker - Manual Picker, or some other order but this is probably the most appropriate)
+
+### v2.3.0
+- add landscape support
 
 ### v2.2.1
 - re-added support for language region US ("color")
