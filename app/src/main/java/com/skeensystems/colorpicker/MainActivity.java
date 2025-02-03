@@ -68,33 +68,6 @@ import java.util.concurrent.ExecutionException;
 
 import kotlin.Triple;
 
-/**
- * ALWAYS RE-ENABLE CAMERA AND ADS BEFORE RELEASE
- * Saved Colours page:
- *  - NEW sharing colours (not sure if this is really needed, copying kind of carries out this function)
- *  - NEW some form of colour groupings defined by the user (i.e. like albums for photos)
- *  - NEW exporting all saved colours in some format
- *  - NEW allow number of columns colours are displayed in to be changed by the user
- *  - NEW make number of columns be automatically determined on first app start, depending on size of screen
- *  - NEW view colour database
- *  - NEW some sort of search (don't really know how best to implement this at the moment)
- *  - DONE version upcoming (no longer a problem, animation expands from 0 size), NEW make inspect colour preview have rounded corners when expanding from rounded corner saved colour button (saved colour buttons are no longer square but are rounded square)
- *  - (introduced in v2.2.0) sometimes favorite colour indicator doesn't show for all colours
- * Camera page:
- *  - NEW some sort of better preview (i.e. zoom in mode when selecting pixels)
- * Manual Picker page:
- *  - NEW see colour name when manually picking
- *  - NEW see complementary colours when manually picking
- *  - NEW allow picking by HSL and CMYK
- * misc:
- *  - comments version = v2.2.1
- *  - re-add support for multiple languages
- *  - NEW landscape version
- *  - NEW add loading screen while camera is loading (not needed for fast devices but would improve user experience on slower devices)
- *  - NEW add support for RYB, Pantone colours? (and any other colour systems)
- *  - NEW pick from picture in phone (then new bottom navigation: Colour Database - Saved Colours - Camera Picker - Image Picker - Manual Picker, or some other order but this is probably the most appropriate)
- */
-
 public class MainActivity extends AppCompatActivity {
 
     // True disables ads
