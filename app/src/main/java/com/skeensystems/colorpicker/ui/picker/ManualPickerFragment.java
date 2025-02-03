@@ -210,6 +210,8 @@ public class ManualPickerFragment extends Fragment {
 
         // Detect when slider is changed, so we can update H of current colour
         binding.manualPickerSlider.addOnChangeListener((slider, value, fromUser) -> {
+            // Reset radius of slider thumb to half slider height every time it is pressed, otherwise it goes thin after being pressed
+            binding.manualPickerSlider.setThumbRadius(binding.sliderLayout.getHeight() / 2);
             // Stop main view pager interpreting these events as a swipe
             binding.manualPickerSlider.getParent().requestDisallowInterceptTouchEvent(true);
 
