@@ -22,6 +22,7 @@ roomCompiler = "2.7.1"
 roomRuntime = "2.7.1"
 navigationRuntimeAndroid = "2.9.0-rc01"
 navigationCompose = "2.8.9"
+secretsGradlePlugin = "2.0.1"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -56,6 +57,7 @@ play-services-ads = { module = "com.google.android.gms:play-services-ads", versi
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
