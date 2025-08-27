@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.compose.ui.platform.ComposeView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.skeensystems.colorpicker.HelpersKt;
@@ -34,8 +33,6 @@ public class CameraFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        CameraViewModel cameraViewModel = new ViewModelProvider(this).get(CameraViewModel.class);
-
         binding = FragmentCameraBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
