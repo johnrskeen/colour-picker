@@ -18,15 +18,16 @@ import java.util.Locale
 // Saved colour object, provides useful functions for saved colours and stores data about them
 @Entity
 class SavedColour : Colour {
-
     @PrimaryKey
-    private var id: Long
+    var id: Long
 
     // RGB colour values
     @ColumnInfo(name = "r")
     private var r: Int
+
     @ColumnInfo(name = "g")
     private var g: Int
+
     @ColumnInfo(name = "b")
     private var b: Int
 
@@ -41,10 +42,13 @@ class SavedColour : Colour {
     // Stores the closest colour to this in the colour database
     @Ignore
     private var closestMatch: DatabaseColour? = null
+
     @Ignore
     private var firstClosest: DatabaseColour? = null
+
     @Ignore
     private var secondClosest: DatabaseColour? = null
+
     @Ignore
     private var thirdClosest: DatabaseColour? = null
 
@@ -67,6 +71,7 @@ class SavedColour : Colour {
     }
 
     fun getId(): Long = id
+
     fun setId(id: Long) {
         this.id = id
     }
@@ -106,7 +111,7 @@ class SavedColour : Colour {
 
     override fun getRGBString(): String = getRGBStringHelper(r, g, b)
 
-    override fun getHSVString(): String  = getHSVStringHelper(r, g, b)
+    override fun getHSVString(): String = getHSVStringHelper(r, g, b)
 
     override fun getHSLString(): String = getHSLStringHelper(r, g, b)
 
@@ -157,12 +162,12 @@ class SavedColour : Colour {
         val newS = Math.round(hsv[1] * 100)
         val newV = Math.round(hsv[2] * 100)
 
-        return (String.format(Locale.getDefault(), "%03d", newH)
-                + String.format(Locale.getDefault(), "%03d", newS)
-                + String.format(Locale.getDefault(), "%03d", newV))
+        return (
+            String.format(Locale.getDefault(), "%03d", newH) +
+                String.format(Locale.getDefault(), "%03d", newS) +
+                String.format(Locale.getDefault(), "%03d", newV)
+        )
     }
 
-    override fun toString(): String {
-        return "Id: $id, Colour: $r, $g, $b, Favourite: $favorite"
-    }
+    override fun toString(): String = "Id: $id, Colour: $r, $g, $b, Favourite: $favorite"
 }
