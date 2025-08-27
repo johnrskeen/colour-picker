@@ -9,7 +9,7 @@ fun Color.calculateTextColour(): Color =
         if (luminance > 0.5) {
             Color.Black // bright colors - black font
         } else {
-            Color.White // dark colors - white font
+            Color.LightGray // dark colors - white font
         }
     }
 
