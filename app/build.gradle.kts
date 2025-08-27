@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.skeensystems.colorpicker"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 35
         versionCode = 29
         versionName = "2.3.0"
@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.compose)
 
     implementation(libs.play.services.ads)
 
