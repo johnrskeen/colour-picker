@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.compose.ui.platform.ComposeView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -85,7 +86,11 @@ public class CameraFragment extends Fragment {
         // Bind observer to getCurrentCameraColour in mainActivityViewModel
         mainActivityViewModel.getCameraCurrentColour().observe(getViewLifecycleOwner(), colourObserver);
 
-        return root;
+        ComposeView composeView = new ComposeView(requireContext());
+        CameraScreenKt.setCameraContent(composeView);
+
+        return composeView;
+        //return root;
     }
 
     /**
