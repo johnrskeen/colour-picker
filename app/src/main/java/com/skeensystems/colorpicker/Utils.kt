@@ -1,6 +1,7 @@
 package com.skeensystems.colorpicker
 
 import androidx.compose.ui.graphics.Color
+import com.skeensystems.colorpicker.database.DatabaseColour
 
 fun Color.calculateTextColour(): Color =
     // Counting the perceptive luminance - human eye favors green color
@@ -11,5 +12,7 @@ fun Color.calculateTextColour(): Color =
             Color.White // dark colors - white font
         }
     }
+
+fun Color.getClosestColour(): String = "Red"
 
 fun Color.getHexString(): String = String.format("#%02X%02X%02X", (red * 255).toInt(), (green * 255).toInt(), (blue * 255).toInt())
