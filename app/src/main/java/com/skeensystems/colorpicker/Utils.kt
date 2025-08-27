@@ -1,7 +1,9 @@
 package com.skeensystems.colorpicker
 
+import android.util.TypedValue
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.skeensystems.colorpicker.database.DatabaseColour
+import androidx.compose.ui.platform.LocalContext
 
 fun Color.calculateTextColour(): Color =
     // Counting the perceptive luminance - human eye favors green color
@@ -16,3 +18,11 @@ fun Color.calculateTextColour(): Color =
 fun Color.getClosestColour(): String = "Red"
 
 fun Color.getHexString(): String = String.format("#%02X%02X%02X", (red * 255).toInt(), (green * 255).toInt(), (blue * 255).toInt())
+
+@Composable
+fun themeColour(attrResId: Int): Color {
+    val context = LocalContext.current
+    val typedValue = TypedValue()
+    context.theme.resolveAttribute(attrResId, typedValue, true)
+    return Color(typedValue.data)
+}
