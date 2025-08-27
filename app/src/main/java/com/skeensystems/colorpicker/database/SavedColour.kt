@@ -19,7 +19,7 @@ import java.util.Locale
 @Entity
 class SavedColour : Colour {
     @PrimaryKey
-    var id: Long
+    private var id: Long
 
     // RGB colour values
     @ColumnInfo(name = "r")
