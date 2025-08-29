@@ -24,6 +24,7 @@ fun CameraScreen() {
     Scaffold(floatingActionButton = {
         LargeFloatingActionButton(
             onClick = {
+                TODO("Not yet implemented")
             },
         ) {
             Icon(Icons.Filled.Add, "Capture colour.")
