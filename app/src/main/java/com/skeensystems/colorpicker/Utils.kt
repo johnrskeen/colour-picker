@@ -4,11 +4,12 @@ import android.util.TypedValue
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.skeensystems.colorpicker.database.SavedColour
 
 fun Color.calculateTextColour(): Color =
     // Counting the perceptive luminance - human eye favors green color
     (0.299 * red + 0.587 * green + 0.114 * blue).let { luminance ->
-        if (luminance > 0.5) {
+        if (luminance > 0.4) {
             Color.Black // bright colors - black font
         } else {
             Color.LightGray // dark colors - white font
@@ -26,3 +27,5 @@ fun themeColour(attrResId: Int): Color {
     context.theme.resolveAttribute(attrResId, typedValue, true)
     return Color(typedValue.data)
 }
+
+fun Map<Long, SavedColour>.sort(): List<SavedColour> = map { it.value }.sortedBy { it.getId() }
