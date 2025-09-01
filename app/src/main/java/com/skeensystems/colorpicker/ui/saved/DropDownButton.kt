@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.skeensystems.colorpicker.calculateTextColour
 import com.skeensystems.colorpicker.copyToClipboard
 import com.skeensystems.colorpicker.database.Colour
+import com.skeensystems.colorpicker.ui.IconAndTextButton
 import kotlinx.coroutines.launch
 
 @Composable
@@ -86,27 +87,28 @@ fun DropDownButton(colour: Colour) {
             ColourCodeItem(type = "HSL", value = colour.getHSLString(), textColour = textColour, smallText = true)
             ColourCodeItem(type = "CMYK", value = colour.getCMYKString(), textColour = textColour, smallText = true)
             Row(modifier = Modifier.fillMaxWidth()) {
-                Box(
-                    modifier =
-                        Modifier.weight(1f).padding(20.dp).clickable {
-                            scope.launch {
-                                colour.copyToClipboard(clipboardManager = clipboardManager)
-                            }
-                        },
-                ) {
-                    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(imageVector = Icons.Filled.ContentCopy, contentDescription = "Copy colour details.", tint = textColour)
-                        Text(modifier = Modifier.padding(top = 10.dp), text = "Copy", color = textColour, fontWeight = FontWeight.Medium)
-                    }
-                }
-                Box(
-                    modifier = Modifier.weight(1f).padding(20.dp).clickable { TODO("Not yet implemented") },
-                ) {
-                    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(imageVector = Icons.Outlined.BookmarkAdd, contentDescription = "Save colour.", tint = textColour)
-                        Text(modifier = Modifier.padding(top = 10.dp), text = "Save", color = textColour, fontWeight = FontWeight.Medium)
-                    }
-                }
+                IconAndTextButton(
+                    modifier = Modifier.weight(1f).padding(20.dp),
+                    onClick = {
+                        scope.launch {
+                            colour.copyToClipboard(clipboardManager = clipboardManager)
+                        }
+                    },
+                    icon = Icons.Filled.ContentCopy,
+                    text = "Copy",
+                    contentDescription = "Copy colour details.",
+                    colour = textColour,
+                )
+                IconAndTextButton(
+                    modifier = Modifier.weight(1f).padding(20.dp),
+                    onClick = {
+                        TODO("Not yet implemented")
+                    },
+                    icon = Icons.Outlined.BookmarkAdd,
+                    text = "Save",
+                    contentDescription = "Save colour.",
+                    colour = textColour,
+                )
             }
         }
     }
