@@ -107,6 +107,15 @@ class SavedColour : Colour {
         requiresLightText = backgroundRequiresLightText(r, g, b)
     }
 
+    fun getDetailsList(): List<Pair<String, String>> =
+        listOf(
+            Pair("HEX", getHEXString()),
+            Pair("RGB", getRGBString()),
+            Pair("HSV", getHSVString()),
+            Pair("HSL", getHSLString()),
+            Pair("CMYK", getCMYKString()),
+        )
+
     override fun getHEXString(): String = getHEXStringHelper(r, g, b)
 
     override fun getRGBString(): String = getRGBStringHelper(r, g, b)
@@ -129,6 +138,16 @@ class SavedColour : Colour {
     fun setFavorite(favorite: Boolean) {
         this.favorite = favorite
     }
+
+    fun getSimilarColours(): List<DatabaseColour> = setOfNotNull(firstClosest, secondClosest, thirdClosest).toList()
+
+    fun getComplementaryColours(): List<DatabaseColour> =
+        setOfNotNull(
+            closestMatch?.getComplementaryColour(),
+            firstClosest?.getComplementaryColour(),
+            secondClosest?.getComplementaryColour(),
+            thirdClosest?.getComplementaryColour(),
+        ).toList().take(3)
 
     fun getClosestMatch(): DatabaseColour = closestMatch!!
 
