@@ -23,6 +23,7 @@ fun ColourCodeItem(
     type: String,
     value: String,
     textColour: Color,
+    smallText: Boolean = false,
 ) {
     val clipboardManager = LocalClipboard.current
     val scope = rememberCoroutineScope()
@@ -40,7 +41,7 @@ fun ColourCodeItem(
             text = type,
             textAlign = TextAlign.Start,
             color = textColour,
-            fontSize = 18.sp,
+            fontSize = if (smallText) 16.sp else 18.sp,
             fontWeight = FontWeight.Medium,
         )
         Text(
@@ -48,7 +49,7 @@ fun ColourCodeItem(
             text = value,
             textAlign = TextAlign.End,
             color = textColour,
-            fontSize = 18.sp,
+            fontSize = if (smallText) 16.sp else 18.sp,
             fontWeight = FontWeight.Medium,
         )
     }
