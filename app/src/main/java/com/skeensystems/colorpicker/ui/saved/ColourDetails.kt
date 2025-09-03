@@ -10,7 +10,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -19,10 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +33,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.skeensystems.colorpicker.calculateTextColour
 import com.skeensystems.colorpicker.database.SavedColour
-import com.skeensystems.colorpicker.ui.IconAndTextButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -100,44 +94,22 @@ fun ColourDetails(
                         RelatedColoursContainer(inspectedColour = inspectedColour)
                     }
                 }
-                Row(modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp)) {
-                    IconAndTextButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = {
-                            hideDetailsView(
-                                scope,
-                                inspectedColourState,
-                                animationDuration,
-                                x,
-                                y,
-                                width,
-                                height,
-                                originCoordinates,
-                                originDimension,
-                            )
-                        },
-                        icon = Icons.AutoMirrored.Filled.ArrowBack,
-                        text = "Back",
-                        contentDescription = "Close colour details preview.",
-                        colour = textColour,
-                    )
-                    IconAndTextButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = { TODO("Not yet implemented") },
-                        icon = Icons.Outlined.Star,
-                        text = "Favourite",
-                        contentDescription = "Toggle favourite colour.",
-                        colour = textColour,
-                    )
-                    IconAndTextButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = { TODO("Not yet implemented") },
-                        icon = Icons.Outlined.Delete,
-                        text = "Delete",
-                        contentDescription = "Delete colour.",
-                        colour = textColour,
-                    )
-                }
+                ColourDetailsActionBar(
+                    hideDetailsView = {
+                        hideDetailsView(
+                            scope,
+                            inspectedColourState,
+                            animationDuration,
+                            x,
+                            y,
+                            width,
+                            height,
+                            originCoordinates,
+                            originDimension,
+                        )
+                    },
+                    textColour = textColour,
+                )
             }
         }
     }
