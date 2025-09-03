@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,6 +48,7 @@ fun ListColour(
         animationSpec = tween(durationMillis = animationDuration),
     )
     val colour = Color(savedColour.getR(), savedColour.getG(), savedColour.getB())
+    val textColour = colour.calculateTextColour()
     BoxWithConstraints(
         modifier =
             Modifier
@@ -67,12 +71,21 @@ fun ListColour(
         selectedCornerRadius = maxHeight.value
         onDimensionMeasured(maxHeight)
 
+        if (savedColour.getFavorite()) {
+            Icon(
+                modifier = Modifier.size(maxHeight / 3.5f, maxHeight / 3.5f),
+                imageVector = Icons.Filled.Star,
+                contentDescription = null,
+                tint = textColour,
+            )
+        }
+
         if (selected) {
             Icon(
                 modifier = Modifier.fillMaxSize(),
                 painter = painterResource(id = R.drawable.ic_tick),
                 contentDescription = null,
-                tint = colour.calculateTextColour(),
+                tint = textColour,
             )
         }
     }
