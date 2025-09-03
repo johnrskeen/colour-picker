@@ -37,7 +37,7 @@ fun ColourCodeItem(
         },
     ) {
         Text(
-            modifier = Modifier.weight(1f).padding(horizontal = 10.dp),
+            modifier = Modifier.padding(horizontal = 10.dp),
             text = type,
             textAlign = TextAlign.Start,
             color = textColour,
