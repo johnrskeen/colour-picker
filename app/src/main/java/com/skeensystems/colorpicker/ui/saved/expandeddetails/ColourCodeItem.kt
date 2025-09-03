@@ -1,4 +1,4 @@
-package com.skeensystems.colorpicker.ui.saved
+package com.skeensystems.colorpicker.ui.saved.expandeddetails
 
 import android.content.ClipData
 import androidx.compose.foundation.clickable

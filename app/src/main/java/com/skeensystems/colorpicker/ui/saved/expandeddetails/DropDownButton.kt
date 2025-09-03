@@ -1,4 +1,4 @@
-package com.skeensystems.colorpicker.ui.saved
+package com.skeensystems.colorpicker.ui.saved.expandeddetails
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background

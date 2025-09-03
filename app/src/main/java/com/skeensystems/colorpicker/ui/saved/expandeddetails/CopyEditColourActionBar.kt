@@ -1,4 +1,4 @@
-package com.skeensystems.colorpicker.ui.saved
+package com.skeensystems.colorpicker.ui.saved.expandeddetails
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
