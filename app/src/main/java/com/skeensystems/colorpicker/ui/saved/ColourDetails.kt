@@ -19,6 +19,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +38,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.skeensystems.colorpicker.calculateTextColour
 import com.skeensystems.colorpicker.database.SavedColour
+import com.skeensystems.colorpicker.ui.IconAndTextButton
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -66,35 +72,7 @@ fun ColourDetails(
                 }.size(width = width.value.dp, height = height.value.dp)
                 .background(color = colour, shape = RoundedCornerShape(10.dp))
                 .clickable {
-                    scope.launch {
-                        awaitAll(
-                            async {
-                                x.animateTo(
-                                    targetValue = originCoordinates.x,
-                                    animationSpec = tween(durationMillis = animationDuration),
-                                )
-                            },
-                            async {
-                                y.animateTo(
-                                    targetValue = originCoordinates.y,
-                                    animationSpec = tween(durationMillis = animationDuration),
-                                )
-                            },
-                            async {
-                                width.animateTo(
-                                    targetValue = originDimension.value,
-                                    animationSpec = tween(durationMillis = animationDuration),
-                                )
-                            },
-                            async {
-                                height.animateTo(
-                                    targetValue = originDimension.value,
-                                    animationSpec = tween(durationMillis = animationDuration),
-                                )
-                            },
-                        )
-                        inspectedColourState.value = null
-                    }
+                    hideDetailsView(scope, inspectedColourState, animationDuration, x, y, width, height, originCoordinates, originDimension)
                 },
     ) {
         AnimatedVisibility(
@@ -111,7 +89,7 @@ fun ColourDetails(
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Medium,
                 )
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     items(inspectedColour.getDetailsList()) {
                         ColourCodeItem(type = it.first, value = it.second, textColour = textColour)
                     }
@@ -122,9 +100,87 @@ fun ColourDetails(
                         RelatedColoursContainer(inspectedColour = inspectedColour)
                     }
                 }
-                Row(modifier = Modifier.fillMaxWidth()) {
+                Row(modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp)) {
+                    IconAndTextButton(
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            hideDetailsView(
+                                scope,
+                                inspectedColourState,
+                                animationDuration,
+                                x,
+                                y,
+                                width,
+                                height,
+                                originCoordinates,
+                                originDimension,
+                            )
+                        },
+                        icon = Icons.AutoMirrored.Filled.ArrowBack,
+                        text = "Back",
+                        contentDescription = "Close colour details preview.",
+                        colour = textColour,
+                    )
+                    IconAndTextButton(
+                        modifier = Modifier.weight(1f),
+                        onClick = { TODO("Not yet implemented") },
+                        icon = Icons.Outlined.Star,
+                        text = "Favourite",
+                        contentDescription = "Toggle favourite colour.",
+                        colour = textColour,
+                    )
+                    IconAndTextButton(
+                        modifier = Modifier.weight(1f),
+                        onClick = { TODO("Not yet implemented") },
+                        icon = Icons.Outlined.Delete,
+                        text = "Delete",
+                        contentDescription = "Delete colour.",
+                        colour = textColour,
+                    )
                 }
             }
         }
+    }
+}
+
+fun hideDetailsView(
+    scope: CoroutineScope,
+    inspectedColourState: MutableState<SavedColour?>,
+    animationDuration: Int,
+    x: Animatable<Float, AnimationVector1D>,
+    y: Animatable<Float, AnimationVector1D>,
+    width: Animatable<Float, AnimationVector1D>,
+    height: Animatable<Float, AnimationVector1D>,
+    originCoordinates: Offset,
+    originDimension: Dp,
+) {
+    scope.launch {
+        awaitAll(
+            async {
+                x.animateTo(
+                    targetValue = originCoordinates.x,
+                    animationSpec = tween(durationMillis = animationDuration),
+                )
+            },
+            async {
+                y.animateTo(
+                    targetValue = originCoordinates.y,
+                    animationSpec = tween(durationMillis = animationDuration),
+                )
+            },
+            async {
+                width.animateTo(
+                    targetValue = originDimension.value,
+                    animationSpec = tween(durationMillis = animationDuration),
+                )
+            },
+            async {
+                height.animateTo(
+                    targetValue = originDimension.value,
+                    animationSpec = tween(durationMillis = animationDuration),
+                )
+            },
+        )
+        inspectedColourState.value = null
     }
 }
