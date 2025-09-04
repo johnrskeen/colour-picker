@@ -210,7 +210,11 @@ fun SavedColoursScreen(viewModel: MainViewModel = viewModel(LocalActivity.curren
                     onDismissRequest = { confirmingDelete = false },
                     confirmButton = {
                         TextButton(
-                            onClick = { TODO("Not yet implemented") },
+                            onClick = {
+                                selectedItems.forEach { viewModel.removeColour(it) }
+                                confirmingDelete = false
+                                exitSelectionMode()
+                            },
                             colors = ButtonDefaults.textButtonColors(contentColor = Color.Red),
                         ) { Text("Delete") }
                     },
