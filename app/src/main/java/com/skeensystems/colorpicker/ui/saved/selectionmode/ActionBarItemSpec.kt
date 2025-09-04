@@ -1,4 +1,4 @@
-package com.skeensystems.colorpicker.ui.saved
+package com.skeensystems.colorpicker.ui.saved.selectionmode
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
