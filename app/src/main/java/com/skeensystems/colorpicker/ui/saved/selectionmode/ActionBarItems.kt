@@ -11,7 +11,12 @@ import androidx.compose.ui.res.vectorResource
 import com.skeensystems.colorpicker.R
 
 @Composable
-fun getActionBarItems(onCancel: () -> Unit): List<ActionBarItemSpec> =
+fun getActionBarItems(
+    onCancel: () -> Unit,
+    onCopy: () -> Unit,
+    onSetFavouriteStatus: (favourite: Boolean) -> Unit,
+    onDelete: () -> Unit,
+): List<ActionBarItemSpec> =
     listOf(
         ActionBarItemSpec(
             onClick = onCancel,
@@ -20,25 +25,25 @@ fun getActionBarItems(onCancel: () -> Unit): List<ActionBarItemSpec> =
             contentDescription = "Cancel selection",
         ),
         ActionBarItemSpec(
-            onClick = {},
+            onClick = onCopy,
             icon = Icons.Outlined.ContentCopy,
             text = "Copy",
             contentDescription = "Copy selection",
         ),
         ActionBarItemSpec(
-            onClick = {},
+            onClick = { onSetFavouriteStatus(true) },
             icon = Icons.Outlined.StarOutline,
             text = "Favourite",
             contentDescription = "Favourite all in selection",
         ),
         ActionBarItemSpec(
-            onClick = {},
+            onClick = { onSetFavouriteStatus(false) },
             icon = ImageVector.vectorResource(R.drawable.ic_star_outline_crossed),
             text = "Remove\nfavourite",
             contentDescription = "Remove favourite from all in selection",
         ),
         ActionBarItemSpec(
-            onClick = {},
+            onClick = onDelete,
             icon = Icons.Outlined.Delete,
             text = "Delete",
             contentDescription = "Delete selection",

@@ -21,8 +21,13 @@ import com.skeensystems.colorpicker.themeColour
 import com.skeensystems.colorpicker.ui.IconAndTextButton
 
 @Composable
-fun SelectionModeActionBar(onCancel: () -> Unit) {
-    val actionBarItems = getActionBarItems(onCancel)
+fun SelectionModeActionBar(
+    onCancel: () -> Unit,
+    onCopy: () -> Unit,
+    onSetFavouriteStatus: (favourite: Boolean) -> Unit,
+    onDelete: () -> Unit,
+) {
+    val actionBarItems = getActionBarItems(onCancel, onCopy, onSetFavouriteStatus, onDelete)
 
     var maxWidth by remember { mutableIntStateOf(0) }
 
