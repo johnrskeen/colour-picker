@@ -6,7 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.Clipboard
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.toClipEntry
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Dp
 import com.skeensystems.colorpicker.database.Colour
 import com.skeensystems.colorpicker.database.SavedColour
 
@@ -45,3 +49,13 @@ suspend fun Colour.copyToClipboard(clipboardManager: Clipboard) {
 }
 
 fun Map<Long, SavedColour>.sort(): List<SavedColour> = map { it.value }.sortedBy { it.getId() }
+
+@Composable
+fun measureTextWidth(
+    text: String,
+    style: TextStyle,
+): Dp {
+    val textMeasurer = rememberTextMeasurer()
+    val widthInPixels = textMeasurer.measure(text, style).size.width * 1.01f
+    return with(LocalDensity.current) { widthInPixels.toDp() }
+}
