@@ -12,9 +12,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -74,6 +76,9 @@ fun SavedColoursScreen(viewModel: MainViewModel = viewModel(LocalActivity.curren
 
     var confirmingDelete by remember { mutableStateOf(false) }
 
+    var sortStatus by remember { mutableStateOf(SortOptions.NEWEST_FIRST) }
+    var filterStatus by remember { mutableStateOf(FilterOptions.NO_FILTER) }
+
     val inspectColourX = remember { Animatable(0f) }
     val inspectColourY = remember { Animatable(0f) }
     val inspectColourWidth = remember { Animatable(0f) }
@@ -116,6 +121,23 @@ fun SavedColoursScreen(viewModel: MainViewModel = viewModel(LocalActivity.curren
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Medium,
                 )
+
+                Row(modifier = Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    DropDownMenu(
+                        modifier = Modifier.weight(1f),
+                        title = "Sort",
+                        options = SortOptions.entries,
+                        onOptionSelected = { selectedOption -> sortStatus = selectedOption },
+                        selectedOption = sortStatus,
+                    )
+                    DropDownMenu(
+                        modifier = Modifier.weight(1f),
+                        title = "Filter",
+                        options = FilterOptions.entries,
+                        onOptionSelected = { selectedOption -> filterStatus = selectedOption },
+                        selectedOption = filterStatus,
+                    )
+                }
 
                 LazyVerticalGrid(
                     modifier = Modifier.fillMaxWidth().weight(1f),
@@ -233,6 +255,7 @@ fun SavedColoursScreen(viewModel: MainViewModel = viewModel(LocalActivity.curren
     }
 }
 
+// TODO extract this and merge with the hide details view function
 fun showDetailsView(
     scope: CoroutineScope,
     inspectedColour: SavedColour,
