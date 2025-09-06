@@ -30,6 +30,7 @@ import com.skeensystems.colorpicker.database.SavedColour
 
 @Composable
 fun ListColour(
+    modifier: Modifier = Modifier,
     savedColour: SavedColour,
     selected: Boolean,
     animationDuration: Int,
@@ -51,7 +52,7 @@ fun ListColour(
     val textColour = colour.calculateTextColour()
     BoxWithConstraints(
         modifier =
-            Modifier
+            modifier
                 .fillMaxSize()
                 .aspectRatio(1f)
                 .graphicsLayer(
