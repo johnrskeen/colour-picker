@@ -1,5 +1,7 @@
 package com.skeensystems.colorpicker.ui.saved.expandeddetails
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
@@ -21,18 +23,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.calculateTextColour
-import com.skeensystems.colorpicker.database.SavedColour
+import com.skeensystems.colorpicker.ui.saved.SavedColoursViewModel
+import com.skeensystems.colorpicker.ui.saved.VisibilityStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -40,119 +46,156 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ColourDetails(
-    inspectedColourState: MutableState<SavedColour?>,
-    inspectedColour: SavedColour,
+    viewModel: SavedColoursViewModel = viewModel(LocalActivity.current as ComponentActivity),
     topPaddingPx: Float,
-    animationDuration: Int,
-    x: Animatable<Float, AnimationVector1D>,
-    y: Animatable<Float, AnimationVector1D>,
-    width: Animatable<Float, AnimationVector1D>,
-    height: Animatable<Float, AnimationVector1D>,
-    originCoordinates: Offset,
-    originDimension: Dp,
 ) {
     val scope = rememberCoroutineScope()
-    val colour = Color(inspectedColour.getR(), inspectedColour.getG(), inspectedColour.getB())
+
+    var visible by remember { mutableStateOf(false) }
+
+    val x = remember { Animatable(0f) }
+    val y = remember { Animatable(0f) }
+    val width = remember { Animatable(0f) }
+    val height = remember { Animatable(0f) }
+
+    val visibilityStatus by remember { viewModel.visibilityStatus }
+    var activeStatus by remember { mutableStateOf<VisibilityStatus.Show?>(null) }
+
+    val colour =
+        activeStatus?.let { status ->
+            Color(status.savedColour.getR(), status.savedColour.getG(), status.savedColour.getB())
+        } ?: Color.Black
     val textColour = colour.calculateTextColour()
 
-    Box(
-        modifier =
-            Modifier
-                .offset {
-                    IntOffset(
-                        x = x.value.toInt(),
-                        y = (y.value - topPaddingPx).toInt(),
+    LaunchedEffect(visibilityStatus) {
+        when (val status = visibilityStatus) {
+            is VisibilityStatus.Hide -> {
+                animate(
+                    scope = scope,
+                    animationDuration = viewModel.animationDuration,
+                    x = x,
+                    xTo = status.to.x,
+                    y = y,
+                    yTo = status.to.y,
+                    width = width,
+                    widthTo = viewModel.colourViewDimension.value,
+                    height = height,
+                    heightTo = viewModel.colourViewDimension.value,
+                    afterAnimation = { activeStatus = null },
+                )
+            }
+            is VisibilityStatus.Show -> {
+                scope.launch {
+                    x.snapTo(status.from.x)
+                    y.snapTo(status.from.y)
+                    width.snapTo(viewModel.colourViewDimension.value)
+                    height.snapTo(viewModel.colourViewDimension.value)
+
+                    activeStatus = status
+                    visible = true
+
+                    animate(
+                        scope = scope,
+                        animationDuration = viewModel.animationDuration,
+                        x = x,
+                        xTo = 0f,
+                        y = y,
+                        yTo = topPaddingPx,
+                        width = width,
+                        widthTo = viewModel.screenWidth.value,
+                        height = height,
+                        heightTo = viewModel.screenHeight.value,
                     )
-                }.size(width = width.value.dp, height = height.value.dp)
-                .background(color = colour, shape = RoundedCornerShape(10.dp))
-                .clickable {
-                    hideDetailsView(scope, inspectedColourState, animationDuration, x, y, width, height, originCoordinates, originDimension)
-                },
-    ) {
-        AnimatedVisibility(
-            visible = width.value > originDimension.value && height.value > originDimension.value,
-            enter = fadeIn(animationSpec = tween(500)),
-            exit = fadeOut(),
-        ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Text(
-                    modifier = Modifier.fillMaxWidth().padding(20.dp),
-                    text = inspectedColour.getClosestMatchString(),
-                    textAlign = TextAlign.Center,
-                    color = textColour,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Medium,
-                )
-                LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                    items(inspectedColour.getDetailsList()) {
-                        ColourCodeItem(type = it.first, value = it.second, textColour = textColour)
-                    }
-                    item {
-                        CopyEditColourActionBar(inspectedColour = inspectedColour)
-                    }
-                    item {
-                        RelatedColoursContainer(inspectedColour = inspectedColour)
-                    }
                 }
-                ColourDetailsActionBar(
-                    hideDetailsView = {
-                        hideDetailsView(
-                            scope,
-                            inspectedColourState,
-                            animationDuration,
-                            x,
-                            y,
-                            width,
-                            height,
-                            originCoordinates,
-                            originDimension,
+            }
+        }
+    }
+
+    activeStatus?.let {
+        Box(
+            modifier =
+                Modifier
+                    .offset {
+                        IntOffset(
+                            x = x.value.toInt(),
+                            y = (y.value - topPaddingPx).toInt(),
                         )
+                    }.size(width = width.value.dp, height = height.value.dp)
+                    .background(color = colour, shape = RoundedCornerShape(10.dp))
+                    .clickable {
+                        viewModel.setVisibilityStatus(VisibilityStatus.Hide(it.from))
                     },
-                    textColour = textColour,
-                )
+        ) {
+            AnimatedVisibility(
+                visible = width.value > viewModel.colourViewDimension.value && height.value > viewModel.colourViewDimension.value,
+                enter = fadeIn(animationSpec = tween(500)),
+                exit = fadeOut(),
+            ) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth().padding(20.dp),
+                        text = it.savedColour.getClosestMatchString(),
+                        textAlign = TextAlign.Center,
+                        color = textColour,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Medium,
+                    )
+                    LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                        items(it.savedColour.getDetailsList()) {
+                            ColourCodeItem(
+                                type = it.first,
+                                value = it.second,
+                                textColour = textColour,
+                            )
+                        }
+                        item {
+                            CopyEditColourActionBar(inspectedColour = it.savedColour)
+                        }
+                        item {
+                            RelatedColoursContainer(inspectedColour = it.savedColour)
+                        }
+                    }
+                    ColourDetailsActionBar(
+                        hideDetailsView = {
+                            viewModel.setVisibilityStatus(VisibilityStatus.Hide(it.from))
+                        },
+                        textColour = textColour,
+                    )
+                }
             }
         }
     }
 }
 
-fun hideDetailsView(
+fun animate(
     scope: CoroutineScope,
-    inspectedColourState: MutableState<SavedColour?>,
     animationDuration: Int,
     x: Animatable<Float, AnimationVector1D>,
+    xTo: Float,
     y: Animatable<Float, AnimationVector1D>,
+    yTo: Float,
     width: Animatable<Float, AnimationVector1D>,
+    widthTo: Float,
     height: Animatable<Float, AnimationVector1D>,
-    originCoordinates: Offset,
-    originDimension: Dp,
+    heightTo: Float,
+    afterAnimation: () -> Unit = {},
 ) {
+    val animationSpec = tween<Float>(durationMillis = animationDuration)
     scope.launch {
         awaitAll(
             async {
-                x.animateTo(
-                    targetValue = originCoordinates.x,
-                    animationSpec = tween(durationMillis = animationDuration),
-                )
+                x.animateTo(targetValue = xTo, animationSpec = animationSpec)
             },
             async {
-                y.animateTo(
-                    targetValue = originCoordinates.y,
-                    animationSpec = tween(durationMillis = animationDuration),
-                )
+                y.animateTo(targetValue = yTo, animationSpec = animationSpec)
             },
             async {
-                width.animateTo(
-                    targetValue = originDimension.value,
-                    animationSpec = tween(durationMillis = animationDuration),
-                )
+                width.animateTo(targetValue = widthTo, animationSpec = animationSpec)
             },
             async {
-                height.animateTo(
-                    targetValue = originDimension.value,
-                    animationSpec = tween(durationMillis = animationDuration),
-                )
+                height.animateTo(targetValue = heightTo, animationSpec = animationSpec)
             },
         )
-        inspectedColourState.value = null
+        afterAnimation()
     }
 }
