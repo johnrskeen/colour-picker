@@ -26,6 +26,14 @@ import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.filter
 import com.skeensystems.colorpicker.sort
 
+/*
+This uses a hack to stop scrolling to the end when elements are reordered.
+This happens because the scroll position is tracked based on the index visible,
+so we need a fixed index that doesn't move at the start side of the screen.
+A very small column of invisible items is used, which is why the logic for
+calculating the screen width and columns, and setting the min column size
+to 1dp is needed.
+*/
 @Composable
 fun SavedColoursGrid(
     modifier: Modifier = Modifier,
