@@ -7,6 +7,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.skeensystems.colorpicker.database.SavedColour
+import com.skeensystems.colorpicker.ui.saved.expandeddetails.VisibilityStatus
 
 class SavedColoursViewModel : ViewModel() {
     private val _selectingMode = mutableStateOf(false)

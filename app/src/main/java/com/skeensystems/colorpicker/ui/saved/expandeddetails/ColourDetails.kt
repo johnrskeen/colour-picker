@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.calculateTextColour
 import com.skeensystems.colorpicker.ui.saved.SavedColoursViewModel
-import com.skeensystems.colorpicker.ui.saved.VisibilityStatus
 import com.skeensystems.colorpicker.ui.saved.animateDetailsView
 import kotlinx.coroutines.launch
 
