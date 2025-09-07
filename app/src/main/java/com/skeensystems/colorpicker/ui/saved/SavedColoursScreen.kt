@@ -4,9 +4,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector1D
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -20,9 +17,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -30,14 +24,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalClipboard
@@ -45,18 +37,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.R
 import com.skeensystems.colorpicker.copyToClipboard
-import com.skeensystems.colorpicker.database.SavedColour
-import com.skeensystems.colorpicker.sort
 import com.skeensystems.colorpicker.themeColour
 import com.skeensystems.colorpicker.ui.saved.expandeddetails.ColourDetails
 import com.skeensystems.colorpicker.ui.saved.selectionmode.SelectionModeActionBar
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 fun ComposeView.setSavedColoursContent() {
@@ -66,33 +54,22 @@ fun ComposeView.setSavedColoursContent() {
 }
 
 @Composable
-fun SavedColoursScreen(viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity)) {
-    var selectedItems by remember { mutableStateOf(setOf<SavedColour>()) }
-    var selectionMode by remember { mutableStateOf(false) }
-    val exitSelectionMode = {
-        selectedItems = emptySet()
-        selectionMode = false
-    }
+fun SavedColoursScreen(
+    mainViewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    localViewModel: SavedColoursViewModel = viewModel(LocalActivity.current as ComponentActivity),
+) {
+    localViewModel.animationDuration =
+        with(LocalContext.current) {
+            resources.getInteger(android.R.integer.config_mediumAnimTime)
+        }
+
+    val selectedItems = localViewModel.selectedItems
+    val selectionMode by localViewModel.selectingMode
 
     var confirmingDelete by remember { mutableStateOf(false) }
 
     var sortStatus by remember { mutableStateOf(SortOptions.NEWEST_FIRST) }
     var filterStatus by remember { mutableStateOf(FilterOptions.NO_FILTER) }
-
-    val inspectColourX = remember { Animatable(0f) }
-    val inspectColourY = remember { Animatable(0f) }
-    val inspectColourWidth = remember { Animatable(0f) }
-    val inspectColourHeight = remember { Animatable(0f) }
-    val animationDuration =
-        with(LocalContext.current) {
-            resources.getInteger(android.R.integer.config_mediumAnimTime)
-        }
-
-    var listColourDimension by remember { mutableStateOf(0.dp) }
-
-    val inspectedColourState = remember { mutableStateOf<SavedColour?>(null) }
-
-    val savedColourCoordinates = remember { mutableMapOf<Long, Offset>() }
 
     val clipboardManager = LocalClipboard.current
     val scope = rememberCoroutineScope()
@@ -107,8 +84,8 @@ fun SavedColoursScreen(viewModel: MainViewModel = viewModel(LocalActivity.curren
                     .background(themeColour(R.attr.mainColour))
                     .padding(top = topPaddingDp),
         ) {
-            val width = maxWidth
-            val height = maxHeight
+            localViewModel.screenWidth = maxWidth
+            localViewModel.screenHeight = maxHeight
             Column {
                 Text(
                     modifier =
@@ -139,66 +116,27 @@ fun SavedColoursScreen(viewModel: MainViewModel = viewModel(LocalActivity.curren
                     )
                 }
 
-                LazyVerticalGrid(
-                    modifier = Modifier.fillMaxWidth().weight(1f),
-                    columns = GridCells.Adaptive(minSize = 100.dp),
-                ) {
-                    items(viewModel.savedColours.sort()) {
-                        ListColour(
-                            savedColour = it,
-                            selected = it in selectedItems,
-                            animationDuration = animationDuration,
-                            onDimensionMeasured = { dimension -> listColourDimension = dimension },
-                            onCoordinatesDetermined = { coordinates -> savedColourCoordinates[it.getId()] = coordinates },
-                            onClick = {
-                                if (!selectionMode) {
-                                    showDetailsView(
-                                        scope = scope,
-                                        inspectedColour = it,
-                                        inspectedColourState = inspectedColourState,
-                                        animationDuration = animationDuration,
-                                        x = inspectColourX,
-                                        y = inspectColourY,
-                                        width = inspectColourWidth,
-                                        height = inspectColourHeight,
-                                        screenWidth = width,
-                                        screenHeight = height,
-                                        originCoordinates = savedColourCoordinates[it.getId()]!!,
-                                        originDimension = listColourDimension,
-                                        topPaddingPx = topPaddingPx,
-                                    )
-                                } else {
-                                    if (it in selectedItems) {
-                                        selectedItems = selectedItems.minus(it)
-                                        if (selectedItems.isEmpty()) selectionMode = false
-                                    } else {
-                                        selectedItems = selectedItems.plus(it)
-                                    }
-                                }
-                            },
-                            onLongClick = {
-                                selectionMode = true
-                                selectedItems = selectedItems.plus(it)
-                            },
-                        )
-                    }
-                }
+                SavedColoursGrid(
+                    modifier = Modifier.fillMaxWidth().weight(1f).padding(end = 1.dp),
+                    sortStatus = sortStatus,
+                    filterStatus = filterStatus,
+                )
 
                 Box(modifier = Modifier.animateContentSize()) {
                     if (selectionMode) {
                         SelectionModeActionBar(
                             onCancel = {
-                                exitSelectionMode()
+                                localViewModel.exitSelectingMode()
                             },
                             onCopy = {
                                 scope.launch {
                                     selectedItems.copyToClipboard(clipboardManager = clipboardManager)
-                                    exitSelectionMode()
+                                    localViewModel.exitSelectingMode()
                                 }
                             },
                             onSetFavouriteStatus = { favourite ->
                                 selectedItems.map { it.setFavorite(favourite) }
-                                exitSelectionMode()
+                                localViewModel.exitSelectingMode()
                             },
                             onDelete = {
                                 confirmingDelete = true
@@ -208,20 +146,9 @@ fun SavedColoursScreen(viewModel: MainViewModel = viewModel(LocalActivity.curren
                 }
             }
 
-            inspectedColourState.value?.let {
-                ColourDetails(
-                    inspectedColourState = inspectedColourState,
-                    inspectedColour = it,
-                    topPaddingPx = topPaddingPx,
-                    animationDuration = animationDuration,
-                    x = inspectColourX,
-                    y = inspectColourY,
-                    width = inspectColourWidth,
-                    height = inspectColourHeight,
-                    originCoordinates = savedColourCoordinates[it.getId()]!!,
-                    originDimension = listColourDimension,
-                )
-            }
+            ColourDetails(
+                topPaddingPx = topPaddingPx,
+            )
 
             AnimatedVisibility(
                 visible = confirmingDelete,
@@ -233,9 +160,9 @@ fun SavedColoursScreen(viewModel: MainViewModel = viewModel(LocalActivity.curren
                     confirmButton = {
                         TextButton(
                             onClick = {
-                                selectedItems.forEach { viewModel.removeColour(it) }
+                                selectedItems.forEach { mainViewModel.removeColour(it) }
                                 confirmingDelete = false
-                                exitSelectionMode()
+                                localViewModel.exitSelectingMode()
                             },
                             colors = ButtonDefaults.textButtonColors(contentColor = Color.Red),
                         ) { Text("Delete") }
@@ -249,59 +176,6 @@ fun SavedColoursScreen(viewModel: MainViewModel = viewModel(LocalActivity.curren
                     title = { Text("Delete all currently selected items?") },
                     text = { Text("This action cannot be undone.") },
                     containerColor = themeColour(R.attr.mainColour),
-                )
-            }
-        }
-    }
-}
-
-// TODO extract this and merge with the hide details view function
-fun showDetailsView(
-    scope: CoroutineScope,
-    inspectedColour: SavedColour,
-    inspectedColourState: MutableState<SavedColour?>,
-    animationDuration: Int,
-    x: Animatable<Float, AnimationVector1D>,
-    y: Animatable<Float, AnimationVector1D>,
-    width: Animatable<Float, AnimationVector1D>,
-    height: Animatable<Float, AnimationVector1D>,
-    screenWidth: Dp,
-    screenHeight: Dp,
-    originCoordinates: Offset,
-    originDimension: Dp,
-    topPaddingPx: Float,
-) {
-    if (inspectedColourState.value == null) {
-        scope.launch {
-            x.snapTo(originCoordinates.x)
-            y.snapTo(originCoordinates.y)
-            width.snapTo(originDimension.value)
-            height.snapTo(originDimension.value)
-
-            inspectedColourState.value = inspectedColour
-
-            launch {
-                x.animateTo(
-                    targetValue = 0f,
-                    animationSpec = tween(durationMillis = animationDuration),
-                )
-            }
-            launch {
-                y.animateTo(
-                    targetValue = topPaddingPx,
-                    animationSpec = tween(durationMillis = animationDuration),
-                )
-            }
-            launch {
-                width.animateTo(
-                    targetValue = screenWidth.value,
-                    animationSpec = tween(durationMillis = animationDuration),
-                )
-            }
-            launch {
-                height.animateTo(
-                    targetValue = screenHeight.value,
-                    animationSpec = tween(durationMillis = animationDuration),
                 )
             }
         }
