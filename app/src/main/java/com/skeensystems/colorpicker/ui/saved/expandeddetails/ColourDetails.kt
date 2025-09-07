@@ -4,7 +4,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -39,9 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.calculateTextColour
 import com.skeensystems.colorpicker.ui.saved.SavedColoursViewModel
 import com.skeensystems.colorpicker.ui.saved.VisibilityStatus
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import com.skeensystems.colorpicker.ui.saved.animateDetailsView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -70,7 +67,7 @@ fun ColourDetails(
     LaunchedEffect(visibilityStatus) {
         when (val status = visibilityStatus) {
             is VisibilityStatus.Hide -> {
-                animate(
+                animateDetailsView(
                     scope = scope,
                     animationDuration = viewModel.animationDuration,
                     x = x,
@@ -94,7 +91,7 @@ fun ColourDetails(
                     activeStatus = status
                     visible = true
 
-                    animate(
+                    animateDetailsView(
                         scope = scope,
                         animationDuration = viewModel.animationDuration,
                         x = x,
@@ -164,38 +161,5 @@ fun ColourDetails(
                 }
             }
         }
-    }
-}
-
-fun animate(
-    scope: CoroutineScope,
-    animationDuration: Int,
-    x: Animatable<Float, AnimationVector1D>,
-    xTo: Float,
-    y: Animatable<Float, AnimationVector1D>,
-    yTo: Float,
-    width: Animatable<Float, AnimationVector1D>,
-    widthTo: Float,
-    height: Animatable<Float, AnimationVector1D>,
-    heightTo: Float,
-    afterAnimation: () -> Unit = {},
-) {
-    val animationSpec = tween<Float>(durationMillis = animationDuration)
-    scope.launch {
-        awaitAll(
-            async {
-                x.animateTo(targetValue = xTo, animationSpec = animationSpec)
-            },
-            async {
-                y.animateTo(targetValue = yTo, animationSpec = animationSpec)
-            },
-            async {
-                width.animateTo(targetValue = widthTo, animationSpec = animationSpec)
-            },
-            async {
-                height.animateTo(targetValue = heightTo, animationSpec = animationSpec)
-            },
-        )
-        afterAnimation()
     }
 }
