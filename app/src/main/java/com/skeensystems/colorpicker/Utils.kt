@@ -12,9 +12,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import com.skeensystems.colorpicker.database.Colour
-import com.skeensystems.colorpicker.database.SavedColour
-import com.skeensystems.colorpicker.ui.saved.FilterOptions
-import com.skeensystems.colorpicker.ui.saved.SortOptions
 
 fun Color.calculateTextColour(): Color =
     // Counting the perceptive luminance - human eye favors green color
@@ -57,19 +54,6 @@ suspend fun Set<Colour>.copyToClipboard(clipboardManager: Clipboard) {
     val clip = ClipData.newPlainText("Colour", text).toClipEntry()
     clipboardManager.setClipEntry(clip)
 }
-
-fun List<SavedColour>.filter(filterStatus: FilterOptions): List<SavedColour> =
-    when (filterStatus) {
-        FilterOptions.NO_FILTER -> this
-        FilterOptions.FAVOURITES -> filter { it.getFavorite() }
-    }
-
-fun List<SavedColour>.sort(sortStatus: SortOptions): List<SavedColour> =
-    when (sortStatus) {
-        SortOptions.NEWEST_FIRST -> sortedByDescending { it.getId() }
-        SortOptions.OLDEST_FIRST -> sortedBy { it.getId() }
-        SortOptions.BY_COLOUR -> sortedBy { it.getId() }
-    }
 
 @Composable
 fun measureTextWidth(

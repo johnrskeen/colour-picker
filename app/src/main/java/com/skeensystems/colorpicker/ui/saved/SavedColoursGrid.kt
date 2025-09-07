@@ -23,8 +23,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
-import com.skeensystems.colorpicker.filter
-import com.skeensystems.colorpicker.sort
 import com.skeensystems.colorpicker.ui.saved.expandeddetails.VisibilityStatus
 import com.skeensystems.colorpicker.ui.saved.sortandfilter.FilterOptions
 import com.skeensystems.colorpicker.ui.saved.sortandfilter.SortOptions

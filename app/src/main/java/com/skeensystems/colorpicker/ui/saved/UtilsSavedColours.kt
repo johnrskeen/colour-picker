@@ -3,6 +3,9 @@ package com.skeensystems.colorpicker.ui.saved
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
+import com.skeensystems.colorpicker.database.SavedColour
+import com.skeensystems.colorpicker.ui.saved.sortandfilter.FilterOptions
+import com.skeensystems.colorpicker.ui.saved.sortandfilter.SortOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -40,3 +43,16 @@ fun animateDetailsView(
         afterAnimation()
     }
 }
+
+fun List<SavedColour>.filter(filterStatus: FilterOptions): List<SavedColour> =
+    when (filterStatus) {
+        FilterOptions.NO_FILTER -> this
+        FilterOptions.FAVOURITES -> filter { it.getFavorite() }
+    }
+
+fun List<SavedColour>.sort(sortStatus: SortOptions): List<SavedColour> =
+    when (sortStatus) {
+        SortOptions.NEWEST_FIRST -> sortedByDescending { it.getId() }
+        SortOptions.OLDEST_FIRST -> sortedBy { it.getId() }
+        SortOptions.BY_COLOUR -> sortedBy { it.getId() }
+    }
