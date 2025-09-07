@@ -2,12 +2,7 @@ package com.skeensystems.colorpicker.ui.saved
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,12 +12,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
@@ -153,34 +144,14 @@ fun SavedColoursScreen(
                 topPaddingPx = topPaddingPx,
             )
 
-            AnimatedVisibility(
-                visible = confirmingDelete,
-                enter = fadeIn() + scaleIn(),
-                exit = fadeOut() + scaleOut(),
-            ) {
-                AlertDialog(
-                    onDismissRequest = { confirmingDelete = false },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                selectedItems.forEach { mainViewModel.removeColour(it) }
-                                confirmingDelete = false
-                                localViewModel.exitSelectingMode()
-                            },
-                            colors = ButtonDefaults.textButtonColors(contentColor = Color.Red),
-                        ) { Text("Delete") }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = { confirmingDelete = false },
-                            colors = ButtonDefaults.textButtonColors(contentColor = themeColour(R.attr.defaultTextColour)),
-                        ) { Text("Cancel") }
-                    },
-                    title = { Text("Delete all currently selected items?") },
-                    text = { Text("This action cannot be undone.") },
-                    containerColor = themeColour(R.attr.mainColour),
-                )
-            }
+            ConfirmDelete(
+                confirmingDelete = confirmingDelete,
+                onDelete = {
+                    selectedItems.forEach { mainViewModel.removeColour(it) }
+                    localViewModel.exitSelectingMode()
+                },
+                exitConfirmingDeleteMode = { confirmingDelete = false },
+            )
         }
     }
 }
