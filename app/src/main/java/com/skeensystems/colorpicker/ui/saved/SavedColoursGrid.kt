@@ -25,6 +25,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.filter
 import com.skeensystems.colorpicker.sort
+import com.skeensystems.colorpicker.ui.saved.sortandfilter.FilterOptions
+import com.skeensystems.colorpicker.ui.saved.sortandfilter.SortOptions
 
 /*
 This uses a hack to stop scrolling to the end when elements are reordered.

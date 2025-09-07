@@ -1,4 +1,4 @@
-package com.skeensystems.colorpicker.ui.saved
+package com.skeensystems.colorpicker.ui.saved.sortandfilter
 
 interface SortAndFilterOptions {
     val label: String

@@ -45,6 +45,9 @@ import com.skeensystems.colorpicker.copyToClipboard
 import com.skeensystems.colorpicker.themeColour
 import com.skeensystems.colorpicker.ui.saved.expandeddetails.ColourDetails
 import com.skeensystems.colorpicker.ui.saved.selectionmode.SelectionModeActionBar
+import com.skeensystems.colorpicker.ui.saved.sortandfilter.DropDownMenu
+import com.skeensystems.colorpicker.ui.saved.sortandfilter.FilterOptions
+import com.skeensystems.colorpicker.ui.saved.sortandfilter.SortOptions
 import kotlinx.coroutines.launch
 
 fun ComposeView.setSavedColoursContent() {
