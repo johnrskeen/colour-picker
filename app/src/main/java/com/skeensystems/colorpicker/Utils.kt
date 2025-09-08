@@ -3,6 +3,7 @@ package com.skeensystems.colorpicker
 import android.content.ClipData
 import android.util.TypedValue
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.Clipboard
 import androidx.compose.ui.platform.LocalContext
@@ -11,7 +12,9 @@ import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import com.skeensystems.colorpicker.database.Colour
+import kotlin.math.roundToInt
 
 fun Color.calculateTextColour(): Color =
     // Counting the perceptive luminance - human eye favors green color
@@ -64,3 +67,8 @@ fun measureTextWidth(
     val widthInPixels = textMeasurer.measure(text, style).size.width * 1.01f
     return with(LocalDensity.current) { widthInPixels.toDp() }
 }
+
+fun Offset.clamp(
+    width: Int,
+    height: Int,
+): IntOffset = IntOffset(x.roundToInt().coerceIn(0, width), y.roundToInt().coerceIn(0, height))
