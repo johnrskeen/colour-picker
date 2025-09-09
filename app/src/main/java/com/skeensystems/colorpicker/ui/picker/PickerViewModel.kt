@@ -1,31 +1,45 @@
 package com.skeensystems.colorpicker.ui.picker
 
-import android.os.Looper
+import android.graphics.Color.HSVToColor
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class PickerViewModel : ViewModel() {
     private val _pickerColour = MutableStateFlow(Color.Black)
     val pickerColour: StateFlow<Color> = _pickerColour.asStateFlow()
 
-    fun updateColour(
-        r: Int,
-        g: Int,
-        b: Int,
-    ) {
-        val color = Color(r, g, b)
+    private val _cornerColour = MutableStateFlow(Color.Red)
+    val cornerColour: StateFlow<Color> = _cornerColour.asStateFlow()
 
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            _pickerColour.value = color
-        } else {
-            viewModelScope.launch {
-                _pickerColour.emit(color)
-            }
-        }
+    private val _h = mutableFloatStateOf(0f)
+    val h: State<Float> = _h
+    private var s = 0f
+    private var v = 0f
+
+    fun updateH(h: Float) {
+        _h.floatValue = h.coerceIn(0f, 360f)
+        val argb = HSVToColor(floatArrayOf(h, 1f, 1f))
+        _cornerColour.value = Color(argb)
+        updateColour()
+    }
+
+    fun updateS(s: Float) {
+        this.s = s
+        updateColour()
+    }
+
+    fun updateV(v: Float) {
+        this.v = v
+        updateColour()
+    }
+
+    private fun updateColour() {
+        val argb = HSVToColor(floatArrayOf(h.value, s, v))
+        _pickerColour.value = Color(argb)
     }
 }
