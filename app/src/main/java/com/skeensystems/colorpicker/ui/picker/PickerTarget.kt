@@ -17,13 +17,19 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.calculateTextColour
+import kotlin.math.roundToInt
 
 @Composable
 fun PickerTarget(
     modifier: Modifier = Modifier,
     viewModel: PickerViewModel = viewModel(LocalActivity.current as ComponentActivity),
-    touchPosition: IntOffset,
+    widthPx: Float,
+    heightPx: Float,
 ) {
+    val s by viewModel.s
+    val v by viewModel.v
+    val touchPosition = IntOffset((s * widthPx).roundToInt(), ((1f - v) * heightPx).roundToInt())
+
     val pickerColour by viewModel.pickerColour.collectAsState()
     val size = with(LocalDensity.current) { 18.dp.roundToPx() }
     Box(
