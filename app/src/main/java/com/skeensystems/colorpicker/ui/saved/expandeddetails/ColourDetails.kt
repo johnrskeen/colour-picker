@@ -137,10 +137,10 @@ fun ColourDetails(
                         fontWeight = FontWeight.Medium,
                     )
                     LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                        items(it.savedColour.getDetailsList()) {
+                        items(it.savedColour.getDetailsList()) { details ->
                             ColourCodeItem(
-                                type = it.first,
-                                value = it.second,
+                                type = details.first,
+                                value = details.second,
                                 textColour = textColour,
                             )
                         }
