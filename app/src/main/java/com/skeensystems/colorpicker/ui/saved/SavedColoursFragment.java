@@ -37,9 +37,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.compose.ui.platform.ComposeView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -164,7 +164,7 @@ public class SavedColoursFragment extends Fragment {
         // Set default corner radius to 10dp
         cornerRadius = 10 * metrics.density;
 
-        SavedColoursViewModel savedColoursViewModel = new ViewModelProvider(this).get(SavedColoursViewModel.class);
+        //SavedColoursViewModel savedColoursViewModel = new ViewModelProvider(this).get(SavedColoursViewModel.class);
 
         binding = FragmentSavedColoursBinding.inflate(inflater, container, false);
 
@@ -421,7 +421,11 @@ public class SavedColoursFragment extends Fragment {
         shortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
         mediumAnimationDuration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
 
-        return binding.getRoot();
+        ComposeView composeView = new ComposeView(requireContext());
+        SavedColoursScreenKt.setSavedColoursContent(composeView);
+
+        return composeView;
+        //return binding.getRoot();
     }
 
     /**
