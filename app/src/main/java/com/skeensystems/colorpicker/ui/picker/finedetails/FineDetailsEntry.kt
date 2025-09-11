@@ -59,7 +59,17 @@ fun FineDetailsEntry(
             viewModel.setLastUpdateId(id)
             val newValue =
                 input.uppercase().applyFilter(colourSystem).let {
-                    if (it == "") 0.000001f else it.toFloat().adjust(details.componentType)
+                    if (it == "") {
+                        0.000001f
+                    } else {
+                        (
+                            if (colourSystem == ColourSystem.HEX) {
+                                it.toInt(radix = 16).toFloat()
+                            } else {
+                                it.toFloat()
+                            }
+                        ).adjust(details.componentType)
+                    }
                 }
             viewModel.updateValue(details.componentType, newValue)
         },
