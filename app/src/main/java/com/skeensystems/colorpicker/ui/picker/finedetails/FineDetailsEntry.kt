@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.R
 import com.skeensystems.colorpicker.themeColour
 import com.skeensystems.colorpicker.ui.picker.PickerViewModel
+import com.skeensystems.colorpicker.ui.picker.adjust
 import com.skeensystems.colorpicker.ui.picker.format
 
 @Composable

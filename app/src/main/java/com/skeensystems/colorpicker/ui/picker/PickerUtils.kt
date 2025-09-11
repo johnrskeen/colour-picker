@@ -16,3 +16,10 @@ fun Float.format(
             else -> (this * 255).roundToInt()
         }
     }
+
+fun Float.adjust(componentType: ComponentType): Float =
+    when (componentType) {
+        is H -> this
+        is S, is V -> 0.01f * this
+        is R, is G, is B -> this / 255f
+    }
