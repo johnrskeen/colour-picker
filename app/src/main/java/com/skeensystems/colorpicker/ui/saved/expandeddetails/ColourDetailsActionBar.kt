@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,9 +16,10 @@ import com.skeensystems.colorpicker.ui.IconAndTextButton
 
 @Composable
 fun ColourDetailsActionBar(
+    favouriteStatus: Boolean,
     onHideDetailsView: () -> Unit,
-    onChangeFavouriteStatus: () -> Unit = {},
-    onDelete: () -> Unit = {},
+    onChangeFavouriteStatus: () -> Unit,
+    onDelete: () -> Unit,
     textColour: Color,
 ) {
     Row(modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp)) {
@@ -34,7 +36,7 @@ fun ColourDetailsActionBar(
         IconAndTextButton(
             modifier = Modifier.weight(1f),
             onClick = { onChangeFavouriteStatus() },
-            icon = Icons.Outlined.Star,
+            icon = if (favouriteStatus) Icons.Outlined.Star else Icons.Outlined.StarOutline,
             text = "Favourite",
             contentDescription = "Toggle favourite colour.",
             colour = textColour,
