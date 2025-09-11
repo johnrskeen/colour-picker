@@ -9,7 +9,9 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.R
@@ -55,6 +57,7 @@ fun FineDetailsEntry(
                 focusedBorderColor = textColour,
                 focusedLabelColor = textColour,
             ),
+        textStyle = TextStyle(textAlign = TextAlign.Center),
         onValueChange = { input ->
             viewModel.setLastUpdateId(id)
             val newValue =
