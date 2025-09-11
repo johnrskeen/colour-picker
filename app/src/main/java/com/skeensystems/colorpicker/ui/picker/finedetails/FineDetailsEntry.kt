@@ -43,7 +43,7 @@ fun FineDetailsEntry(
                 } else if (colourSystem ==
                     ColourSystem.HEX
                 ) {
-                    String.format("%02X", it)
+                    String.format("%X", it)
                 } else {
                     it.toString()
                 }
