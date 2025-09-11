@@ -58,13 +58,27 @@ fun FineDetailsEntry(
         onValueChange = { input ->
             viewModel.setLastUpdateId(id)
             val newValue =
-                input.filter { it.isDigit() }.let {
+                input.uppercase().applyFilter(colourSystem).let {
                     if (it == "") 0.000001f else it.toFloat().adjust(details.componentType)
                 }
             viewModel.updateValue(details.componentType, newValue)
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions =
+            if (colourSystem == ColourSystem.HEX) {
+                KeyboardOptions(keyboardType = KeyboardType.Ascii)
+            } else {
+                KeyboardOptions(keyboardType = KeyboardType.Number)
+            },
         singleLine = true,
         shape = RoundedCornerShape(16.dp),
     )
 }
+
+fun String.applyFilter(colourSystem: ColourSystem): String =
+    when (colourSystem) {
+        ColourSystem.HEX -> {
+            val hexCharacters = listOf('A', 'B', 'C', 'D', 'E', 'F')
+            this.filter { it.isDigit() || it in hexCharacters }
+        }
+        else -> this.filter { it.isDigit() }
+    }
