@@ -18,6 +18,11 @@ class MainViewModel : ViewModel() {
     private val _cameraColour = MutableStateFlow(Color.Black)
     val cameraColour: StateFlow<Color> = _cameraColour.asStateFlow()
 
+    // TODO temporary, while colours are manually added, will be removed with full migration
+    fun clearSavedColours() {
+        _savedColours.clear()
+    }
+
     fun addColour(savedColour: SavedColour) {
         _savedColours.add(savedColour)
     }

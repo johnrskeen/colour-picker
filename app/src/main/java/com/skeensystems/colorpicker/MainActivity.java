@@ -51,6 +51,7 @@ import com.skeensystems.colorpicker.database.ColourDatabase;
 import com.skeensystems.colorpicker.database.DatabaseColour;
 import com.skeensystems.colorpicker.database.SavedColour;
 import com.skeensystems.colorpicker.databinding.ActivityMainTabsBinding;
+import com.skeensystems.colorpicker.ui.saved.SavedColoursViewModel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     // True disables ads
     // False MUST be used for production
+    // TODO compose camera doesn't work if this is set to true
     private final boolean adsDisabled = false;
     // True disables camera
     // False MUST be used for production
@@ -174,6 +176,13 @@ public class MainActivity extends AppCompatActivity {
                 else if (!closestMatches.isEmpty()) {
                     savedColours.get(i).setClosestMatch(closestMatches.get(0));
                 }
+            }
+
+            MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+            SavedColoursViewModel savedColoursViewModel = new ViewModelProvider(this).get(SavedColoursViewModel.class);
+            viewModel.clearSavedColours();
+            for (SavedColour savedColour : savedColours) {
+                viewModel.addColour(savedColour);
             }
 
             // Initialise app interface after database has been loaded
