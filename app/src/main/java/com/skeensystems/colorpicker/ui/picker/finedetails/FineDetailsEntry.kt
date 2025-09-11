@@ -23,7 +23,7 @@ fun FineDetailsEntry(
     modifier: Modifier = Modifier,
     viewModel: PickerViewModel = viewModel(LocalActivity.current as ComponentActivity),
     details: FineDetailsEntrySpec,
-    colourSystem: FineDetailsOptions,
+    colourSystem: ColourSystem,
 ) {
     val textColour = themeColour(R.attr.defaultTextColour)
     val id = colourSystem.toString() + details.componentType.toString()
@@ -41,7 +41,7 @@ fun FineDetailsEntry(
                 if (it == -1) {
                     ""
                 } else if (colourSystem ==
-                    FineDetailsOptions.HEX
+                    ColourSystem.HEX
                 ) {
                     String.format("%02X", it)
                 } else {

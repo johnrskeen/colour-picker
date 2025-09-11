@@ -16,7 +16,7 @@ import com.skeensystems.colorpicker.ui.picker.V
 @Composable
 fun getFineDetailsColumns(
     viewModel: PickerViewModel = viewModel(LocalActivity.current as ComponentActivity),
-    colourSystem: FineDetailsOptions,
+    colourSystem: ColourSystem,
 ): List<FineDetailsEntrySpec> {
     val h by viewModel.h
     val s by viewModel.s
@@ -26,19 +26,19 @@ fun getFineDetailsColumns(
     val b by viewModel.b
 
     return when (colourSystem) {
-        FineDetailsOptions.RGB ->
+        ColourSystem.RGB ->
             listOf(
                 FineDetailsEntrySpec(componentType = R, value = r),
                 FineDetailsEntrySpec(componentType = G, value = g),
                 FineDetailsEntrySpec(componentType = B, value = b),
             )
-        FineDetailsOptions.HEX ->
+        ColourSystem.HEX ->
             listOf(
                 FineDetailsEntrySpec(componentType = R, value = r),
                 FineDetailsEntrySpec(componentType = G, value = g),
                 FineDetailsEntrySpec(componentType = B, value = b),
             )
-        FineDetailsOptions.HSV ->
+        ColourSystem.HSV ->
             listOf(
                 FineDetailsEntrySpec(componentType = H, value = h),
                 FineDetailsEntrySpec(componentType = S, value = s),

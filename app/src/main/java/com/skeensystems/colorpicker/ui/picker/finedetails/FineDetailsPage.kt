@@ -24,7 +24,7 @@ import com.skeensystems.colorpicker.ui.picker.PickerViewModel
 fun FineDetailsPage(
     modifier: Modifier = Modifier,
     viewModel: PickerViewModel = viewModel(LocalActivity.current as ComponentActivity),
-    colourSystem: FineDetailsOptions,
+    colourSystem: ColourSystem,
 ) {
     val columns = getFineDetailsColumns(colourSystem = colourSystem)
 

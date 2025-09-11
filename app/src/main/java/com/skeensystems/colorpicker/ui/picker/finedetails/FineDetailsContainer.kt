@@ -24,7 +24,7 @@ fun FineDetailsContainer(modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
     Row(modifier = modifier) {
         Column(modifier = Modifier.fillMaxHeight().wrapContentWidth()) {
-            listOf(FineDetailsOptions.RGB, FineDetailsOptions.HEX, FineDetailsOptions.HSV).forEachIndexed { index, title ->
+            listOf(ColourSystem.RGB, ColourSystem.HEX, ColourSystem.HSV).forEachIndexed { index, title ->
                 Button(
                     onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
                     colors =
@@ -49,9 +49,9 @@ fun FineDetailsContainer(modifier: Modifier = Modifier) {
         }
         VerticalPager(modifier = Modifier.fillMaxHeight().weight(1f), state = pagerState) { page ->
             when (page) {
-                0 -> FineDetailsPage(colourSystem = FineDetailsOptions.RGB)
-                1 -> FineDetailsPage(colourSystem = FineDetailsOptions.HEX)
-                else -> FineDetailsPage(colourSystem = FineDetailsOptions.HSV)
+                0 -> FineDetailsPage(colourSystem = ColourSystem.RGB)
+                1 -> FineDetailsPage(colourSystem = ColourSystem.HEX)
+                else -> FineDetailsPage(colourSystem = ColourSystem.HSV)
             }
         }
     }

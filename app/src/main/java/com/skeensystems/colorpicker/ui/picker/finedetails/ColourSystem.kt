@@ -1,6 +1,6 @@
 package com.skeensystems.colorpicker.ui.picker.finedetails
 
-enum class FineDetailsOptions {
+enum class ColourSystem {
     RGB,
     HEX,
     HSV,
