@@ -15,14 +15,16 @@ import com.skeensystems.colorpicker.ui.IconAndTextButton
 
 @Composable
 fun ColourDetailsActionBar(
-    hideDetailsView: () -> Unit,
+    onHideDetailsView: () -> Unit,
+    onChangeFavouriteStatus: () -> Unit = {},
+    onDelete: () -> Unit = {},
     textColour: Color,
 ) {
     Row(modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp)) {
         IconAndTextButton(
             modifier = Modifier.weight(1f),
             onClick = {
-                hideDetailsView()
+                onHideDetailsView()
             },
             icon = Icons.AutoMirrored.Filled.ArrowBack,
             text = "Back",
@@ -31,7 +33,7 @@ fun ColourDetailsActionBar(
         )
         IconAndTextButton(
             modifier = Modifier.weight(1f),
-            onClick = { TODO("Not yet implemented") },
+            onClick = { onChangeFavouriteStatus() },
             icon = Icons.Outlined.Star,
             text = "Favourite",
             contentDescription = "Toggle favourite colour.",
@@ -39,7 +41,7 @@ fun ColourDetailsActionBar(
         )
         IconAndTextButton(
             modifier = Modifier.weight(1f),
-            onClick = { TODO("Not yet implemented") },
+            onClick = { onDelete() },
             icon = Icons.Outlined.Delete,
             text = "Delete",
             contentDescription = "Delete colour.",
