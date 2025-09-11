@@ -19,9 +19,9 @@ import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.compose.ui.platform.ComposeView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -63,7 +63,7 @@ public class ManualPickerFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ManualPickerViewModel manualPickerViewModel = new ViewModelProvider(this).get(ManualPickerViewModel.class);
+        //ManualPickerViewModel manualPickerViewModel = new ViewModelProvider(this).get(ManualPickerViewModel.class);
 
 
         sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE);
@@ -246,7 +246,11 @@ public class ManualPickerFragment extends Fragment {
         binding.saveCopyOfEditingColour.setOnClickListener(v -> saveCopyOfColour());
         binding.overwriteEditingColour.setOnClickListener(v -> overwriteColour());
 
-        return binding.getRoot();
+        ComposeView composeView = new ComposeView(requireContext());
+        PickerScreenKt.setPickerContent(composeView);
+
+        return composeView;
+        //return binding.getRoot();
     }
 
 
