@@ -85,6 +85,6 @@ fun updateValues(
     widthPx: Float,
     heightPx: Float,
 ) {
-    viewModel.updateS(x.coerceIn(0f, widthPx) / widthPx)
-    viewModel.updateV(1f - (y.coerceIn(0f, heightPx) / heightPx))
+    viewModel.updateValue(S, x.coerceIn(0f, widthPx) / widthPx)
+    viewModel.updateValue(V, 1f - (y.coerceIn(0f, heightPx) / heightPx))
 }

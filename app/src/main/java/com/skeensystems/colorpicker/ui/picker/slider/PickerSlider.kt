@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.skeensystems.colorpicker.ui.picker.H
 import com.skeensystems.colorpicker.ui.picker.PickerViewModel
 
 @Composable
@@ -28,18 +29,18 @@ fun PickerSlider(
                 .pointerInput(Unit) {
                     detectTapGestures { offset ->
                         val width = size.width.toFloat()
-                        viewModel.updateH(360f * offset.x / width)
+                        viewModel.updateValue(H, 360f * offset.x / width)
                     }
                 }.pointerInput(Unit) {
                     detectDragGestures(
                         onDragStart = { offset ->
                             val width = size.width.toFloat()
-                            viewModel.updateH(360f * offset.x / width)
+                            viewModel.updateValue(H, 360f * offset.x / width)
                         },
                         onDrag = { change, _ ->
                             change.consume()
                             val width = size.width.toFloat()
-                            viewModel.updateH(360f * change.position.x / width)
+                            viewModel.updateValue(H, 360f * change.position.x / width)
                         },
                     )
                 },
