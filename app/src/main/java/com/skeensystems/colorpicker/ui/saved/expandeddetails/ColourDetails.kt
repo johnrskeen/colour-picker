@@ -35,14 +35,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.calculateTextColour
+import com.skeensystems.colorpicker.database.SavedColour
 import com.skeensystems.colorpicker.ui.saved.SavedColoursViewModel
 import com.skeensystems.colorpicker.ui.saved.animateDetailsView
 import kotlinx.coroutines.launch
 
 @Composable
 fun ColourDetails(
-    viewModel: SavedColoursViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    localViewModel: SavedColoursViewModel = viewModel(LocalActivity.current as ComponentActivity),
     topPaddingPx: Float,
 ) {
     val scope = rememberCoroutineScope()
@@ -54,12 +57,13 @@ fun ColourDetails(
     val width = remember { Animatable(0f) }
     val height = remember { Animatable(0f) }
 
-    val visibilityStatus by remember { viewModel.visibilityStatus }
+    val visibilityStatus by remember { localViewModel.visibilityStatus }
     var activeStatus by remember { mutableStateOf<VisibilityStatus.Show?>(null) }
 
     val colour =
         activeStatus?.let { status ->
-            Color(status.savedColour.getR(), status.savedColour.getG(), status.savedColour.getB())
+            val savedColour = viewModel.savedColours.find { it.getId() == status.savedColourId } ?: SavedColour()
+            Color(savedColour.getR(), savedColour.getG(), savedColour.getB())
         } ?: Color.Black
     val textColour = colour.calculateTextColour()
 
@@ -68,15 +72,15 @@ fun ColourDetails(
             is VisibilityStatus.Hide -> {
                 animateDetailsView(
                     scope = scope,
-                    animationDuration = viewModel.animationDuration,
+                    animationDuration = localViewModel.animationDuration,
                     x = x,
                     xTo = status.to.x,
                     y = y,
                     yTo = status.to.y,
                     width = width,
-                    widthTo = viewModel.colourViewDimension.value,
+                    widthTo = localViewModel.colourViewDimension.value,
                     height = height,
-                    heightTo = viewModel.colourViewDimension.value,
+                    heightTo = localViewModel.colourViewDimension.value,
                     afterAnimation = { activeStatus = null },
                 )
             }
@@ -84,30 +88,31 @@ fun ColourDetails(
                 scope.launch {
                     x.snapTo(status.from.x)
                     y.snapTo(status.from.y)
-                    width.snapTo(viewModel.colourViewDimension.value)
-                    height.snapTo(viewModel.colourViewDimension.value)
+                    width.snapTo(localViewModel.colourViewDimension.value)
+                    height.snapTo(localViewModel.colourViewDimension.value)
 
                     activeStatus = status
                     visible = true
 
                     animateDetailsView(
                         scope = scope,
-                        animationDuration = viewModel.animationDuration,
+                        animationDuration = localViewModel.animationDuration,
                         x = x,
                         xTo = 0f,
                         y = y,
                         yTo = topPaddingPx,
                         width = width,
-                        widthTo = viewModel.screenWidth.value,
+                        widthTo = localViewModel.screenWidth.value,
                         height = height,
-                        heightTo = viewModel.screenHeight.value,
+                        heightTo = localViewModel.screenHeight.value,
                     )
                 }
             }
         }
     }
 
-    activeStatus?.let {
+    activeStatus?.let { status ->
+        val savedColour = viewModel.savedColours.find { it.getId() == status.savedColourId } ?: SavedColour()
         Box(
             modifier =
                 Modifier
@@ -119,25 +124,25 @@ fun ColourDetails(
                     }.size(width = width.value.dp, height = height.value.dp)
                     .background(color = colour, shape = RoundedCornerShape(10.dp))
                     .clickable {
-                        viewModel.setVisibilityStatus(VisibilityStatus.Hide(it.from))
+                        localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
                     },
         ) {
             AnimatedVisibility(
-                visible = width.value > viewModel.colourViewDimension.value && height.value > viewModel.colourViewDimension.value,
+                visible = width.value > localViewModel.colourViewDimension.value && height.value > localViewModel.colourViewDimension.value,
                 enter = fadeIn(animationSpec = tween(500)),
                 exit = fadeOut(),
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     Text(
                         modifier = Modifier.fillMaxWidth().padding(20.dp),
-                        text = it.savedColour.getClosestMatchString(),
+                        text = savedColour.getClosestMatchString(),
                         textAlign = TextAlign.Center,
                         color = textColour,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Medium,
                     )
                     LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                        items(it.savedColour.getDetailsList()) { details ->
+                        items(savedColour.getDetailsList()) { details ->
                             ColourCodeItem(
                                 type = details.first,
                                 value = details.second,
@@ -145,18 +150,18 @@ fun ColourDetails(
                             )
                         }
                         item {
-                            CopyEditColourActionBar(inspectedColour = it.savedColour)
+                            CopyEditColourActionBar(inspectedColour = savedColour)
                         }
                         item {
-                            RelatedColoursContainer(inspectedColour = it.savedColour)
+                            RelatedColoursContainer(inspectedColour = savedColour)
                         }
                     }
                     ColourDetailsActionBar(
-                        favouriteStatus = it.savedColour.getFavorite(),
+                        favouriteStatus = savedColour.getFavorite(),
                         onHideDetailsView = {
-                            viewModel.setVisibilityStatus(VisibilityStatus.Hide(it.from))
+                            localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
                         },
-                        onChangeFavouriteStatus = { it.savedColour.setFavorite(!it.savedColour.getFavorite()) },
+                        onChangeFavouriteStatus = { savedColour.setFavorite(!savedColour.getFavorite()) },
                         onDelete = {},
                         textColour = textColour,
                     )

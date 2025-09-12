@@ -95,7 +95,7 @@ fun SavedColoursGrid(
                     onClick = {
                         if (!selectionMode) {
                             localViewModel.setVisibilityStatus(
-                                VisibilityStatus.Show(localViewModel.savedColourCoordinates[it.getId()]!!, it),
+                                VisibilityStatus.Show(localViewModel.savedColourCoordinates[it.getId()]!!, it.getId()),
                             )
                         } else {
                             if (it in selectedItems) {
