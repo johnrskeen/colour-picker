@@ -8,11 +8,6 @@ import androidx.compose.runtime.setValue
 import com.skeensystems.colorpicker.DARK_TEXT_COLOUR
 import com.skeensystems.colorpicker.LIGHT_TEXT_COLOUR
 import com.skeensystems.colorpicker.backgroundRequiresLightText
-import com.skeensystems.colorpicker.getCMYKStringHelper
-import com.skeensystems.colorpicker.getHEXStringHelper
-import com.skeensystems.colorpicker.getHSLStringHelper
-import com.skeensystems.colorpicker.getHSVStringHelper
-import com.skeensystems.colorpicker.getRGBStringHelper
 import java.util.Locale
 
 class SavedColour(
@@ -49,16 +44,6 @@ class SavedColour(
             Pair("HSL", getHSLString()),
             Pair("CMYK", getCMYKString()),
         )
-
-    override fun getHEXString(): String = getHEXStringHelper(r, g, b)
-
-    override fun getRGBString(): String = getRGBStringHelper(r, g, b)
-
-    override fun getHSVString(): String = getHSVStringHelper(r, g, b)
-
-    override fun getHSLString(): String = getHSLStringHelper(r, g, b)
-
-    override fun getCMYKString(): String = getCMYKStringHelper(r, g, b)
 
     fun getClosestMatchString(): String =
         if (closestMatch != null) {
