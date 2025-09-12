@@ -60,10 +60,11 @@ fun ColourDetails(
     val visibilityStatus by remember { localViewModel.visibilityStatus }
     var activeStatus by remember { mutableStateOf<VisibilityStatus.Show?>(null) }
 
+    // TODO make default saved colour object for both of these in this file
     val colour =
         activeStatus?.let { status ->
-            val savedColour = viewModel.savedColours.find { it.getId() == status.savedColourId } ?: SavedColour()
-            Color(savedColour.getR(), savedColour.getG(), savedColour.getB())
+            val savedColour = viewModel.savedColours.find { it.id == status.savedColourId } ?: SavedColour(0, 0, 0, 0, false)
+            Color(savedColour.r, savedColour.g, savedColour.b)
         } ?: Color.Black
     val textColour = colour.calculateTextColour()
 
@@ -112,7 +113,7 @@ fun ColourDetails(
     }
 
     activeStatus?.let { status ->
-        val savedColour = viewModel.savedColours.find { it.getId() == status.savedColourId } ?: SavedColour()
+        val savedColour = viewModel.savedColours.find { it.id == status.savedColourId } ?: SavedColour(0, 0, 0, 0, false)
         Box(
             modifier =
                 Modifier

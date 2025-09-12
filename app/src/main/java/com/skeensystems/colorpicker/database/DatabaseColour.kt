@@ -10,14 +10,23 @@ import com.skeensystems.colorpicker.getHSLStringHelper
 import com.skeensystems.colorpicker.getHSVStringHelper
 import com.skeensystems.colorpicker.getRGBStringHelper
 
-class DatabaseColour(private val name: String, private val r: Int, private val g: Int, private val b: Int) : Colour {
-
+class DatabaseColour(
+    private val name: String,
+    override val r: Int,
+    override val g: Int,
+    override val b: Int,
+) : Colour {
     private var complementaryColour: DatabaseColour? = null
 
     // When this colour is the background, should text be white (true) or black (false)
     private val requiresLightText = backgroundRequiresLightText(r, g, b)
 
-    fun setComplementaryColour(complementaryName: String, complementaryR: Int, complementaryG: Int, complementaryB: Int) {
+    fun setComplementaryColour(
+        complementaryName: String,
+        complementaryR: Int,
+        complementaryG: Int,
+        complementaryB: Int,
+    ) {
         complementaryColour = DatabaseColour(complementaryName, complementaryR, complementaryG, complementaryB)
     }
 
@@ -27,13 +36,7 @@ class DatabaseColour(private val name: String, private val r: Int, private val g
 
     override fun getName(): String = name
 
-    override fun getR(): Int = r
-
-    override fun getG(): Int = g
-
-    override fun getB(): Int = b
-
-    override fun getTextColour(): Int = if(requiresLightText) LIGHT_TEXT_COLOUR else DARK_TEXT_COLOUR
+    override fun getTextColour(): Int = if (requiresLightText) LIGHT_TEXT_COLOUR else DARK_TEXT_COLOUR
 
     override fun getHEXString(): String = getHEXStringHelper(r, g, b)
 

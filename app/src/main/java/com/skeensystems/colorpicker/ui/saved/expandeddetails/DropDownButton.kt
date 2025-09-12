@@ -43,7 +43,8 @@ fun DropDownButton(colour: Colour) {
     val clipboardManager = LocalClipboard.current
     val scope = rememberCoroutineScope()
 
-    val colourObject = Color(colour.getR(), colour.getG(), colour.getB())
+    // TODO provide method to get compose colour
+    val colourObject = Color(colour.r, colour.g, colour.b)
     val textColour = colourObject.calculateTextColour()
 
     Column(

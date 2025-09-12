@@ -52,7 +52,7 @@ fun List<SavedColour>.filter(filterStatus: FilterOptions): List<SavedColour> =
 
 fun List<SavedColour>.sort(sortStatus: SortOptions): List<SavedColour> =
     when (sortStatus) {
-        SortOptions.NEWEST_FIRST -> sortedByDescending { it.getId() }
-        SortOptions.OLDEST_FIRST -> sortedBy { it.getId() }
-        SortOptions.BY_COLOUR -> sortedBy { it.getId() }
+        SortOptions.NEWEST_FIRST -> sortedByDescending { it.id }
+        SortOptions.OLDEST_FIRST -> sortedBy { it.id }
+        SortOptions.BY_COLOUR -> sortedBy { it.id }
     }

@@ -48,7 +48,7 @@ fun ListColour(
         targetValue = if (selected) selectedCornerRadius else 10f,
         animationSpec = tween(durationMillis = animationDuration),
     )
-    val colour = Color(savedColour.getR(), savedColour.getG(), savedColour.getB())
+    val colour = Color(savedColour.r, savedColour.g, savedColour.b)
     val textColour = colour.calculateTextColour()
     BoxWithConstraints(
         modifier =

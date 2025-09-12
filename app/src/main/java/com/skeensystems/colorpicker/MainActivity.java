@@ -435,18 +435,16 @@ public class MainActivity extends AppCompatActivity {
             reader = new BufferedReader(new FileReader(directory + "pickedColours.txt"));
             String nextLine = reader.readLine();
             while (nextLine != null) {
-                // Create the colour object
-                SavedColour savedColour = new SavedColour();
-                // Set id
-                savedColour.setId(count);
-                // Increment id counter by 1 for next iteration
-                count++;
                 // Set r, g and b values using #RRGGBB from file
-                savedColour.setR(Integer.parseInt(nextLine.substring(1, 3), 16));
-                savedColour.setG(Integer.parseInt(nextLine.substring(3, 5), 16));
-                savedColour.setB(Integer.parseInt(nextLine.substring(5), 16));
+                int r =  Integer.parseInt(nextLine.substring(1, 3), 16);
+                int g = Integer.parseInt(nextLine.substring(3, 5), 16);
+                int b = Integer.parseInt(nextLine.substring(5), 16);
+                // Create the colour object
+                SavedColour savedColour = new SavedColour(count, r, g, b, false);
                 // Add SavedColour object to the ArrayList
                 oldSavedColours.add(savedColour);
+                // Increment id counter by 1 for next iteration
+                count++;
                 nextLine = reader.readLine();
             }
         } catch (IOException ignored) {

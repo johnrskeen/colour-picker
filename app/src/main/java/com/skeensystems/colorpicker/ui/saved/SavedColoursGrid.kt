@@ -84,18 +84,18 @@ fun SavedColoursGrid(
                 )
             }
 
-            items(row, key = { it.getId() }, span = { GridItemSpan(itemSpan) }) {
+            items(row, key = { it.id }, span = { GridItemSpan(itemSpan) }) {
                 ListColour(
                     modifier = Modifier.animateItem(),
                     savedColour = it,
                     selected = it in selectedItems,
                     animationDuration = localViewModel.animationDuration,
                     onDimensionMeasured = { dimension -> localViewModel.colourViewDimension = dimension },
-                    onCoordinatesDetermined = { coordinates -> localViewModel.savedColourCoordinates[it.getId()] = coordinates },
+                    onCoordinatesDetermined = { coordinates -> localViewModel.savedColourCoordinates[it.id] = coordinates },
                     onClick = {
                         if (!selectionMode) {
                             localViewModel.setVisibilityStatus(
-                                VisibilityStatus.Show(localViewModel.savedColourCoordinates[it.getId()]!!, it.getId()),
+                                VisibilityStatus.Show(localViewModel.savedColourCoordinates[it.id]!!, it.id),
                             )
                         } else {
                             if (it in selectedItems) {

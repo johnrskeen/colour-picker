@@ -1,7 +1,10 @@
 package com.skeensystems.colorpicker.database
 
 import android.graphics.Color
-import androidx.room.Ignore
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.skeensystems.colorpicker.DARK_TEXT_COLOUR
 import com.skeensystems.colorpicker.LIGHT_TEXT_COLOUR
 import com.skeensystems.colorpicker.backgroundRequiresLightText
@@ -12,89 +15,31 @@ import com.skeensystems.colorpicker.getHSVStringHelper
 import com.skeensystems.colorpicker.getRGBStringHelper
 import java.util.Locale
 
-// Saved colour object, provides useful functions for saved colours and stores data about them
-class SavedColour : Colour {
-    private var id: Long
+class SavedColour(
+    val id: Long,
+    r: Int,
+    g: Int,
+    b: Int,
+    favourite: Boolean,
+) : Colour {
+    override var r by mutableIntStateOf(r)
+    override var g by mutableIntStateOf(g)
+    override var b by mutableIntStateOf(b)
 
-    // RGB colour values
-    private var r: Int
-    private var g: Int
-    private var b: Int
+    private var favourite by mutableStateOf(favourite)
 
-    // True if colour is favorite, otherwise false
-    private var favorite: Boolean
+    private var requiresLightText: Boolean = backgroundRequiresLightText(r, g, b)
 
-    // When this colour is the background, should text be white (true) or black (false)
-    @Ignore
-    private var requiresLightText: Boolean = false
-
-    // Stores the closest colour to this in the colour database
-    @Ignore
     private var closestMatch: DatabaseColour? = null
-
-    @Ignore
     private var firstClosest: DatabaseColour? = null
-
-    @Ignore
     private var secondClosest: DatabaseColour? = null
-
-    @Ignore
     private var thirdClosest: DatabaseColour? = null
-
-    constructor() {
-        id = 0
-        r = 0
-        g = 0
-        b = 0
-        favorite = false
-    }
-
-    @Ignore
-    constructor(id: Long, r: Int, g: Int, b: Int, favorite: Boolean) {
-        this.id = id
-        this.r = r
-        this.g = g
-        this.b = b
-        this.favorite = favorite
-        updateTextColour()
-    }
-
-    fun getId(): Long = id
-
-    fun setId(id: Long) {
-        this.id = id
-    }
 
     override fun getColour(): Int = Color.rgb(r, g, b)
 
     override fun getName(): String = closestMatch!!.getName()
 
-    override fun getR(): Int = r
-
-    fun setR(r: Int) {
-        this.r = r
-        updateTextColour()
-    }
-
-    override fun getG(): Int = g
-
-    fun setG(g: Int) {
-        this.g = g
-        updateTextColour()
-    }
-
-    override fun getB(): Int = b
-
-    fun setB(b: Int) {
-        this.b = b
-        updateTextColour()
-    }
-
     override fun getTextColour(): Int = if (requiresLightText) LIGHT_TEXT_COLOUR else DARK_TEXT_COLOUR
-
-    fun updateTextColour() {
-        requiresLightText = backgroundRequiresLightText(r, g, b)
-    }
 
     fun getDetailsList(): List<Pair<String, String>> =
         listOf(
@@ -122,10 +67,10 @@ class SavedColour : Colour {
             ""
         }
 
-    fun getFavorite(): Boolean = favorite
+    fun getFavorite(): Boolean = favourite
 
     fun setFavorite(favorite: Boolean) {
-        this.favorite = favorite
+        this.favourite = favorite
     }
 
     fun getSimilarColours(): List<DatabaseColour> = setOfNotNull(firstClosest, secondClosest, thirdClosest).toList()
@@ -138,25 +83,17 @@ class SavedColour : Colour {
             thirdClosest?.getComplementaryColour(),
         ).toList().take(3)
 
-    fun getClosestMatch(): DatabaseColour = closestMatch!!
-
     fun setClosestMatch(closestMatch: DatabaseColour) {
         this.closestMatch = closestMatch
     }
-
-    fun getFirstClosest(): DatabaseColour = firstClosest!!
 
     fun setFirstClosest(firstClosest: DatabaseColour?) {
         this.firstClosest = firstClosest
     }
 
-    fun getSecondClosest(): DatabaseColour = secondClosest!!
-
     fun setSecondClosest(secondClosest: DatabaseColour?) {
         this.secondClosest = secondClosest
     }
-
-    fun getThirdClosest(): DatabaseColour = thirdClosest!!
 
     fun setThirdClosest(thirdClosest: DatabaseColour?) {
         this.thirdClosest = thirdClosest
@@ -177,7 +114,7 @@ class SavedColour : Colour {
         )
     }
 
-    fun toSavedColourEntity(): SavedColourEntity = SavedColourEntity(id, r, g, b, favorite)
+    fun toSavedColourEntity(): SavedColourEntity = SavedColourEntity(id, r, g, b, favourite)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -190,5 +127,5 @@ class SavedColour : Colour {
 
     override fun hashCode(): Int = id.hashCode()
 
-    override fun toString(): String = "Id: $id, Colour: $r, $g, $b, Favourite: $favorite"
+    override fun toString(): String = "Id: $id, Colour: $r, $g, $b, Favourite: $favourite"
 }

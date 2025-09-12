@@ -1,16 +1,13 @@
 package com.skeensystems.colorpicker.database
 
 interface Colour {
+    val r: Int
+    val g: Int
+    val b: Int
 
     fun getColour(): Int
 
     fun getName(): String
-
-    fun getR(): Int
-
-    fun getG(): Int
-
-    fun getB(): Int
 
     fun getTextColour(): Int
 
