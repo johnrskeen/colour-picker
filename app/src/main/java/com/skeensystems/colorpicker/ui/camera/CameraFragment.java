@@ -5,8 +5,6 @@ import static com.skeensystems.colorpicker.MainActivity.mainActivityViewModel;
 import static com.skeensystems.colorpicker.MainActivity.savedColours;
 
 import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,79 +13,20 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.compose.ui.platform.ComposeView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.skeensystems.colorpicker.HelpersKt;
 import com.skeensystems.colorpicker.MainActivity;
 import com.skeensystems.colorpicker.database.DatabaseColour;
 import com.skeensystems.colorpicker.database.SavedColour;
-import com.skeensystems.colorpicker.databinding.FragmentCameraBinding;
 
 import java.util.ArrayList;
 
 public class CameraFragment extends Fragment {
 
-    private FragmentCameraBinding binding;
-
-
     @SuppressLint("ClickableViewAccessibility")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentCameraBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        // When pickColour button is clicked, add the current central colour to saved colours
-        binding.pickColour.setOnClickListener(v -> pickColour(mainActivityViewModel.getCameraR(), mainActivityViewModel.getCameraG(), mainActivityViewModel.getCameraB()));
-
-        // Observer for central colour
-        final Observer<Integer> colourObserver = newColour -> {
-            // Colour state list for new central colour
-            ColorStateList colorStateList = new ColorStateList(new int[][]{{}}, new int[]{newColour});
-            // Set tint of central preview view to the current centre colour
-            binding.pickerPreview.setBackgroundTintList(colorStateList);
-            // Update cross colour
-            int crossColour = Color.BLACK;
-            // If central colour is dark enough, change cross colour to white
-            if (HelpersKt.backgroundRequiresLightText(Color.red(newColour), Color.green(newColour),Color.blue(newColour))) {
-                crossColour = Color.WHITE;
-            }
-            // Set colour of cross (made up of these 4 views)
-            binding.crossLeft.setBackgroundColor(crossColour);
-            binding.crossRight.setBackgroundColor(crossColour);
-            binding.crossTop.setBackgroundColor(crossColour);
-            binding.crossBottom.setBackgroundColor(crossColour);
-
-
-            // Calculate closest match of the current colour (this is where an Octree might be needed, as this is calculated on every update of the central colour)
-            // Make dummy SavedColour object
-            SavedColour savedColour = new SavedColour(-1, Color.red(newColour), Color.green(newColour),Color.blue(newColour), false);
-            ArrayList<DatabaseColour> closestMatches = mainActivityViewModel.getClosestMatches(savedColour);
-            if (!closestMatches.isEmpty()) {
-                savedColour.setClosestMatch(closestMatches.get(0));
-            }
-            else {
-                // If for some reason (I can't think of any) no close colours are returned, use a blank colour instead
-                savedColour.setClosestMatch(new DatabaseColour("", 0, 0, 0));
-            }
-
-            // Update preview picked colour button to inform user of current colour they are looking at
-            binding.previewPickedColour.setBackgroundTintList(new ColorStateList(new int[][]{{}}, new int[]{savedColour.getColour()}));
-            binding.previewPickedColour.setTextColor(savedColour.getTextColour());
-            // Text: " ~ COLOUR_NAME \n COLOUR_HEX_VALUE"
-            String text = "\u2248 ";
-            text += savedColour.getClosestMatch().getName();
-            text += "\n";
-            text += savedColour.getHEXString();
-            binding.previewPickedColour.setText(text);
-        };
-        // Bind observer to getCurrentCameraColour in mainActivityViewModel
-        mainActivityViewModel.getCameraCurrentColour().observe(getViewLifecycleOwner(), colourObserver);
-
         ComposeView composeView = new ComposeView(requireContext());
         CameraScreenKt.setCameraContent(composeView);
-
         return composeView;
-        //return root;
     }
 
     /**
@@ -119,7 +58,7 @@ public class CameraFragment extends Fragment {
         new Thread(() -> colourDAO.insertAll(savedColour)).start();
 
         // Inform user colour was successfully saved
-        Snackbar.make(binding.previewPickedColour, "Saved colour " + savedColour.getHEXString() + " (\u2248" + savedColour.getName() + ")", Snackbar.LENGTH_LONG).show();
+        // Snackbar.make(binding.previewPickedColour, "Saved colour " + savedColour.getHEXString() + " (\u2248" + savedColour.getName() + ")", Snackbar.LENGTH_LONG).show();
     }
 
 
@@ -135,11 +74,5 @@ public class CameraFragment extends Fragment {
         super.onPause();
         // Enable updating of colour preview
         MainActivity.onCamera = false;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 }
