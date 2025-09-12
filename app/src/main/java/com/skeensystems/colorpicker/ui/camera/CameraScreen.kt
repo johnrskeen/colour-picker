@@ -3,10 +3,6 @@ package com.skeensystems.colorpicker.ui.camera
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,13 +18,7 @@ fun ComposeView.setCameraContent() {
 @Composable
 fun CameraScreen() {
     Scaffold(floatingActionButton = {
-        LargeFloatingActionButton(
-            onClick = {
-                TODO("Not yet implemented")
-            },
-        ) {
-            Icon(Icons.Filled.Add, "Capture colour.")
-        }
+        CaptureColourButton()
     }) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
             CameraPreview()

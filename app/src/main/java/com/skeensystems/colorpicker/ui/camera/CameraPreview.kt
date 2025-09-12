@@ -23,14 +23,13 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.GetColour
 import com.skeensystems.colorpicker.MainActivity
-import com.skeensystems.colorpicker.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
 @Composable
-fun CameraPreview(viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity)) {
+fun CameraPreview(viewModel: CameraViewModel = viewModel(LocalActivity.current as ComponentActivity)) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
