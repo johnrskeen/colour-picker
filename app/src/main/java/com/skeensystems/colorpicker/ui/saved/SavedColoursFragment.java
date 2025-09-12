@@ -52,6 +52,6 @@ public class SavedColoursFragment extends Fragment {
         // Add this colour to the savedColours list
         savedColours.add(savedColour);
         // Update the database with the new colour
-        new Thread(() -> colourDAO.insertAll(savedColour)).start();
+        new Thread(() -> colourDAO.insertAll(savedColour.toSavedColourEntity())).start();
     }
 }

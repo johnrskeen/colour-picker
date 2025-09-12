@@ -55,7 +55,7 @@ public class CameraFragment extends Fragment {
         // Add this colour to the savedColours list
         savedColours.add(savedColour);
         // Update the database with the new colour
-        new Thread(() -> colourDAO.insertAll(savedColour)).start();
+        new Thread(() -> colourDAO.insertAll(savedColour.toSavedColourEntity())).start();
 
         // Inform user colour was successfully saved
         // Snackbar.make(binding.previewPickedColour, "Saved colour " + savedColour.getHEXString() + " (\u2248" + savedColour.getName() + ")", Snackbar.LENGTH_LONG).show();

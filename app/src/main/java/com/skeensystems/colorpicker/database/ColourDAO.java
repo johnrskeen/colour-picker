@@ -10,16 +10,16 @@ import java.util.List;
 @Dao
 public interface ColourDAO {
     @Query("SELECT * FROM SavedColour")
-    List<SavedColour> getAll();
+    List<SavedColourEntity> getAll();
 
     @Query("SELECT * FROM SavedColour WHERE id IN (:colourIds)")
-    List<SavedColour> loadAllByIds(int[] colourIds);
+    List<SavedColourEntity> loadAllByIds(int[] colourIds);
 
     @Query("SELECT * FROM SavedColour WHERE r = :r AND g = :g AND b = :b LIMIT 1")
-    SavedColour findByColour(int r, int g, int b);
+    SavedColourEntity findByColour(int r, int g, int b);
 
     @Query("SELECT * FROM SavedColour WHERE favorite LIKE :favorite")
-    List<SavedColour> loadFavoriteColours(boolean favorite);
+    List<SavedColourEntity> loadFavoriteColours(boolean favorite);
 
     @Query("UPDATE SavedColour SET favorite = :favorite WHERE id = :id")
     void updateFavoriteColour(long id, boolean favorite);
@@ -28,10 +28,10 @@ public interface ColourDAO {
     void updateColour(long id, int r, int g, int b);
 
     @Insert
-    void insertAll(SavedColour... savedColours);
+    void insertAll(SavedColourEntity... savedColours);
 
     @Delete
-    void delete(SavedColour savedColour);
+    void delete(SavedColourEntity savedColour);
 
     @Query("DELETE FROM SavedColour WHERE id = :id")
     void deleteById(int id);

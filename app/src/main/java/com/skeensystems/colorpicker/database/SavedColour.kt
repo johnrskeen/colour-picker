@@ -1,10 +1,7 @@
 package com.skeensystems.colorpicker.database
 
 import android.graphics.Color
-import androidx.room.ColumnInfo
-import androidx.room.Entity
 import androidx.room.Ignore
-import androidx.room.PrimaryKey
 import com.skeensystems.colorpicker.DARK_TEXT_COLOUR
 import com.skeensystems.colorpicker.LIGHT_TEXT_COLOUR
 import com.skeensystems.colorpicker.backgroundRequiresLightText
@@ -16,23 +13,15 @@ import com.skeensystems.colorpicker.getRGBStringHelper
 import java.util.Locale
 
 // Saved colour object, provides useful functions for saved colours and stores data about them
-@Entity
 class SavedColour : Colour {
-    @PrimaryKey
     private var id: Long
 
     // RGB colour values
-    @ColumnInfo(name = "r")
     private var r: Int
-
-    @ColumnInfo(name = "g")
     private var g: Int
-
-    @ColumnInfo(name = "b")
     private var b: Int
 
     // True if colour is favorite, otherwise false
-    @ColumnInfo(name = "favorite")
     private var favorite: Boolean
 
     // When this colour is the background, should text be white (true) or black (false)
@@ -187,6 +176,8 @@ class SavedColour : Colour {
                 String.format(Locale.getDefault(), "%03d", newV)
         )
     }
+
+    fun toSavedColourEntity(): SavedColourEntity = SavedColourEntity(id, r, g, b, favorite)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

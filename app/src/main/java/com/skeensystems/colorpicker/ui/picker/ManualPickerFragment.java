@@ -377,7 +377,7 @@ public class ManualPickerFragment extends Fragment {
         // Add this colour to the savedColours list
         savedColours.add(savedColour);
         // Update the database with the new colour
-        new Thread(() -> colourDAO.insertAll(savedColour)).start();
+        new Thread(() -> colourDAO.insertAll(savedColour.toSavedColourEntity())).start();
 
         // Inform user colour was successfully saved
         Snackbar.make(binding.manualPickerMainLayout, "Saved colour", Snackbar.LENGTH_LONG).show();

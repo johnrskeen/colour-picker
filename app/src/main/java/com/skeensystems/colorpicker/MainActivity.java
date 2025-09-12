@@ -36,6 +36,7 @@ import com.skeensystems.colorpicker.database.ColourDAO;
 import com.skeensystems.colorpicker.database.ColourDatabase;
 import com.skeensystems.colorpicker.database.DatabaseColour;
 import com.skeensystems.colorpicker.database.SavedColour;
+import com.skeensystems.colorpicker.database.SavedColourEntity;
 import com.skeensystems.colorpicker.databinding.ActivityMainTabsBinding;
 import com.skeensystems.colorpicker.ui.saved.SavedColoursViewModel;
 
@@ -50,6 +51,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -120,7 +122,11 @@ public class MainActivity extends AppCompatActivity {
             migrateToDatabase();
 
             // Load saved colours from the database
-            savedColours = (ArrayList<SavedColour>) colourDAO.getAll();
+            List<SavedColourEntity> savedColourEntities = colourDAO.getAll();
+            savedColours = new ArrayList<>();
+            for (SavedColourEntity entity : savedColourEntities) {
+                savedColours.add(entity.toSavedColour());
+            }
 
             // Calculate closest matches for all colours in saved colour list and store these values in each SavedColour object
             // For more efficiency these could be stored on the database, although this way allows the colour database to be changed whenever without need for migration
@@ -513,7 +519,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Write all colours in the ArrayList to the database
         for (SavedColour savedColour : oldSavedColours) {
-            colourDAO.insertAll(savedColour);
+            colourDAO.insertAll(savedColour.toSavedColourEntity());
         }
     }
 
