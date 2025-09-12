@@ -72,7 +72,7 @@ fun ListColour(
         selectedCornerRadius = maxHeight.value
         onDimensionMeasured(maxHeight)
 
-        if (savedColour.getFavorite()) {
+        if (savedColour.favourite) {
             Icon(
                 modifier = Modifier.size(maxHeight / 3.5f, maxHeight / 3.5f),
                 imageVector = Icons.Filled.Star,

@@ -457,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
             reader = new BufferedReader(new FileReader(directory + "favoriteColours.txt"));
             String nextLine = reader.readLine();
             while (nextLine != null) {
-                oldSavedColours.get(Integer.parseInt(nextLine)).setFavorite(true);
+                oldSavedColours.get(Integer.parseInt(nextLine)).setFavourite(true);
                 nextLine = reader.readLine();
 
             }

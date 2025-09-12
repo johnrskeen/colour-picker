@@ -26,7 +26,7 @@ class SavedColour(
     override var g by mutableIntStateOf(g)
     override var b by mutableIntStateOf(b)
 
-    private var favourite by mutableStateOf(favourite)
+    var favourite by mutableStateOf(favourite)
 
     private var requiresLightText: Boolean = backgroundRequiresLightText(r, g, b)
 
@@ -66,12 +66,6 @@ class SavedColour(
         } else {
             ""
         }
-
-    fun getFavorite(): Boolean = favourite
-
-    fun setFavorite(favorite: Boolean) {
-        this.favourite = favorite
-    }
 
     fun getSimilarColours(): List<DatabaseColour> = setOfNotNull(firstClosest, secondClosest, thirdClosest).toList()
 

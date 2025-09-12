@@ -158,11 +158,11 @@ fun ColourDetails(
                         }
                     }
                     ColourDetailsActionBar(
-                        favouriteStatus = savedColour.getFavorite(),
+                        favouriteStatus = savedColour.favourite,
                         onHideDetailsView = {
                             localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
                         },
-                        onChangeFavouriteStatus = { savedColour.setFavorite(!savedColour.getFavorite()) },
+                        onChangeFavouriteStatus = { savedColour.favourite = !savedColour.favourite },
                         onDelete = {},
                         textColour = textColour,
                     )

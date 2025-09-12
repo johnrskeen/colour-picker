@@ -47,7 +47,7 @@ fun animateDetailsView(
 fun List<SavedColour>.filter(filterStatus: FilterOptions): List<SavedColour> =
     when (filterStatus) {
         FilterOptions.NO_FILTER -> this
-        FilterOptions.FAVOURITES -> filter { it.getFavorite() }
+        FilterOptions.FAVOURITES -> filter { it.favourite }
     }
 
 fun List<SavedColour>.sort(sortStatus: SortOptions): List<SavedColour> =
