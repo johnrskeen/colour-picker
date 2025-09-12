@@ -6,30 +6,17 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.Preview;
-import androidx.camera.core.resolutionselector.AspectRatioStrategy;
-import androidx.camera.core.resolutionselector.ResolutionSelector;
-import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
@@ -44,7 +31,6 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.skeensystems.colorpicker.database.AppDatabase;
 import com.skeensystems.colorpicker.database.ColourDAO;
 import com.skeensystems.colorpicker.database.ColourDatabase;
@@ -65,9 +51,6 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-
-import kotlin.Triple;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,9 +58,6 @@ public class MainActivity extends AppCompatActivity {
     // False MUST be used for production
     // TODO compose camera doesn't work if this is set to true
     private final boolean adsDisabled = false;
-    // True disables camera
-    // False MUST be used for production
-    private final boolean cameraDisabled = false;
 
     // Database object for reading/writing to the app database
     public static ColourDAO colourDAO;
@@ -87,12 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainTabsBinding binding;
 
-    // Width and height of the screen
-    public static int screenWidth = 0;
-    public static int screenHeight = 0;
-
-    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-
     // Set to true when on the camera page - when false, less work needs to be done
     public static boolean onCamera = false;
 
@@ -101,27 +75,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static MainActivityViewModel mainActivityViewModel;
 
-    // Records timestamp of last frame, so we can limit to 10fps
-    private long lastFrame;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Main shade value for the status and navigation bars (black = dark theme, white = light theme
         int mainColour = getColourFromTheme(R.attr.mainColour);
-        // Set status bar and navigation bar colours
-        accentPickedColour(mainColour);
-        Window window = getWindow();
-        window.setNavigationBarColor(mainColour);
 
         int orientation = this.getResources().getConfiguration().orientation;
         portrait = orientation == Configuration.ORIENTATION_PORTRAIT;
 
         super.onCreate(savedInstanceState);
-
-        Bitmap bitmap = Bitmap.createBitmap(24, 24, Bitmap.Config.ARGB_8888);
-        bitmap.eraseColor(mainColour);
-        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
-        getWindow().setBackgroundDrawable(bitmapDrawable);
 
         // View model for storing data (especially for values used in manual picker)
         mainActivityViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
@@ -226,12 +188,6 @@ public class MainActivity extends AppCompatActivity {
                     // Landscape layout
                     setUpLandscapeLayout();
                 }
-
-                // Get screen width and height and set to variables to be used when drawing some layouts
-                getScreenDims();
-
-                // Start camera
-                if (!cameraDisabled) startCamera();
             });
         }).start();
     }
@@ -257,12 +213,7 @@ public class MainActivity extends AppCompatActivity {
         binding.tabLayout.setSelectedTabIndicatorColor(getColourFromTheme(R.attr.reversedColour));
 
         // Get colour state list for tab colours
-        ColorStateList colourStateList;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            colourStateList = getResources().getColorStateList(R.color.tab_colours, getTheme());
-        } else {
-            colourStateList = AppCompatResources.getColorStateList(this, R.color.tab_colours);
-        }
+        ColorStateList colourStateList = getResources().getColorStateList(R.color.tab_colours, getTheme());
         // Set icon and text colours of tabs
         binding.tabLayout.setTabIconTint(colourStateList);
         binding.tabLayout.setTabTextColors(colourStateList);
@@ -566,139 +517,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    /**
-     * Start the image analysis and set camera to send output to "cameraView"
-     */
-    private void startCamera() {
-        // Run this on a background thread, to avoid blocking the main thread (on slower devices, starting the camera can take a few seconds)
-        new Thread(() -> {
-            cameraProviderFuture = ProcessCameraProvider.getInstance(MainActivity.this);
-            // Add listener to cameraProviderFuture, so we know when it is ready to bind image analysis
-            cameraProviderFuture.addListener(() -> {
-                try {
-                    ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                    bindImageAnalysis(cameraProvider);
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }, ContextCompat.getMainExecutor(MainActivity.this));
-        }).start();
-    }
-
-    /**
-     * Set up image analyser, binding to the camera, allowing us to do stuff on each frame
-     */
-    private void bindImageAnalysis(@NonNull ProcessCameraProvider cameraProvider) {
-        // Set time to "lastFrame"
-        lastFrame = System.currentTimeMillis();
-
-        // Create ImageAnalysis object, setting it to only keep the latest frame (to avoid a queue of frames backing up)
-        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().setResolutionSelector(new ResolutionSelector.Builder().setAspectRatioStrategy(AspectRatioStrategy.RATIO_16_9_FALLBACK_AUTO_STRATEGY).build())
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST).build();
-
-        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(this), imageProxy -> {
-            // Limit updates of central pixel colour to 10fps
-            boolean includeFrame = true;
-            // If current time is within 100ms of last frame time, skip this frame
-            if (System.currentTimeMillis() < lastFrame + 100) {
-                includeFrame = false;
-            }
-            // Otherwise set last frame time to the current time
-            else {
-                lastFrame = System.currentTimeMillis();
-            }
-
-            // Skip analysis if not on camera page
-            if (onCamera && includeFrame) {
-                // Get colour of pixel at centre of current frame
-                Triple<Double, Double, Double> colour = GetColour.getColour(imageProxy);
-
-                // Round RGB values to integers
-                int r = Math.toIntExact(Math.round(colour.component1()));
-                int g = Math.toIntExact(Math.round(colour.component2()));
-                int b = Math.toIntExact(Math.round(colour.component3()));
-
-                // Set RGB values in mainActivityViewModel, so we can access the colour in CameraFragment
-                mainActivityViewModel.setCameraR(r);
-                mainActivityViewModel.setCameraG(g);
-                mainActivityViewModel.setCameraB(b);
-
-                // Set colour of status and navigation bars to the current colour (CURRENTLY DISABLED)
-                // accentPickedColour(r, g, b);
-            }
-            // If not on camera page, set colour of status and navigation bars to black/white depending on night theme (NOT CURRENTLY NEEDED, AS ABOVE LINE IS NOT USED)
-            //else {
-            //    accentPickedColour(getColourFromTheme(R.attr.mainColour));
-            //}
-
-            // Finish analysis and allow next frame to be received
-            imageProxy.close();
-        });
-
-        // Build the preview and select camera to use (back)
-        Preview preview = new Preview.Builder().build();
-        CameraSelector cameraSelector = new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
-        preview.setSurfaceProvider(binding.cameraView.getSurfaceProvider());
-
-        cameraProvider.bindToLifecycle(MainActivity.this, cameraSelector, imageAnalysis, preview);
-    }
-
-    /**
-     * Returns a colour from the theme using it's id
-     *
-     * @param id R.attr.COLOUR_NAME
-     * @return TypedValue containing the colour (.data returns the colour)
-     */
     private int getColourFromTheme(int id) {
         TypedValue value = new TypedValue();
         getTheme().resolveAttribute(id, value, true);
         return value.data;
     }
-
-    /**
-     * Sets colour of status and navigation bars to inputted value
-     * @param r red part of new colour
-     * @param g green part of new colour
-     * @param b blue part of new colour
-     */
-    private void accentPickedColour(int r, int g, int b) {
-        // Format the colour as a colour object
-        int newColour = Color.rgb(r, g, b);
-        Window window = getWindow();
-        // Set background of status bar to the new colour
-        window.setStatusBarColor(newColour);
-        // Temporarily don't set this colour
-        //window.setNavigationBarColor(newColour);
-
-        // Needs min API 23 (current min is 21)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Set status bar text colour to white
-            if (HelpersKt.backgroundRequiresLightText(r, g, b)) {
-                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility() & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            }
-            // Set status bar text colour to black
-            else {
-                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            }
-        }
-    }
-
-    private void accentPickedColour(int colour) {
-        accentPickedColour(Color.red(colour), Color.green(colour), Color.blue(colour));
-    }
-
-
-    /**
-     * Get screen width and height and set the dimension variables
-     */
-    private void getScreenDims() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        screenWidth = displayMetrics.widthPixels;
-        screenHeight = displayMetrics.heightPixels;
-    }
-
 
     /**
      * Check to see if we have camera permission
