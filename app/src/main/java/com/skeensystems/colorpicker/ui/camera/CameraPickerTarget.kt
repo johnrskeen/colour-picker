@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,11 +25,11 @@ fun CameraPickerTarget(
     val targetedColour by viewModel.cameraColour.collectAsState()
     val backgroundColour = targetedColour.calculateTextColour()
     Box(modifier = modifier.size(80.dp)) {
-        Text(modifier = Modifier.size(30.dp, 3.dp).align(Alignment.CenterStart).background(backgroundColour), text = "")
-        Text(modifier = Modifier.size(30.dp, 3.dp).align(Alignment.CenterEnd).background(backgroundColour), text = "")
-        Text(modifier = Modifier.size(3.dp, 30.dp).align(Alignment.TopCenter).background(backgroundColour), text = "")
-        Text(modifier = Modifier.size(3.dp, 30.dp).align(Alignment.BottomCenter).background(backgroundColour), text = "")
+        Box(modifier = Modifier.size(30.dp, 3.dp).align(Alignment.CenterStart).background(backgroundColour))
+        Box(modifier = Modifier.size(30.dp, 3.dp).align(Alignment.CenterEnd).background(backgroundColour))
+        Box(modifier = Modifier.size(3.dp, 30.dp).align(Alignment.TopCenter).background(backgroundColour))
+        Box(modifier = Modifier.size(3.dp, 30.dp).align(Alignment.BottomCenter).background(backgroundColour))
 
-        Text(modifier = Modifier.fillMaxSize().border(width = 10.dp, color = targetedColour, shape = CircleShape), text = "")
+        Box(modifier = Modifier.fillMaxSize().border(width = 10.dp, color = targetedColour, shape = CircleShape))
     }
 }
