@@ -32,7 +32,7 @@ class SavedColour(
 
     override fun getColour(): Int = Color.rgb(r, g, b)
 
-    override fun getName(): String = closestMatch!!.getName()
+    override fun getName(): String = closestMatch?.getName() ?: ""
 
     override fun getTextColour(): Int = if (requiresLightText) LIGHT_TEXT_COLOUR else DARK_TEXT_COLOUR
 
