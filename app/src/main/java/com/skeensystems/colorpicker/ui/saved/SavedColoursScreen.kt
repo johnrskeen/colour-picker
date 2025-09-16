@@ -128,9 +128,8 @@ fun SavedColoursScreen(
                                     localViewModel.exitSelectingMode()
                                 }
                             },
-                            onSetFavouriteStatus = { favourite ->
-                                // TODO when saving to database can only update favourite status
-                                selectedItems.map { it.favourite = favourite }
+                            onSetFavouriteStatus = { favouriteStatus ->
+                                selectedItems.map { mainViewModel.setFavouriteStatus(it, favouriteStatus) }
                                 localViewModel.exitSelectingMode()
                             },
                             onDelete = {

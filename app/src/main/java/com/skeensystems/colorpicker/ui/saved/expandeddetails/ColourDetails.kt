@@ -168,7 +168,7 @@ fun ColourDetails(
                                     localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
                                 },
                                 onChangeFavouriteStatus = {
-                                    mainViewModel.toggleFavourite(it)
+                                    mainViewModel.setFavouriteStatus(it, it.favourite)
                                 },
                                 onDelete = { confirmingDelete = true },
                                 textColour = textColour,

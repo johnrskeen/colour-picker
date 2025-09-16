@@ -43,8 +43,11 @@ class MainViewModel(
         }
     }
 
-    fun toggleFavourite(savedColour: SavedColour) {
-        savedColour.favourite = !savedColour.favourite
+    fun setFavouriteStatus(
+        savedColour: SavedColour,
+        favouriteStatus: Boolean,
+    ) {
+        savedColour.favourite = favouriteStatus
         viewModelScope.launch(Dispatchers.IO) {
             colourDAO.updateFavoriteColour(savedColour.id, savedColour.favourite)
         }
