@@ -1,7 +1,6 @@
 package com.skeensystems.colorpicker
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -30,7 +29,7 @@ class MainViewModel(
         _savedColours.clear()
     }
 
-    fun addColour(savedColour: SavedColour) {
+    fun savedColour(savedColour: SavedColour) {
         _savedColours.add(savedColour)
         viewModelScope.launch(Dispatchers.IO) {
             colourDAO.insertAll(savedColour.toSavedColourEntity())
