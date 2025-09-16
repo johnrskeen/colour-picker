@@ -16,6 +16,7 @@ import com.skeensystems.colorpicker.themeColour
 
 @Composable
 fun ConfirmDelete(
+    title: String,
     confirmingDelete: Boolean,
     onDelete: () -> Unit,
     exitConfirmingDeleteMode: () -> Unit,
@@ -42,7 +43,7 @@ fun ConfirmDelete(
                     colors = ButtonDefaults.textButtonColors(contentColor = themeColour(R.attr.defaultTextColour)),
                 ) { Text("Cancel") }
             },
-            title = { Text("Delete all currently selected items?") },
+            title = { Text(title) },
             text = { Text("This action cannot be undone.") },
             containerColor = themeColour(R.attr.mainColour),
         )

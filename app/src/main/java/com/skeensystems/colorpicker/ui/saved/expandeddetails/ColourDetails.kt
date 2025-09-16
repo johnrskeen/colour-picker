@@ -175,6 +175,7 @@ fun ColourDetails(
                             )
                         }
                         ConfirmDelete(
+                            title = "Delete colour?",
                             confirmingDelete = confirmingDelete,
                             onDelete = {
                                 mainViewModel.deleteColour(it)

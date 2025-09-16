@@ -146,6 +146,7 @@ fun SavedColoursScreen(
             )
 
             ConfirmDelete(
+                title = "Delete all currently selected colours?",
                 confirmingDelete = confirmingDelete,
                 onDelete = {
                     selectedItems.forEach { mainViewModel.deleteColour(it) }
