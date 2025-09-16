@@ -38,19 +38,21 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.calculateTextColour
 import com.skeensystems.colorpicker.database.SavedColour
+import com.skeensystems.colorpicker.ui.saved.ConfirmDelete
 import com.skeensystems.colorpicker.ui.saved.SavedColoursViewModel
 import com.skeensystems.colorpicker.ui.saved.animateDetailsView
 import kotlinx.coroutines.launch
 
 @Composable
 fun ColourDetails(
-    viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    mainViewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
     localViewModel: SavedColoursViewModel = viewModel(LocalActivity.current as ComponentActivity),
     topPaddingPx: Float,
 ) {
     val scope = rememberCoroutineScope()
 
     var visible by remember { mutableStateOf(false) }
+    var confirmingDelete by remember { mutableStateOf(false) }
 
     val x = remember { Animatable(0f) }
     val y = remember { Animatable(0f) }
@@ -63,7 +65,7 @@ fun ColourDetails(
     // TODO make default saved colour object for both of these in this file
     val colour =
         activeStatus?.let { status ->
-            val savedColour = viewModel.savedColours.find { it.id == status.savedColourId } ?: SavedColour(0, 0, 0, 0, false)
+            val savedColour = mainViewModel.savedColours.find { it.id == status.savedColourId } ?: SavedColour(0, 0, 0, 0, false)
             Color(savedColour.r, savedColour.g, savedColour.b)
         } ?: Color.Black
     val textColour = colour.calculateTextColour()
@@ -113,59 +115,76 @@ fun ColourDetails(
     }
 
     activeStatus?.let { status ->
-        val savedColour = viewModel.savedColours.find { it.id == status.savedColourId } ?: SavedColour(0, 0, 0, 0, false)
-        Box(
-            modifier =
-                Modifier
-                    .offset {
-                        IntOffset(
-                            x = x.value.toInt(),
-                            y = (y.value - topPaddingPx).toInt(),
-                        )
-                    }.size(width = width.value.dp, height = height.value.dp)
-                    .background(color = colour, shape = RoundedCornerShape(10.dp))
-                    .clickable {
-                        localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
-                    },
-        ) {
-            AnimatedVisibility(
-                visible = width.value > localViewModel.colourViewDimension.value && height.value > localViewModel.colourViewDimension.value,
-                enter = fadeIn(animationSpec = tween(500)),
-                exit = fadeOut(),
+        val savedColour = mainViewModel.savedColours.find { it.id == status.savedColourId } ?: SavedColour(0, 0, 0, 0, false)
+        if (savedColour.id != 0L) {
+            Box(
+                modifier =
+                    Modifier
+                        .offset {
+                            IntOffset(
+                                x = x.value.toInt(),
+                                y = (y.value - topPaddingPx).toInt(),
+                            )
+                        }.size(width = width.value.dp, height = height.value.dp)
+                        .background(color = colour, shape = RoundedCornerShape(10.dp))
+                        .clickable {
+                            localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
+                        },
             ) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth().padding(20.dp),
-                        text = savedColour.getClosestMatchString(),
-                        textAlign = TextAlign.Center,
-                        color = textColour,
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Medium,
-                    )
-                    LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                        items(savedColour.getDetailsList()) { details ->
-                            ColourCodeItem(
-                                type = details.first,
-                                value = details.second,
+                AnimatedVisibility(
+                    visible =
+                        width.value > localViewModel.colourViewDimension.value && height.value > localViewModel.colourViewDimension.value,
+                    enter = fadeIn(animationSpec = tween(500)),
+                    exit = fadeOut(),
+                ) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth().padding(20.dp),
+                                text = savedColour.getClosestMatchString(),
+                                textAlign = TextAlign.Center,
+                                color = textColour,
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Medium,
+                            )
+                            LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                                items(savedColour.getDetailsList()) { details ->
+                                    ColourCodeItem(
+                                        type = details.first,
+                                        value = details.second,
+                                        textColour = textColour,
+                                    )
+                                }
+                                item {
+                                    CopyEditColourActionBar(inspectedColour = savedColour)
+                                }
+                                item {
+                                    RelatedColoursContainer(inspectedColour = savedColour)
+                                }
+                            }
+                            ColourDetailsActionBar(
+                                favouriteStatus = savedColour.favourite,
+                                onHideDetailsView = {
+                                    localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
+                                },
+                                onChangeFavouriteStatus = {
+                                    mainViewModel.toggleFavourite(
+                                        savedColour,
+                                    )
+                                },
+                                onDelete = { confirmingDelete = true },
                                 textColour = textColour,
                             )
                         }
-                        item {
-                            CopyEditColourActionBar(inspectedColour = savedColour)
-                        }
-                        item {
-                            RelatedColoursContainer(inspectedColour = savedColour)
-                        }
+                        ConfirmDelete(
+                            confirmingDelete = confirmingDelete,
+                            onDelete = {
+                                mainViewModel.removeColour(savedColour)
+                                localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
+                            },
+                            exitConfirmingDeleteMode = { confirmingDelete = false },
+                        )
                     }
-                    ColourDetailsActionBar(
-                        favouriteStatus = savedColour.favourite,
-                        onHideDetailsView = {
-                            localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
-                        },
-                        onChangeFavouriteStatus = { savedColour.favourite = !savedColour.favourite },
-                        onDelete = {},
-                        textColour = textColour,
-                    )
                 }
             }
         }
