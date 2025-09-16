@@ -22,10 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.GetColour
-import com.skeensystems.colorpicker.MainActivity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
 @Composable
@@ -58,7 +55,7 @@ fun CameraPreview(viewModel: CameraViewModel = viewModel(LocalActivity.current a
             if (includeFrame) lastFrame = System.currentTimeMillis()
 
             // TODO tidy this up when full migration complete
-            if (MainActivity.onCamera && includeFrame) {
+            if (includeFrame) { // MainActivity.onCamera && includeFrame) {
                 val colour = GetColour.getColour(image)
 
                 val r = Math.toIntExact(Math.round(colour.component1()))
@@ -66,12 +63,6 @@ fun CameraPreview(viewModel: CameraViewModel = viewModel(LocalActivity.current a
                 val b = Math.toIntExact(Math.round(colour.component3()))
 
                 viewModel.updateColour(r, g, b)
-
-                launch(Dispatchers.Main) {
-                    MainActivity.mainActivityViewModel.cameraR = r
-                    MainActivity.mainActivityViewModel.cameraG = g
-                    MainActivity.mainActivityViewModel.cameraB = b
-                }
             }
             image.close()
         }
