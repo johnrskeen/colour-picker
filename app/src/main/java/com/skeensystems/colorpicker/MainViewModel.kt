@@ -43,6 +43,13 @@ class MainViewModel(
             colourDAO.delete(savedColour.toSavedColourEntity())
         }
     }
+
+    fun toggleFavourite(savedColour: SavedColour) {
+        savedColour.favourite = !savedColour.favourite
+        viewModelScope.launch(Dispatchers.IO) {
+            colourDAO.updateFavoriteColour(savedColour.id, savedColour.favourite)
+        }
+    }
 }
 
 class MainViewModelFactory(
