@@ -115,8 +115,8 @@ fun ColourDetails(
     }
 
     activeStatus?.let { status ->
-        val savedColour = mainViewModel.savedColours.find { it.id == status.savedColourId } ?: SavedColour(0, 0, 0, 0, false)
-        if (savedColour.id != 0L) {
+        val savedColour = mainViewModel.savedColours.find { it.id == status.savedColourId }
+        savedColour?.let {
             Box(
                 modifier =
                     Modifier
@@ -141,14 +141,14 @@ fun ColourDetails(
                         Column(modifier = Modifier.fillMaxSize()) {
                             Text(
                                 modifier = Modifier.fillMaxWidth().padding(20.dp),
-                                text = savedColour.getClosestMatchString(),
+                                text = it.getClosestMatchString(),
                                 textAlign = TextAlign.Center,
                                 color = textColour,
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Medium,
                             )
                             LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                                items(savedColour.getDetailsList()) { details ->
+                                items(it.getDetailsList()) { details ->
                                     ColourCodeItem(
                                         type = details.first,
                                         value = details.second,
@@ -156,21 +156,19 @@ fun ColourDetails(
                                     )
                                 }
                                 item {
-                                    CopyEditColourActionBar(inspectedColour = savedColour)
+                                    CopyEditColourActionBar(inspectedColour = it)
                                 }
                                 item {
-                                    RelatedColoursContainer(inspectedColour = savedColour)
+                                    RelatedColoursContainer(inspectedColour = it)
                                 }
                             }
                             ColourDetailsActionBar(
-                                favouriteStatus = savedColour.favourite,
+                                favouriteStatus = it.favourite,
                                 onHideDetailsView = {
                                     localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
                                 },
                                 onChangeFavouriteStatus = {
-                                    mainViewModel.toggleFavourite(
-                                        savedColour,
-                                    )
+                                    mainViewModel.toggleFavourite(it)
                                 },
                                 onDelete = { confirmingDelete = true },
                                 textColour = textColour,
@@ -179,7 +177,7 @@ fun ColourDetails(
                         ConfirmDelete(
                             confirmingDelete = confirmingDelete,
                             onDelete = {
-                                mainViewModel.removeColour(savedColour)
+                                mainViewModel.removeColour(it)
                                 localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
                             },
                             exitConfirmingDeleteMode = { confirmingDelete = false },
