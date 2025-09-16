@@ -36,7 +36,7 @@ class MainViewModel(
         }
     }
 
-    fun removeColour(savedColour: SavedColour) {
+    fun deleteColour(savedColour: SavedColour) {
         _savedColours.remove(savedColour)
         viewModelScope.launch(Dispatchers.IO) {
             colourDAO.delete(savedColour.toSavedColourEntity())

@@ -148,7 +148,7 @@ fun SavedColoursScreen(
             ConfirmDelete(
                 confirmingDelete = confirmingDelete,
                 onDelete = {
-                    selectedItems.forEach { mainViewModel.removeColour(it) }
+                    selectedItems.forEach { mainViewModel.deleteColour(it) }
                     localViewModel.exitSelectingMode()
                 },
                 exitConfirmingDeleteMode = { confirmingDelete = false },

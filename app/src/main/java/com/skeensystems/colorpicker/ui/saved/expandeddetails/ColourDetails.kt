@@ -177,7 +177,7 @@ fun ColourDetails(
                         ConfirmDelete(
                             confirmingDelete = confirmingDelete,
                             onDelete = {
-                                mainViewModel.removeColour(it)
+                                mainViewModel.deleteColour(it)
                                 localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
                             },
                             exitConfirmingDeleteMode = { confirmingDelete = false },
