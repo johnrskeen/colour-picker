@@ -62,22 +62,6 @@ class SavedColour(
             thirdClosest?.getComplementaryColour(),
         ).toList().take(3)
 
-    fun setClosestMatch(closestMatch: DatabaseColour) {
-        this.closestMatch = closestMatch
-    }
-
-    fun setFirstClosest(firstClosest: DatabaseColour?) {
-        this.firstClosest = firstClosest
-    }
-
-    fun setSecondClosest(secondClosest: DatabaseColour?) {
-        this.secondClosest = secondClosest
-    }
-
-    fun setThirdClosest(thirdClosest: DatabaseColour?) {
-        this.thirdClosest = thirdClosest
-    }
-
     fun getSortValue(): String {
         val hsv = FloatArray(3)
         Color.RGBToHSV(r, g, b, hsv)
