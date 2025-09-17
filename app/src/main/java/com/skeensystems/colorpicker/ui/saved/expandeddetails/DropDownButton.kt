@@ -1,5 +1,7 @@
 package com.skeensystems.colorpicker.ui.saved.expandeddetails
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,14 +32,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.calculateTextColour
 import com.skeensystems.colorpicker.copyToClipboard
 import com.skeensystems.colorpicker.database.Colour
+import com.skeensystems.colorpicker.database.SavedColour
 import com.skeensystems.colorpicker.ui.IconAndTextButton
 import kotlinx.coroutines.launch
 
 @Composable
-fun DropDownButton(colour: Colour) {
+fun DropDownButton(
+    viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    colour: Colour,
+) {
     var displayingContent by remember { mutableStateOf(false) }
 
     val clipboardManager = LocalClipboard.current
@@ -103,7 +111,15 @@ fun DropDownButton(colour: Colour) {
                 IconAndTextButton(
                     modifier = Modifier.weight(1f).padding(20.dp),
                     onClick = {
-                        TODO("Not yet implemented")
+                        viewModel.savedColour(
+                            SavedColour(
+                                id = System.currentTimeMillis(),
+                                r = colour.r,
+                                g = colour.g,
+                                b = colour.b,
+                                favourite = false,
+                            ),
+                        )
                     },
                     icon = Icons.Outlined.BookmarkAdd,
                     text = "Save",
