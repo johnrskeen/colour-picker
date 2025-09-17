@@ -4,28 +4,21 @@ import android.graphics.Color
 import com.skeensystems.colorpicker.DARK_TEXT_COLOUR
 import com.skeensystems.colorpicker.LIGHT_TEXT_COLOUR
 import com.skeensystems.colorpicker.backgroundRequiresLightText
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 class DatabaseColour(
-    private val name: String,
+    @SerialName("n") private val name: String,
     override val r: Int,
     override val g: Int,
     override val b: Int,
+    @SerialName("c") private val complementaryName: String,
 ) : Colour {
     private var complementaryColour: DatabaseColour? = null
 
     // When this colour is the background, should text be white (true) or black (false)
     private val requiresLightText = backgroundRequiresLightText(r, g, b)
-
-    fun setComplementaryColour(
-        complementaryName: String,
-        complementaryR: Int,
-        complementaryG: Int,
-        complementaryB: Int,
-    ) {
-        complementaryColour = DatabaseColour(complementaryName, complementaryR, complementaryG, complementaryB)
-    }
 
     fun getComplementaryColour(): DatabaseColour? = complementaryColour
 
