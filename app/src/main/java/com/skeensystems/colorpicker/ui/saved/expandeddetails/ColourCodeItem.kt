@@ -29,12 +29,14 @@ fun ColourCodeItem(
     val scope = rememberCoroutineScope()
 
     Row(
-        Modifier.fillMaxWidth().padding(10.dp).clickable {
-            scope.launch {
-                val clip = ClipData.newPlainText(type, "$type $value").toClipEntry()
-                clipboardManager.setClipEntry(clip)
-            }
-        },
+        Modifier
+            .fillMaxWidth()
+            .clickable {
+                scope.launch {
+                    val clip = ClipData.newPlainText(type, "$type $value").toClipEntry()
+                    clipboardManager.setClipEntry(clip)
+                }
+            }.padding(10.dp),
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 10.dp),
