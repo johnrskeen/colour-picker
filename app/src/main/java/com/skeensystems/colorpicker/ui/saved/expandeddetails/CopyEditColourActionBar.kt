@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.skeensystems.colorpicker.EditEvent
 import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.R
 import com.skeensystems.colorpicker.copyToClipboard
@@ -49,7 +50,7 @@ fun CopyEditColourActionBar(
             modifier = Modifier.weight(1f).padding(5.dp),
             containerColor = themeColour(R.attr.mainColour),
             contentColor = themeColour(R.attr.defaultTextColour),
-            onClick = { viewModel.setEditingColour(inspectedColour) },
+            onClick = { viewModel.setEditingColour(EditEvent(colour = inspectedColour)) },
             icon = { Icon(Icons.Filled.Edit, "Edit colour details.") },
             text = { Text("Edit") },
         )

@@ -17,8 +17,8 @@ class MainViewModel(
     private val _savedColours = mutableStateListOf<SavedColour>()
     val savedColours: List<SavedColour> = _savedColours
 
-    private val _editingColour = mutableStateOf<SavedColour?>(null)
-    val editingColour: State<SavedColour?> = _editingColour
+    private val _editingColour = mutableStateOf<EditEvent?>(null)
+    val editingColour: State<EditEvent?> = _editingColour
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -58,8 +58,8 @@ class MainViewModel(
         }
     }
 
-    fun setEditingColour(savedColour: SavedColour?) {
-        _editingColour.value = savedColour
+    fun setEditingColour(editEvent: EditEvent) {
+        _editingColour.value = editEvent
     }
 }
 
