@@ -39,7 +39,7 @@ fun RelatedColoursContainer(inspectedColour: SavedColour) {
             fontWeight = FontWeight.Medium,
         )
         similarColours.forEach {
-            DropDownButton(it)
+            DropDownButton(colour = it)
         }
 
         Text(
@@ -51,7 +51,7 @@ fun RelatedColoursContainer(inspectedColour: SavedColour) {
             fontWeight = FontWeight.Medium,
         )
         complementaryColours.forEach {
-            DropDownButton(it)
+            DropDownButton(colour = it)
         }
     }
 }
