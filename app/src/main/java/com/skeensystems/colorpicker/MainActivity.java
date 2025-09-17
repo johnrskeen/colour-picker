@@ -121,24 +121,6 @@ public class MainActivity extends AppCompatActivity {
                 savedColours.add(entity.toSavedColour());
             }
 
-            // Calculate closest matches for all colours in saved colour list and store these values in each SavedColour object
-            // For more efficiency these could be stored on the database, although this way allows the colour database to be changed whenever without need for migration
-            for (int i = 0; i < savedColours.size(); i++) {
-                // Get closest matches for each colour
-                ArrayList<DatabaseColour> closestMatches = mainActivityViewModel.getClosestMatches(savedColours.get(i));
-                // If size equals four then we have a closest match and next three closest, otherwise just set the closest colour if there are 1, 2, or 3 close match colours returned
-                // So far, I have not seen less than four colours be returned here
-                if (closestMatches.size() == 4) {
-                    savedColours.get(i).setClosestMatch(closestMatches.get(0));
-                    savedColours.get(i).setFirstClosest(closestMatches.get(1));
-                    savedColours.get(i).setSecondClosest(closestMatches.get(2));
-                    savedColours.get(i).setThirdClosest(closestMatches.get(3));
-                }
-                else if (!closestMatches.isEmpty()) {
-                    savedColours.get(i).setClosestMatch(closestMatches.get(0));
-                }
-            }
-
             MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
             SavedColoursViewModel savedColoursViewModel = new ViewModelProvider(this).get(SavedColoursViewModel.class);
             viewModel.clearSavedColours();
