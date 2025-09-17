@@ -6,22 +6,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.skeensystems.colorpicker.database.ColourDatabase;
 import com.skeensystems.colorpicker.database.DatabaseColour;
 import com.skeensystems.colorpicker.database.SavedColour;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import kotlin.Triple;
 
 public class MainActivityViewModel extends ViewModel {
-
-    // Instance of ColourDatabase to use when calculating closest matches
-    private ColourDatabase colourDatabase;
-    // Whether we have set a colour database
-    private boolean colourDatabaseActive;
-
     // LiveData for Manual Picker
     // All of these keep all the other up to date
     // (i.e. changing h value needs to also update rgb values)
@@ -60,10 +56,6 @@ public class MainActivityViewModel extends ViewModel {
     public SavedColour savedColourToEdit;
 
     public MainActivityViewModel() {
-        // Colour database defaults to null (to get any meaningful closest matches, this must be set to an instance of ColourDatabase)
-        colourDatabaseActive = false;
-        colourDatabase = null;
-
         // Default colour for manual picker is RED
         rString = new MutableLiveData<>(255);
         gString = new MutableLiveData<>(0);
@@ -95,23 +87,13 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     /**
-     * Sets the colour database
-     * @param colourDatabase instance of ColourDatabase to use when calculating closest matches
-     */
-    public void setColourDatabase(ColourDatabase colourDatabase) {
-        this.colourDatabase = colourDatabase;
-        colourDatabaseActive = true;
-    }
-
-    /**
      * Gets up to four colours from the colour database that are closest to the inputted colour
      * If the colour database has not yet been set, return the colour BLACK (the colour database will always be set first though)
      * @param colour colour to find the closest matches with
      * @return ArrayList<DatabaseColour>(CLOSEST_MATCH, FIRST_CLOSEST, SECOND_CLOSEST, THIRD_CLOSEST) (yes, I know 1st closest is actually 2nd closest etc, but it doesn't really matter)
      */
     public ArrayList<DatabaseColour> getClosestMatches(SavedColour colour) {
-        if (!colourDatabaseActive) return new ArrayList<>(Collections.singleton(new DatabaseColour("", 0, 0, 0)));
-        return colourDatabase.getClosestMatches(colour);
+        return (ArrayList<DatabaseColour>) List.of(new DatabaseColour("", 0, 0, 0, ""));
     }
 
     /**

@@ -33,7 +33,6 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.skeensystems.colorpicker.database.AppDatabase;
 import com.skeensystems.colorpicker.database.ColourDAO;
-import com.skeensystems.colorpicker.database.ColourDatabase;
 import com.skeensystems.colorpicker.database.DatabaseColour;
 import com.skeensystems.colorpicker.database.SavedColour;
 import com.skeensystems.colorpicker.database.SavedColourEntity;
@@ -108,12 +107,6 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "colour_picker_database").build();
             colourDAO = db.colourDAO();
-
-            // Initialise the colour database
-            try {
-                mainActivityViewModel.setColourDatabase(new ColourDatabase(this));
-            } catch (IOException ignored) {
-            }
 
             // Maybe need to close the database here to stop leaks?
             //db.close();
