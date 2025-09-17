@@ -4,7 +4,9 @@ import android.graphics.Color
 import com.skeensystems.colorpicker.DARK_TEXT_COLOUR
 import com.skeensystems.colorpicker.LIGHT_TEXT_COLOUR
 import com.skeensystems.colorpicker.backgroundRequiresLightText
+import kotlinx.serialization.Serializable
 
+@Serializable
 class DatabaseColour(
     private val name: String,
     override val r: Int,
