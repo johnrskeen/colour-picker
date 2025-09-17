@@ -47,14 +47,24 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun App(colourDAO: ColourDAO) {
-    viewModel<MainViewModel>(
-        factory = MainViewModelFactory(colourDAO),
-        viewModelStoreOwner = LocalActivity.current as ComponentActivity,
-    )
+    val viewModel: MainViewModel =
+        viewModel(
+            factory = MainViewModelFactory(colourDAO),
+            viewModelStoreOwner = LocalActivity.current as ComponentActivity,
+        )
 
     val pagerState = rememberPagerState(pageCount = { 3 }, initialPage = 1)
     var selectedTab by remember { mutableIntStateOf(1) }
     val scope = rememberCoroutineScope()
+
+    val editingColour by viewModel.editingColour
+    LaunchedEffect(editingColour) {
+        editingColour?.let {
+            scope.launch {
+                pagerState.scrollToPage(2)
+            }
+        }
+    }
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }
