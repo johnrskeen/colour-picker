@@ -1,5 +1,6 @@
 package com.skeensystems.colorpicker.ui.saved.expandeddetails
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,7 +23,7 @@ fun ColourDetailsActionBar(
     onDelete: () -> Unit,
     textColour: Color,
 ) {
-    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp)) {
+    Row(modifier = Modifier.fillMaxWidth()) {
         IconAndTextButton(
             modifier = Modifier.weight(1f),
             onClick = {
@@ -32,6 +33,7 @@ fun ColourDetailsActionBar(
             text = "Back",
             contentDescription = "Close colour details preview.",
             colour = textColour,
+            afterOnClickPadding = PaddingValues(vertical = 20.dp),
         )
         IconAndTextButton(
             modifier = Modifier.weight(1f),
@@ -40,6 +42,7 @@ fun ColourDetailsActionBar(
             text = "Favourite",
             contentDescription = "Toggle favourite colour.",
             colour = textColour,
+            afterOnClickPadding = PaddingValues(vertical = 20.dp),
         )
         IconAndTextButton(
             modifier = Modifier.weight(1f),
@@ -48,6 +51,7 @@ fun ColourDetailsActionBar(
             text = "Delete",
             contentDescription = "Delete colour.",
             colour = textColour,
+            afterOnClickPadding = PaddingValues(vertical = 20.dp),
         )
     }
 }

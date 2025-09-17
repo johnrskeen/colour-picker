@@ -2,6 +2,7 @@ package com.skeensystems.colorpicker.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -22,12 +23,14 @@ fun IconAndTextButton(
     text: String,
     contentDescription: String,
     colour: Color,
+    afterOnClickPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     Column(
         modifier =
-            modifier.clickable {
-                onClick()
-            },
+            modifier
+                .clickable {
+                    onClick()
+                }.padding(paddingValues = afterOnClickPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(imageVector = icon, contentDescription = contentDescription, tint = colour)
