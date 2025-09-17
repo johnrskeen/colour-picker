@@ -1,6 +1,8 @@
 package com.skeensystems.colorpicker
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -14,6 +16,9 @@ class MainViewModel(
 ) : ViewModel() {
     private val _savedColours = mutableStateListOf<SavedColour>()
     val savedColours: List<SavedColour> = _savedColours
+
+    private val _editingColour = mutableStateOf<SavedColour?>(null)
+    val editingColour: State<SavedColour?> = _editingColour
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -51,6 +56,10 @@ class MainViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             colourDAO.updateFavoriteColour(savedColour.id, savedColour.favourite)
         }
+    }
+
+    fun setEditingColour(savedColour: SavedColour?) {
+        _editingColour.value = savedColour
     }
 }
 
