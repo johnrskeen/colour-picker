@@ -39,6 +39,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.MainViewModelFactory
 import com.skeensystems.colorpicker.database.ColourDAO
+import com.skeensystems.colorpicker.database.ColourDatabase
 import com.skeensystems.colorpicker.ui.camera.CameraScreen
 import com.skeensystems.colorpicker.ui.picker.PickerScreen
 import com.skeensystems.colorpicker.ui.saved.SavedColoursScreen
@@ -47,9 +48,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun App(colourDAO: ColourDAO) {
+    val colourDatabase = ColourDatabase(LocalContext.current)
     val viewModel: MainViewModel =
         viewModel(
-            factory = MainViewModelFactory(colourDAO),
+            factory = MainViewModelFactory(colourDAO, colourDatabase),
             viewModelStoreOwner = LocalActivity.current as ComponentActivity,
         )
 

@@ -7,12 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.skeensystems.colorpicker.database.ColourDAO
+import com.skeensystems.colorpicker.database.ColourDatabase
 import com.skeensystems.colorpicker.database.SavedColour
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val colourDAO: ColourDAO,
+    private val colourDatabase: ColourDatabase,
 ) : ViewModel() {
     private val _savedColours = mutableStateListOf<SavedColour>()
     val savedColours: List<SavedColour> = _savedColours
@@ -65,11 +67,12 @@ class MainViewModel(
 
 class MainViewModelFactory(
     private val colourDAO: ColourDAO,
+    private val colourDatabase: ColourDatabase,
 ) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MainViewModel(colourDAO) as T
+            return MainViewModel(colourDAO, colourDatabase) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
