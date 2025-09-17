@@ -111,15 +111,15 @@ fun DropDownButton(
                 IconAndTextButton(
                     modifier = Modifier.weight(1f).padding(20.dp),
                     onClick = {
-                        viewModel.savedColour(
+                        val newColour =
                             SavedColour(
                                 id = System.currentTimeMillis(),
                                 r = colour.r,
                                 g = colour.g,
                                 b = colour.b,
                                 favourite = false,
-                            ),
-                        )
+                            )
+                        viewModel.saveColour(newColour)
                     },
                     icon = Icons.Outlined.BookmarkAdd,
                     text = "Save",

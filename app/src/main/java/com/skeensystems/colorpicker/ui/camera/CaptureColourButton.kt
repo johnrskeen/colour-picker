@@ -55,7 +55,7 @@ fun CaptureColourButton(
                     (targetedColour.blue * 255).toInt(),
                     false,
                 )
-            viewModel.savedColour(newColour)
+            viewModel.saveColour(newColour)
             scope.launch {
                 snackbarHostState.showSnackbar(
                     "Saved colour ${newColour.getHEXString()} (\u2248 ${newColour.getName()})",

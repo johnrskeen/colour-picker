@@ -34,7 +34,7 @@ class MainViewModel(
         _savedColours.clear()
     }
 
-    fun savedColour(savedColour: SavedColour) {
+    fun saveColour(savedColour: SavedColour) {
         _savedColours.add(savedColour)
         viewModelScope.launch(Dispatchers.IO) {
             colourDAO.insertAll(savedColour.toSavedColourEntity())

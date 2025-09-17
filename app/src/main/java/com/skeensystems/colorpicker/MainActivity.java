@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             SavedColoursViewModel savedColoursViewModel = new ViewModelProvider(this).get(SavedColoursViewModel.class);
             viewModel.clearSavedColours();
             for (SavedColour savedColour : savedColours) {
-                viewModel.savedColour(savedColour);
+                viewModel.saveColour(savedColour);
             }
 
             // Initialise app interface after database has been loaded
