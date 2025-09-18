@@ -37,7 +37,7 @@ fun themeColour(attrResId: Int): Color {
 
 // TODO extract to Colour objects
 private fun Colour.generateColourCopyData(): String =
-    getName() +
+    name +
         "\nHEX ${getHEXString()}" +
         "\nHEX ${getRGBString()}" +
         "\nHSV ${getHSVString()}" +

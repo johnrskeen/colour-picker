@@ -28,7 +28,7 @@ class MainViewModel(
             colourDAO.all
                 .forEach {
                     val (closestMatch, similarColours, complementaryColours) = calculateRelatedColours(it.r, it.g, it.b)
-                    _savedColours.add(it.toSavedColour(closestMatch, similarColours, complementaryColours))
+                    _savedColours.add(it.toSavedColour(closestMatch.name, similarColours, complementaryColours))
                 }
         }
     }
@@ -61,7 +61,17 @@ class MainViewModel(
         b: Int,
     ): SavedColour {
         val (closestMatch, similarColours, complementaryColours) = calculateRelatedColours(r, g, b)
-        val newColour = SavedColour(System.currentTimeMillis(), r, g, b, false, closestMatch, similarColours, complementaryColours)
+        val newColour =
+            SavedColour(
+                id = System.currentTimeMillis(),
+                name = closestMatch.name,
+                r = r,
+                g = g,
+                b = b,
+                favourite = false,
+                similarColours = similarColours,
+                complementaryColours = complementaryColours,
+            )
         _savedColours.add(newColour)
         viewModelScope.launch(Dispatchers.IO) {
             colourDAO.insertAll(newColour.toSavedColourEntity())

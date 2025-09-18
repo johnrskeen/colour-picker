@@ -7,13 +7,12 @@ import com.skeensystems.colorpicker.getHSVStringHelper
 import com.skeensystems.colorpicker.getRGBStringHelper
 
 interface Colour {
+    val name: String
     val r: Int
     val g: Int
     val b: Int
 
     fun getColour(): Int
-
-    fun getName(): String
 
     fun getTextColour(): Int
 

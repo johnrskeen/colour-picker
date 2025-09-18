@@ -13,8 +13,8 @@ data class SavedColourEntity(
     @ColumnInfo(name = "favorite") val favourite: Boolean,
 ) {
     fun toSavedColour(
-        closestMatch: DatabaseColour,
+        name: String,
         similarColours: Set<DatabaseColour>,
         complementaryColours: Set<DatabaseColour>,
-    ): SavedColour = SavedColour(id, r, g, b, favourite, closestMatch, similarColours, complementaryColours)
+    ): SavedColour = SavedColour(id, name, r, g, b, favourite, similarColours, complementaryColours)
 }

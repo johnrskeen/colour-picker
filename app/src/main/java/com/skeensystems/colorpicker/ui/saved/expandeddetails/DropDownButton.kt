@@ -74,7 +74,7 @@ fun DropDownButton(
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
-                text = colour.getName(),
+                text = colour.name,
                 textAlign = TextAlign.Center,
                 color = textColour,
                 fontSize = 18.sp,

@@ -40,5 +40,5 @@ class ColourDatabase(
             (g - colour.g).toFloat().pow(2) +
             (b - colour.b).toFloat().pow(2)
 
-    fun getColourByName(name: String): DatabaseColour? = colourDatabase.find { it.getName() == name }
+    fun getColourByName(name: String): DatabaseColour? = colourDatabase.find { it.name == name }
 }

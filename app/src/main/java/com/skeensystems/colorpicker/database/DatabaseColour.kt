@@ -10,22 +10,16 @@ import kotlinx.serialization.Serializable
 // TODO tidying up is needed
 @Serializable
 class DatabaseColour(
-    @SerialName("n") private val name: String,
+    @SerialName("n") override val name: String,
     override val r: Int,
     override val g: Int,
     override val b: Int,
     @SerialName("c") val complementaryName: String,
 ) : Colour {
-    private var complementaryColour: DatabaseColour? = null
-
     // When this colour is the background, should text be white (true) or black (false)
     private val requiresLightText = backgroundRequiresLightText(r, g, b)
 
-    fun getComplementaryColour(): DatabaseColour? = complementaryColour
-
     override fun getColour(): Int = Color.rgb(r, g, b)
-
-    override fun getName(): String = name
 
     override fun getTextColour(): Int = if (requiresLightText) LIGHT_TEXT_COLOUR else DARK_TEXT_COLOUR
 

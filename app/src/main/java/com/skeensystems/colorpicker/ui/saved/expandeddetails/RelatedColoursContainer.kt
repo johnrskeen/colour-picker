@@ -19,9 +19,6 @@ import com.skeensystems.colorpicker.themeColour
 
 @Composable
 fun RelatedColoursContainer(inspectedColour: SavedColour) {
-    val similarColours = inspectedColour.getSimilarColours()
-    val complementaryColours = inspectedColour.getComplementaryColours()
-
     Column(
         modifier =
             Modifier
@@ -38,7 +35,7 @@ fun RelatedColoursContainer(inspectedColour: SavedColour) {
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
         )
-        similarColours.forEach {
+        inspectedColour.similarColours.forEach {
             DropDownButton(colour = it)
         }
 
@@ -50,7 +47,7 @@ fun RelatedColoursContainer(inspectedColour: SavedColour) {
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
         )
-        complementaryColours.forEach {
+        inspectedColour.complementaryColours.forEach {
             DropDownButton(colour = it)
         }
     }

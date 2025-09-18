@@ -12,13 +12,13 @@ import java.util.Locale
 
 class SavedColour(
     val id: Long,
+    override val name: String,
     override val r: Int,
     override val g: Int,
     override val b: Int,
     favourite: Boolean,
-    private val closestMatch: DatabaseColour,
-    private val similarColours: Set<DatabaseColour>,
-    private val complementaryColours: Set<DatabaseColour>,
+    val similarColours: Set<DatabaseColour>,
+    val complementaryColours: Set<DatabaseColour>,
 ) : Colour {
     // override var r by mutableIntStateOf(r)
     // override var g by mutableIntStateOf(g)
@@ -29,8 +29,6 @@ class SavedColour(
     private var requiresLightText: Boolean = backgroundRequiresLightText(r, g, b)
 
     override fun getColour(): Int = Color.rgb(r, g, b)
-
-    override fun getName(): String = closestMatch.getName()
 
     override fun getTextColour(): Int = if (requiresLightText) LIGHT_TEXT_COLOUR else DARK_TEXT_COLOUR
 
@@ -43,11 +41,7 @@ class SavedColour(
             Pair("CMYK", getCMYKString()),
         )
 
-    fun getClosestMatchString(): String = "\u2248 $closestMatch"
-
-    fun getSimilarColours(): List<DatabaseColour> = similarColours.toList()
-
-    fun getComplementaryColours(): List<DatabaseColour> = complementaryColours.toList()
+    fun getClosestMatchString(): String = "\u2248 $name"
 
     fun getSortValue(): String {
         val hsv = FloatArray(3)
