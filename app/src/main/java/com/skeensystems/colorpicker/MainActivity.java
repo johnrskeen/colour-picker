@@ -4,23 +4,15 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.Display;
-import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.room.Room;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -30,14 +22,9 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.material.tabs.TabLayoutMediator;
-import com.skeensystems.colorpicker.database.AppDatabase;
 import com.skeensystems.colorpicker.database.ColourDAO;
-import com.skeensystems.colorpicker.database.DatabaseColour;
 import com.skeensystems.colorpicker.database.SavedColour;
 import com.skeensystems.colorpicker.database.SavedColourEntity;
-import com.skeensystems.colorpicker.databinding.ActivityMainTabsBinding;
-import com.skeensystems.colorpicker.ui.saved.SavedColoursViewModel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,8 +37,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,25 +48,17 @@ public class MainActivity extends AppCompatActivity {
     // Database object for reading/writing to the app database
     public static ColourDAO colourDAO;
 
-    // List containing all colours that have been picked
-    public static ArrayList<SavedColour> savedColours;
-
-    public static MainActivityViewModel mainActivityViewModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // View model for storing data (especially for values used in manual picker)
-        mainActivityViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
 
         // Get previous HSV values used in ManualPicker
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
         // Set these HSV values, so ManualPicker displays last colour when opened
-        mainActivityViewModel.setH(sharedPref.getInt(getString(R.string.previousManualPickerH), 0), true);
-        mainActivityViewModel.setS(sharedPref.getInt(getString(R.string.previousManualPickerS), 100), true);
-        mainActivityViewModel.setV(sharedPref.getInt(getString(R.string.previousManualPickerV), 100), true);
+//        mainActivityViewModel.setH(sharedPref.getInt(getString(R.string.previousManualPickerH), 0), true);
+//        mainActivityViewModel.setS(sharedPref.getInt(getString(R.string.previousManualPickerS), 100), true);
+//        mainActivityViewModel.setV(sharedPref.getInt(getString(R.string.previousManualPickerV), 100), true);
 
         // Check for camera permission (and request if necessary)
         String[] Permissions = {Manifest.permission.CAMERA};
