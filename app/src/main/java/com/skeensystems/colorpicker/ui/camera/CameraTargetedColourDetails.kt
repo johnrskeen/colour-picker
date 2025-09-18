@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.calculateTextColour
 import com.skeensystems.colorpicker.getClosestColour
 import com.skeensystems.colorpicker.getHexString
@@ -22,10 +23,11 @@ import com.skeensystems.colorpicker.getHexString
 @Composable
 fun CameraTargetedColourDetails(
     modifier: Modifier = Modifier,
-    viewModel: CameraViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    mainViewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    localViewModel: CameraViewModel = viewModel(LocalActivity.current as ComponentActivity),
 ) {
-    val targetedColour by viewModel.cameraColour.collectAsState()
-    val closestColour = targetedColour.getClosestColour()
+    val targetedColour by localViewModel.cameraColour.collectAsState()
+    val closestColour = targetedColour.getClosestColour(mainViewModel)
     val hexString = targetedColour.getHexString()
     val textColour = targetedColour.calculateTextColour()
     Text(

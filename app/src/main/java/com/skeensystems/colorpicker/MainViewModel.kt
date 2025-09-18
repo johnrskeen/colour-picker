@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.skeensystems.colorpicker.database.Colour
 import com.skeensystems.colorpicker.database.ColourDAO
 import com.skeensystems.colorpicker.database.ColourDatabase
 import com.skeensystems.colorpicker.database.DatabaseColour
@@ -48,6 +49,15 @@ class MainViewModel(
                 .take(3)
                 .toSet()
         return Triple(closestMatch, similarColours, complementaryColours)
+    }
+
+    fun getClosestColour(
+        r: Int,
+        g: Int,
+        b: Int,
+    ): String {
+        val (closestMatch, _, _) = calculateRelatedColours(r, g, b)
+        return closestMatch.name
     }
 
     // TODO temporary, while colours are manually added, will be removed with full migration
