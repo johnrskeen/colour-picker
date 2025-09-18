@@ -66,24 +66,10 @@ public class MainActivity extends AppCompatActivity {
     // List containing all colours that have been picked
     public static ArrayList<SavedColour> savedColours;
 
-    private ActivityMainTabsBinding binding;
-
-    // Set to true when on the camera page - when false, less work needs to be done
-    public static boolean onCamera = false;
-
-    // Set to true when device is portrait, false when landscape
-    public static boolean portrait = true;
-
     public static MainActivityViewModel mainActivityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Main shade value for the status and navigation bars (black = dark theme, white = light theme
-        int mainColour = getColourFromTheme(R.attr.mainColour);
-
-        int orientation = this.getResources().getConfiguration().orientation;
-        portrait = orientation == Configuration.ORIENTATION_PORTRAIT;
-
         super.onCreate(savedInstanceState);
 
         // View model for storing data (especially for values used in manual picker)
@@ -104,157 +90,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Do database stuff on background thread
-        new Thread(() -> {
-            // If this is the first time the user has opened v2+, this converts previous files into new database data
-            migrateToDatabase();
-
-            // Initialise app interface after database has been loaded
-            //TODO loading screen for before this
-            runOnUiThread(() -> {
-                binding = ActivityMainTabsBinding.inflate(getLayoutInflater());
-                setContentView(binding.getRoot());
-
-                // Set up bottom navigation view pager
-                MainActivityCollectionAdapter collectionAdapter = new MainActivityCollectionAdapter(this);
-                binding.pager.setAdapter(collectionAdapter);
-                // Keep all three pages active (I don't think this is really necessary, but it might stop recalculation of SavedColours layout, which is quite expensive)
-                binding.pager.setOffscreenPageLimit(2);
-
-                binding.pager.post(() -> {
-                    // Set view pager to display CameraFragment
-                    binding.pager.setCurrentItem(1, false);
-                    // Make view pager and bottom tabs visible
-                    binding.pager.setVisibility(View.VISIBLE);
-                    if (portrait) Objects.requireNonNull(binding.tabLayout).setVisibility(View.VISIBLE);
-                    else Objects.requireNonNull(binding.navigationRail).setVisibility(View.VISIBLE);
-                    // Load ad
-                    if (!adsDisabled) loadAd();
-                });
-
-                // Observer for if colour is being edited in the ManualPicker (from a saved colour)
-                // This is how the app knows to change from SavedColoursFragment to ManualPickerFragment
-                final Observer<Boolean> editingColourObserver = editColour -> {
-                    if (editColour) {
-                        // Smooth scroll to ManualPickerFragment
-                        binding.pager.setCurrentItem(2, true);
-                    }
-                };
-                mainActivityViewModel.getEditingColour().observe(this, editingColourObserver);
-
-                if (portrait) {
-                    // Portrait layout
-                    setUpPortraitLayout();
-                }
-                else {
-                    // Landscape layout
-                    setUpLandscapeLayout();
-                }
-            });
-        }).start();
-    }
-
-
-    private void setUpPortraitLayout() {
-        assert binding.tabLayout != null;
-        // Set up tab layout
-        new TabLayoutMediator(binding.tabLayout, binding.pager, (tab, position) -> {
-            if (position == 0)
-                tab.setText(getResources().getString(R.string.title_saved_colours));
-            else if (position == 1)
-                tab.setText(getResources().getString(R.string.title_camera));
-            else tab.setText(getResources().getString(R.string.title_manual_picker));
-        }).attach();
-
-        // Set icons of tabs
-        Objects.requireNonNull(binding.tabLayout.getTabAt(0)).setIcon(R.drawable.ic_navigation_saved_colours_outline);
-        Objects.requireNonNull(binding.tabLayout.getTabAt(1)).setIcon(R.drawable.ic_navigation_camera_filled);
-        Objects.requireNonNull(binding.tabLayout.getTabAt(2)).setIcon(R.drawable.ic_navigation_manual_picker_outline);
-
-        // Set colour of tabs when selected
-        binding.tabLayout.setSelectedTabIndicatorColor(getColourFromTheme(R.attr.reversedColour));
-
-        // Get colour state list for tab colours
-        ColorStateList colourStateList = getResources().getColorStateList(R.color.tab_colours, getTheme());
-        // Set icon and text colours of tabs
-        binding.tabLayout.setTabIconTint(colourStateList);
-        binding.tabLayout.setTabTextColors(colourStateList);
-
-        // Detect when page has changed, so tab icons can be updated (filled = on page, outline = not on page)
-        // Also exit editing colour mode when scrolling off ManualPickerFragment (if editing colour mode is enabled)
-        binding.pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                // On SavedColours page
-                if (position == 0) {
-                    mainActivityViewModel.setEditingColour(false);
-                    Objects.requireNonNull(binding.tabLayout.getTabAt(0)).setIcon(R.drawable.ic_navigation_saved_colours_filled);
-                    Objects.requireNonNull(binding.tabLayout.getTabAt(1)).setIcon(R.drawable.ic_navigation_camera_outline);
-                    Objects.requireNonNull(binding.tabLayout.getTabAt(2)).setIcon(R.drawable.ic_navigation_manual_picker_outline);
-                }
-                // On Camera page
-                else if (position == 1) {
-                    mainActivityViewModel.setEditingColour(false);
-                    Objects.requireNonNull(binding.tabLayout.getTabAt(0)).setIcon(R.drawable.ic_navigation_saved_colours_outline);
-                    Objects.requireNonNull(binding.tabLayout.getTabAt(1)).setIcon(R.drawable.ic_navigation_camera_filled);
-                    Objects.requireNonNull(binding.tabLayout.getTabAt(2)).setIcon(R.drawable.ic_navigation_manual_picker_outline);
-                }
-                // On ManualPicker page
-                else if (position == 2) {
-                    Objects.requireNonNull(binding.tabLayout.getTabAt(0)).setIcon(R.drawable.ic_navigation_saved_colours_outline);
-                    Objects.requireNonNull(binding.tabLayout.getTabAt(1)).setIcon(R.drawable.ic_navigation_camera_outline);
-                    Objects.requireNonNull(binding.tabLayout.getTabAt(2)).setIcon(R.drawable.ic_navigation_manual_picker_filled);
-                }
-                super.onPageSelected(position);
-            }
-        });
-    }
-
-
-    private void setUpLandscapeLayout() {
-        assert binding.navigationRail != null;
-        binding.navigationRail.setOnItemSelectedListener(item -> {
-            String title = String.valueOf(item.getTitle());
-            if (title.equals(getString(R.string.title_saved_colours_landscape)))
-                binding.pager.setCurrentItem(0, true);
-            else if (title.equals(getString(R.string.title_camera)))
-                binding.pager.setCurrentItem(1, true);
-            else if (title.equals(getString(R.string.title_manual_picker)))
-                binding.pager.setCurrentItem(2, true);
-            return true;
-        });
-
-
-        // Detect when page has changed, so tab icons can be updated (filled = on page, outline = not on page)
-        // Also exit editing colour mode when scrolling off ManualPickerFragment (if editing colour mode is enabled)
-        binding.pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                // On SavedColours page
-                if (position == 0) {
-                    mainActivityViewModel.setEditingColour(false);
-                    binding.navigationRail.getMenu().getItem(0).setChecked(true);
-                    binding.navigationRail.getMenu().getItem(0).setIcon(R.drawable.ic_navigation_saved_colours_filled);
-                    binding.navigationRail.getMenu().getItem(1).setIcon(R.drawable.ic_navigation_camera_outline);
-                    binding.navigationRail.getMenu().getItem(2).setIcon(R.drawable.ic_navigation_manual_picker_outline);
-                }
-                // On Camera page
-                else if (position == 1) {
-                    mainActivityViewModel.setEditingColour(false);
-                    binding.navigationRail.getMenu().getItem(1).setChecked(true);
-                    binding.navigationRail.getMenu().getItem(0).setIcon(R.drawable.ic_navigation_saved_colours_outline);
-                    binding.navigationRail.getMenu().getItem(1).setIcon(R.drawable.ic_navigation_camera_filled);
-                    binding.navigationRail.getMenu().getItem(2).setIcon(R.drawable.ic_navigation_manual_picker_outline);
-                }
-                // On ManualPicker page
-                else if (position == 2) {
-                    binding.navigationRail.getMenu().getItem(2).setChecked(true);
-                    binding.navigationRail.getMenu().getItem(0).setIcon(R.drawable.ic_navigation_saved_colours_outline);
-                    binding.navigationRail.getMenu().getItem(1).setIcon(R.drawable.ic_navigation_camera_outline);
-                    binding.navigationRail.getMenu().getItem(2).setIcon(R.drawable.ic_navigation_manual_picker_filled);
-                }
-                super.onPageSelected(position);
-            }
-        });
+        // If this is the first time the user has opened v2+, this converts previous files into new database data
+        new Thread(this::migrateToDatabase).start();
     }
 
 
@@ -284,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         adView.loadAd(adRequest);
 
         // Add AdView to the layout
-        binding.adViewContainer.addView(adView);
+        //binding.adViewContainer.addView(adView);
 
         // Set listener on AdView, so we know when ad is loaded/opened/impression occurs/error loading etc
         // Send data to google sheet when these actions occur
@@ -478,12 +315,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private int getColourFromTheme(int id) {
-        TypedValue value = new TypedValue();
-        getTheme().resolveAttribute(id, value, true);
-        return value.data;
-    }
-
     /**
      * Check to see if we have camera permission
      * @return true if we have camera permission, false if we don't
@@ -513,20 +344,5 @@ public class MainActivity extends AppCompatActivity {
         if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "Camera Permission required for Colour Picker to function", Toast.LENGTH_SHORT).show();
         }
-    }
-
-
-    /**
-     * Sets back action to send to CameraFragment if not already on it, otherwise back will close app
-     */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            if (binding.pager.getCurrentItem() != 1) {
-                binding.pager.setCurrentItem(1, true);
-                return false;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
     }
 }
