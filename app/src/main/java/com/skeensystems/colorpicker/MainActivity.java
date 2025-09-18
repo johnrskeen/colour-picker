@@ -105,12 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Do database stuff on background thread
         new Thread(() -> {
-            AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "colour_picker_database").build();
-            colourDAO = db.colourDAO();
-
-            // Maybe need to close the database here to stop leaks?
-            //db.close();
-
             // If this is the first time the user has opened v2+, this converts previous files into new database data
             migrateToDatabase();
 
