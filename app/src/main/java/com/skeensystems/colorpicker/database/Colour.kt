@@ -27,4 +27,12 @@ abstract class Colour {
     fun getHSLString(): String = getHSLStringHelper(r, g, b)
 
     fun getCMYKString(): String = getCMYKStringHelper(r, g, b)
+
+    fun generateCopyString(): String =
+        name +
+            "\nHEX ${getHEXString()}" +
+            "\nHEX ${getRGBString()}" +
+            "\nHSV ${getHSVString()}" +
+            "\nHSL ${getHSLString()}" +
+            "\nCMYK ${getCMYKString()}"
 }

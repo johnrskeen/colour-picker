@@ -35,22 +35,13 @@ fun themeColour(attrResId: Int): Color {
     return Color(typedValue.data)
 }
 
-// TODO extract to Colour objects
-private fun Colour.generateColourCopyData(): String =
-    name +
-        "\nHEX ${getHEXString()}" +
-        "\nHEX ${getRGBString()}" +
-        "\nHSV ${getHSVString()}" +
-        "\nHSL ${getHSLString()}" +
-        "\nCMYK ${getCMYKString()}"
-
 suspend fun Colour.copyToClipboard(clipboardManager: Clipboard) {
-    val clip = ClipData.newPlainText("Colour", generateColourCopyData()).toClipEntry()
+    val clip = ClipData.newPlainText("Colour", generateCopyString()).toClipEntry()
     clipboardManager.setClipEntry(clip)
 }
 
 suspend fun Set<Colour>.copyToClipboard(clipboardManager: Clipboard) {
-    val text = this.joinToString(separator = "\n\n") { it.generateColourCopyData() }
+    val text = this.joinToString(separator = "\n\n") { it.generateCopyString() }
     val clip = ClipData.newPlainText("Colour", text).toClipEntry()
     clipboardManager.setClipEntry(clip)
 }
