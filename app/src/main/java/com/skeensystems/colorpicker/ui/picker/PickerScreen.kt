@@ -37,13 +37,13 @@ fun ComposeView.setPickerContent() {
 
 @Composable
 fun PickerScreen(
-    viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    mainViewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
     localViewModel: PickerViewModel = viewModel(LocalActivity.current as ComponentActivity),
 ) {
     val currentColour by localViewModel.pickerColour.collectAsState()
     val focusManager = LocalFocusManager.current
 
-    val editingColour by viewModel.editingColour
+    val editingColour by mainViewModel.editingColour
     LaunchedEffect(editingColour) {
         editingColour?.colour?.let {
             localViewModel.updateValue(R, it.r.toFloat().adjust(R))

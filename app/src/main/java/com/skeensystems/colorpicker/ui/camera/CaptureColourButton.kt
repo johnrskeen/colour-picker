@@ -20,12 +20,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
-import com.skeensystems.colorpicker.database.SavedColour
 import kotlinx.coroutines.launch
 
 @Composable
 fun CaptureColourButton(
-    viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    mainViewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
     localViewModel: CameraViewModel = viewModel(LocalActivity.current as ComponentActivity),
     snackbarHostState: SnackbarHostState,
 ) {
@@ -48,7 +47,7 @@ fun CaptureColourButton(
         modifier = Modifier.windowInsetsPadding(WindowInsets(bottom = bottomPadding)),
         onClick = {
             val newColour =
-                viewModel.saveColour(
+                mainViewModel.saveColour(
                     (targetedColour.red * 255).toInt(),
                     (targetedColour.green * 255).toInt(),
                     (targetedColour.blue * 255).toInt(),
