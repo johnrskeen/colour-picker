@@ -63,3 +63,55 @@ fun measureTextWidth(
     val widthInPixels = textMeasurer.measure(text, style).size.width * 1.01f
     return with(LocalDensity.current) { widthInPixels.toDp() }
 }
+
+fun hsvToRGB(
+    h: Float,
+    s: Float,
+    v: Float,
+): Triple<Float, Float, Float> {
+    val c = v * s
+    val x = c * (1 - kotlin.math.abs((h / 60f) % 2 - 1))
+    val m = v - c
+
+    val (r, g, b) =
+        when {
+            h < 60f -> Triple(c, x, 0f)
+            h < 120f -> Triple(x, c, 0f)
+            h < 180f -> Triple(0f, c, x)
+            h < 240f -> Triple(0f, x, c)
+            h < 300f -> Triple(x, 0f, c)
+            else -> Triple(c, 0f, x)
+        }
+
+    return Triple(
+        (r + m).coerceIn(0f, 1f),
+        (g + m).coerceIn(0f, 1f),
+        (b + m).coerceIn(0f, 1f),
+    )
+}
+
+fun rgbToHSV(
+    r: Float,
+    g: Float,
+    b: Float,
+): Triple<Float, Float, Float> {
+    val max = maxOf(r, g, b)
+    val min = minOf(r, g, b)
+    val delta = max - min
+
+    val h =
+        when {
+            delta == 0f -> 0f
+            max == r -> 60 * (((g - b) / delta) % 6)
+            max == g -> 60 * (((b - r) / delta) + 2)
+            else -> 60 * (((r - g) / delta) + 4)
+        }.let { if (it < 0) it + 360f else it }
+
+    val s =
+        when {
+            max == 0f -> 0f
+            else -> delta / max
+        }
+
+    return Triple(h, s, max)
+}
