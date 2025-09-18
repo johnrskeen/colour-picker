@@ -18,7 +18,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalFocusManager
@@ -27,7 +26,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.R
 import com.skeensystems.colorpicker.themeColour
-import com.skeensystems.colorpicker.ui.camera.CaptureColourButton
 import com.skeensystems.colorpicker.ui.picker.finedetails.FineDetailsContainer
 import com.skeensystems.colorpicker.ui.picker.slider.PickerSlider
 
@@ -90,8 +88,7 @@ fun PickerScreen(
                 )
                 Row(modifier = Modifier.fillMaxWidth().weight(3f)) {
                     editingColour?.colour?.let {
-                        // TODO add method to get colour in saved colour and replace this everywhere
-                        Box(modifier = Modifier.fillMaxHeight().weight(1f).background(Color(it.r, it.g, it.b)))
+                        Box(modifier = Modifier.fillMaxHeight().weight(1f).background(it.getColour()))
                     }
                     Box(modifier = Modifier.fillMaxHeight().weight(1f).background(currentColour))
                 }
