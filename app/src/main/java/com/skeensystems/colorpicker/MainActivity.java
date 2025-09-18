@@ -114,20 +114,6 @@ public class MainActivity extends AppCompatActivity {
             // If this is the first time the user has opened v2+, this converts previous files into new database data
             migrateToDatabase();
 
-            // Load saved colours from the database
-            List<SavedColourEntity> savedColourEntities = colourDAO.getAll();
-            savedColours = new ArrayList<>();
-            for (SavedColourEntity entity : savedColourEntities) {
-                savedColours.add(entity.toSavedColour());
-            }
-
-            MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-            SavedColoursViewModel savedColoursViewModel = new ViewModelProvider(this).get(SavedColoursViewModel.class);
-            viewModel.clearSavedColours();
-            for (SavedColour savedColour : savedColours) {
-                viewModel.saveColour(savedColour);
-            }
-
             // Initialise app interface after database has been loaded
             //TODO loading screen for before this
             runOnUiThread(() -> {
@@ -400,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void migrateToDatabase() {
         // ArrayList to store the colours read from the file
-        ArrayList<SavedColour> oldSavedColours = new ArrayList<>();
+        ArrayList<SavedColourEntity> oldSavedColours = new ArrayList<>();
         File directory = getFilesDir();
         BufferedReader reader;
 
@@ -415,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
                 int g = Integer.parseInt(nextLine.substring(3, 5), 16);
                 int b = Integer.parseInt(nextLine.substring(5), 16);
                 // Create the colour object
-                SavedColour savedColour = new SavedColour(count, r, g, b, false);
+                SavedColourEntity savedColour = new SavedColourEntity(count, r, g, b, false);
                 // Add SavedColour object to the ArrayList
                 oldSavedColours.add(savedColour);
                 // Increment id counter by 1 for next iteration
@@ -432,7 +418,9 @@ public class MainActivity extends AppCompatActivity {
             reader = new BufferedReader(new FileReader(directory + "favoriteColours.txt"));
             String nextLine = reader.readLine();
             while (nextLine != null) {
-                oldSavedColours.get(Integer.parseInt(nextLine)).setFavourite(true);
+                int index = Integer.parseInt(nextLine);
+                SavedColourEntity oldSavedColour = oldSavedColours.get(index);
+                oldSavedColours.set(index, new SavedColourEntity(oldSavedColour.getId(), oldSavedColour.getR(), oldSavedColour.getG(), oldSavedColour.getB(), true));
                 nextLine = reader.readLine();
 
             }
@@ -491,8 +479,8 @@ public class MainActivity extends AppCompatActivity {
                 new SavedColour(43, 255, 191, 0, false)));*/
 
         // Write all colours in the ArrayList to the database
-        for (SavedColour savedColour : oldSavedColours) {
-            colourDAO.insertAll(savedColour.toSavedColourEntity());
+        for (SavedColourEntity savedColour : oldSavedColours) {
+            colourDAO.insertAll(savedColour);
         }
     }
 

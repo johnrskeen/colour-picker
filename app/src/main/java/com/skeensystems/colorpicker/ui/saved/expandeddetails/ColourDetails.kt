@@ -65,8 +65,8 @@ fun ColourDetails(
     // TODO make default saved colour object for both of these in this file
     val colour =
         activeStatus?.let { status ->
-            val savedColour = mainViewModel.savedColours.find { it.id == status.savedColourId } ?: SavedColour(0, 0, 0, 0, false)
-            Color(savedColour.r, savedColour.g, savedColour.b)
+            val savedColour = mainViewModel.savedColours.find { it.id == status.savedColourId }
+            savedColour?.let { Color(it.r, it.g, it.b) } ?: Color(0, 0, 0)
         } ?: Color.Black
     val textColour = colour.calculateTextColour()
 

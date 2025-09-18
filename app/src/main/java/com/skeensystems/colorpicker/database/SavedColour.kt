@@ -12,27 +12,25 @@ import java.util.Locale
 
 class SavedColour(
     val id: Long,
-    r: Int,
-    g: Int,
-    b: Int,
+    override val r: Int,
+    override val g: Int,
+    override val b: Int,
     favourite: Boolean,
+    private val closestMatch: DatabaseColour,
+    private val similarColours: Set<DatabaseColour>,
+    private val complementaryColours: Set<DatabaseColour>,
 ) : Colour {
-    override var r by mutableIntStateOf(r)
-    override var g by mutableIntStateOf(g)
-    override var b by mutableIntStateOf(b)
+    // override var r by mutableIntStateOf(r)
+    // override var g by mutableIntStateOf(g)
+    // override var b by mutableIntStateOf(b)
 
     var favourite by mutableStateOf(favourite)
 
     private var requiresLightText: Boolean = backgroundRequiresLightText(r, g, b)
 
-    private var closestMatch: DatabaseColour? = null
-    private var firstClosest: DatabaseColour? = null
-    private var secondClosest: DatabaseColour? = null
-    private var thirdClosest: DatabaseColour? = null
-
     override fun getColour(): Int = Color.rgb(r, g, b)
 
-    override fun getName(): String = closestMatch?.getName() ?: ""
+    override fun getName(): String = closestMatch.getName()
 
     override fun getTextColour(): Int = if (requiresLightText) LIGHT_TEXT_COLOUR else DARK_TEXT_COLOUR
 
@@ -45,22 +43,11 @@ class SavedColour(
             Pair("CMYK", getCMYKString()),
         )
 
-    fun getClosestMatchString(): String =
-        if (closestMatch != null) {
-            "\u2248 $closestMatch"
-        } else {
-            ""
-        }
+    fun getClosestMatchString(): String = "\u2248 $closestMatch"
 
-    fun getSimilarColours(): List<DatabaseColour> = setOfNotNull(firstClosest, secondClosest, thirdClosest).toList()
+    fun getSimilarColours(): List<DatabaseColour> = similarColours.toList()
 
-    fun getComplementaryColours(): List<DatabaseColour> =
-        setOfNotNull(
-            closestMatch?.getComplementaryColour(),
-            firstClosest?.getComplementaryColour(),
-            secondClosest?.getComplementaryColour(),
-            thirdClosest?.getComplementaryColour(),
-        ).toList().take(3)
+    fun getComplementaryColours(): List<DatabaseColour> = complementaryColours.toList()
 
     fun getSortValue(): String {
         val hsv = FloatArray(3)

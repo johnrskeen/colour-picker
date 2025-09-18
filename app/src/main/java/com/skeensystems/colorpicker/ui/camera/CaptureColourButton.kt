@@ -48,14 +48,11 @@ fun CaptureColourButton(
         modifier = Modifier.windowInsetsPadding(WindowInsets(bottom = bottomPadding)),
         onClick = {
             val newColour =
-                SavedColour(
-                    System.currentTimeMillis(),
+                viewModel.saveColour(
                     (targetedColour.red * 255).toInt(),
                     (targetedColour.green * 255).toInt(),
                     (targetedColour.blue * 255).toInt(),
-                    false,
                 )
-            viewModel.saveColour(newColour)
             scope.launch {
                 snackbarHostState.showSnackbar(
                     "Saved colour ${newColour.getHEXString()} (\u2248 ${newColour.getName()})",

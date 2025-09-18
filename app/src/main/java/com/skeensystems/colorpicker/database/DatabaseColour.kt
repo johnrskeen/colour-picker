@@ -7,13 +7,14 @@ import com.skeensystems.colorpicker.backgroundRequiresLightText
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// TODO tidying up is needed
 @Serializable
 class DatabaseColour(
     @SerialName("n") private val name: String,
     override val r: Int,
     override val g: Int,
     override val b: Int,
-    @SerialName("c") private val complementaryName: String,
+    @SerialName("c") val complementaryName: String,
 ) : Colour {
     private var complementaryColour: DatabaseColour? = null
 

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.skeensystems.colorpicker.database.ColourDAO
 import com.skeensystems.colorpicker.database.ColourDatabase
+import com.skeensystems.colorpicker.database.DatabaseColour
 import com.skeensystems.colorpicker.database.SavedColour
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,9 +27,27 @@ class MainViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             colourDAO.all
                 .forEach {
-                    _savedColours.add(it.toSavedColour())
+                    val (closestMatch, similarColours, complementaryColours) = calculateRelatedColours(it.r, it.g, it.b)
+                    _savedColours.add(it.toSavedColour(closestMatch, similarColours, complementaryColours))
                 }
         }
+    }
+
+    private fun calculateRelatedColours(
+        r: Int,
+        g: Int,
+        b: Int,
+    ): Triple<DatabaseColour, Set<DatabaseColour>, Set<DatabaseColour>> {
+        val (closestMatch, similarColours) = colourDatabase.getClosestMatches(r, g, b)
+        val complementaryColours =
+            similarColours
+                .asSequence()
+                .plus(closestMatch)
+                .mapNotNull { colourDatabase.getColourByName(it.complementaryName) }
+                .toSet()
+                .take(3)
+                .toSet()
+        return Triple(closestMatch, similarColours, complementaryColours)
     }
 
     // TODO temporary, while colours are manually added, will be removed with full migration
@@ -36,11 +55,18 @@ class MainViewModel(
         _savedColours.clear()
     }
 
-    fun saveColour(savedColour: SavedColour) {
-        _savedColours.add(savedColour)
+    fun saveColour(
+        r: Int,
+        g: Int,
+        b: Int,
+    ): SavedColour {
+        val (closestMatch, similarColours, complementaryColours) = calculateRelatedColours(r, g, b)
+        val newColour = SavedColour(System.currentTimeMillis(), r, g, b, false, closestMatch, similarColours, complementaryColours)
+        _savedColours.add(newColour)
         viewModelScope.launch(Dispatchers.IO) {
-            colourDAO.insertAll(savedColour.toSavedColourEntity())
+            colourDAO.insertAll(newColour.toSavedColourEntity())
         }
+        return newColour
     }
 
     fun deleteColour(savedColour: SavedColour) {
