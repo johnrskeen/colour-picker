@@ -29,15 +29,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
-import com.skeensystems.colorpicker.calculateTextColour
-import com.skeensystems.colorpicker.database.SavedColour
 import com.skeensystems.colorpicker.ui.saved.ConfirmDelete
 import com.skeensystems.colorpicker.ui.saved.SavedColoursViewModel
 import com.skeensystems.colorpicker.ui.saved.animateDetailsView
@@ -61,14 +58,6 @@ fun ColourDetails(
 
     val visibilityStatus by remember { localViewModel.visibilityStatus }
     var activeStatus by remember { mutableStateOf<VisibilityStatus.Show?>(null) }
-
-    // TODO make default saved colour object for both of these in this file
-    val colour =
-        activeStatus?.let { status ->
-            val savedColour = mainViewModel.savedColours.find { it.id == status.savedColourId }
-            savedColour?.let { Color(it.r, it.g, it.b) } ?: Color(0, 0, 0)
-        } ?: Color.Black
-    val textColour = colour.calculateTextColour()
 
     LaunchedEffect(visibilityStatus) {
         when (val status = visibilityStatus) {
@@ -126,7 +115,7 @@ fun ColourDetails(
                                 y = (y.value - topPaddingPx).toInt(),
                             )
                         }.size(width = width.value.dp, height = height.value.dp)
-                        .background(color = colour, shape = RoundedCornerShape(10.dp))
+                        .background(color = it.getColour(), shape = RoundedCornerShape(10.dp))
                         .clickable {
                             localViewModel.setVisibilityStatus(VisibilityStatus.Hide(status.from))
                         },
@@ -143,7 +132,7 @@ fun ColourDetails(
                                 modifier = Modifier.fillMaxWidth().padding(20.dp),
                                 text = it.getClosestMatchString(),
                                 textAlign = TextAlign.Center,
-                                color = textColour,
+                                color = it.textColour,
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Medium,
                             )
@@ -152,7 +141,7 @@ fun ColourDetails(
                                     ColourCodeItem(
                                         type = details.first,
                                         value = details.second,
-                                        textColour = textColour,
+                                        textColour = it.textColour,
                                     )
                                 }
                                 item {
@@ -171,7 +160,7 @@ fun ColourDetails(
                                     mainViewModel.setFavouriteStatus(it, it.favourite)
                                 },
                                 onDelete = { confirmingDelete = true },
-                                textColour = textColour,
+                                textColour = it.textColour,
                             )
                         }
                         ConfirmDelete(

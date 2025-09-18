@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionOnScreen
@@ -25,7 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.skeensystems.colorpicker.R
-import com.skeensystems.colorpicker.calculateTextColour
 import com.skeensystems.colorpicker.database.SavedColour
 
 @Composable
@@ -48,8 +46,6 @@ fun ListColour(
         targetValue = if (selected) selectedCornerRadius else 10f,
         animationSpec = tween(durationMillis = animationDuration),
     )
-    val colour = Color(savedColour.r, savedColour.g, savedColour.b)
-    val textColour = colour.calculateTextColour()
     BoxWithConstraints(
         modifier =
             modifier
@@ -60,7 +56,7 @@ fun ListColour(
                     scaleY = scale,
                 ).padding(2.dp)
                 .background(
-                    color = colour,
+                    color = savedColour.getColour(),
                     shape = RoundedCornerShape(cornerRadius.dp),
                 ).onGloballyPositioned { coordinates ->
                     onCoordinatesDetermined(coordinates.positionOnScreen())
@@ -77,7 +73,7 @@ fun ListColour(
                 modifier = Modifier.size(maxHeight / 3.5f, maxHeight / 3.5f),
                 imageVector = Icons.Filled.Star,
                 contentDescription = null,
-                tint = textColour,
+                tint = savedColour.textColour,
             )
         }
 
@@ -86,7 +82,7 @@ fun ListColour(
                 modifier = Modifier.fillMaxSize(),
                 painter = painterResource(id = R.drawable.ic_tick),
                 contentDescription = null,
-                tint = textColour,
+                tint = savedColour.textColour,
             )
         }
     }
