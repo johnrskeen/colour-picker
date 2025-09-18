@@ -15,14 +15,7 @@ class DatabaseColour(
     override val g: Int,
     override val b: Int,
     @SerialName("c") val complementaryName: String,
-) : Colour {
-    // When this colour is the background, should text be white (true) or black (false)
-    private val requiresLightText = backgroundRequiresLightText(r, g, b)
-
-    override fun getColour(): Int = Color.rgb(r, g, b)
-
-    override fun getTextColour(): Int = if (requiresLightText) LIGHT_TEXT_COLOUR else DARK_TEXT_COLOUR
-
+) : Colour() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

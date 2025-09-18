@@ -19,18 +19,12 @@ class SavedColour(
     favourite: Boolean,
     val similarColours: Set<DatabaseColour>,
     val complementaryColours: Set<DatabaseColour>,
-) : Colour {
+) : Colour() {
     // override var r by mutableIntStateOf(r)
     // override var g by mutableIntStateOf(g)
     // override var b by mutableIntStateOf(b)
 
     var favourite by mutableStateOf(favourite)
-
-    private var requiresLightText: Boolean = backgroundRequiresLightText(r, g, b)
-
-    override fun getColour(): Int = Color.rgb(r, g, b)
-
-    override fun getTextColour(): Int = if (requiresLightText) LIGHT_TEXT_COLOUR else DARK_TEXT_COLOUR
 
     fun getDetailsList(): List<Pair<String, String>> =
         listOf(
