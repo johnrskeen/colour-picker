@@ -11,7 +11,7 @@ class ColourDatabase(
     private val colourDatabase: List<DatabaseColour> = loadColors(context)
 
     private fun loadColors(context: Context): List<DatabaseColour> {
-        val inputStream = context.resources.openRawResource(R.raw.colour_database_new)
+        val inputStream = context.resources.openRawResource(R.raw.colour_database)
         val text = inputStream.bufferedReader().readText()
 
         return Json.decodeFromString(text)
