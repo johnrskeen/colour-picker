@@ -21,19 +21,19 @@ fun getActionBarItems(
         ActionBarItemSpec(
             onClick = onCancel,
             icon = Icons.Outlined.Close,
-            text = "Cancel",
+            text = "Cancel\n",
             contentDescription = "Cancel selection",
         ),
         ActionBarItemSpec(
             onClick = onCopy,
             icon = Icons.Outlined.ContentCopy,
-            text = "Copy",
+            text = "Copy\n",
             contentDescription = "Copy selection",
         ),
         ActionBarItemSpec(
             onClick = { onSetFavouriteStatus(true) },
             icon = Icons.Outlined.StarOutline,
-            text = "Favourite",
+            text = "Favourite\n",
             contentDescription = "Favourite all in selection",
         ),
         ActionBarItemSpec(
@@ -45,7 +45,7 @@ fun getActionBarItems(
         ActionBarItemSpec(
             onClick = onDelete,
             icon = Icons.Outlined.Delete,
-            text = "Delete",
+            text = "Delete\n",
             contentDescription = "Delete selection",
         ),
     )
