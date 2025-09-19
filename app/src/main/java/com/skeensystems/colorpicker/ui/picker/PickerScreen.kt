@@ -22,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -35,6 +36,7 @@ import com.skeensystems.colorpicker.themeColour
 import com.skeensystems.colorpicker.ui.CaptureColourButton
 import com.skeensystems.colorpicker.ui.picker.finedetails.FineDetailsContainer
 import com.skeensystems.colorpicker.ui.picker.slider.PickerSlider
+import kotlinx.coroutines.launch
 
 fun ComposeView.setPickerContent() {
     setContent {
@@ -49,6 +51,7 @@ fun PickerScreen(
 ) {
     val currentColour by localViewModel.pickerColour.collectAsState()
     val focusManager = LocalFocusManager.current
+    val scope = rememberCoroutineScope()
 
     val editingColour by mainViewModel.editingColour
     LaunchedEffect(editingColour) {
@@ -105,6 +108,22 @@ fun PickerScreen(
                     }
                     Box(modifier = Modifier.fillMaxHeight().weight(1f).background(currentColour))
                 }
+            }
+
+            editingColour?.let {
+                EditingModeActionBar(
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                    editingColour = it.colour,
+                    currentColour = currentColour,
+                    exitEditingMode = { newColour ->
+                        mainViewModel.clearEditingColour()
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                "Saved colour ${newColour.getHEXString()} (${newColour.getClosestMatchString()})",
+                            )
+                        }
+                    },
+                )
             }
 
             SnackbarHost(

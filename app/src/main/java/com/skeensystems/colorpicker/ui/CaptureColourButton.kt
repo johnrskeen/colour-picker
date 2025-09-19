@@ -53,7 +53,7 @@ fun CaptureColourButton(
                 )
             scope.launch {
                 snackbarHostState.showSnackbar(
-                    "Saved colour ${newColour.getHEXString()} (\u2248 ${newColour.name})",
+                    "Saved colour ${newColour.getHEXString()} (${newColour.getClosestMatchString()})",
                 )
             }
         },

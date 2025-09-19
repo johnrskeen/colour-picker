@@ -72,16 +72,18 @@ class MainViewModel(
         r: Int,
         g: Int,
         b: Int,
+        id: Long = System.currentTimeMillis(),
+        favourite: Boolean = false,
     ): SavedColour {
         val (closestMatch, similarColours, complementaryColours) = calculateRelatedColours(r, g, b)
         val newColour =
             SavedColour(
-                id = System.currentTimeMillis(),
+                id = id,
                 name = closestMatch.name,
                 r = r,
                 g = g,
                 b = b,
-                favourite = false,
+                favourite = favourite,
                 similarColours = similarColours,
                 complementaryColours = complementaryColours,
             )
@@ -111,6 +113,10 @@ class MainViewModel(
 
     fun setEditingColour(editEvent: EditEvent) {
         _editingColour.value = editEvent
+    }
+
+    fun clearEditingColour() {
+        _editingColour.value = null
     }
 
     fun setOnCamera(onCamera: Boolean) {

@@ -64,6 +64,9 @@ fun App(colourDAO: ColourDAO) {
             .collectLatest { page ->
                 selectedTab = page
                 viewModel.setOnCamera(page == 1)
+                if (editingColour != null && page != 2) {
+                    viewModel.clearEditingColour()
+                }
             }
     }
 
