@@ -62,8 +62,8 @@ fun SavedColoursScreen(
 
     var confirmingDelete by remember { mutableStateOf(false) }
 
-    var sortStatus by remember { mutableStateOf(SortOptions.NEWEST_FIRST) }
-    var filterStatus by remember { mutableStateOf(FilterOptions.NO_FILTER) }
+    val sortStatus by localViewModel.sortStatus
+    val filterStatus by localViewModel.filterStatus
 
     val clipboardManager = LocalClipboard.current
     val scope = rememberCoroutineScope()
@@ -98,14 +98,14 @@ fun SavedColoursScreen(
                         modifier = Modifier.weight(1f),
                         title = "Sort",
                         options = SortOptions.entries,
-                        onOptionSelected = { selectedOption -> sortStatus = selectedOption },
+                        onOptionSelected = { selectedOption -> localViewModel.setSortStatus(selectedOption) },
                         selectedOption = sortStatus,
                     )
                     DropDownMenu(
                         modifier = Modifier.weight(1f),
                         title = "Filter",
                         options = FilterOptions.entries,
-                        onOptionSelected = { selectedOption -> filterStatus = selectedOption },
+                        onOptionSelected = { selectedOption -> localViewModel.setFilterStatus(selectedOption) },
                         selectedOption = filterStatus,
                     )
                 }
