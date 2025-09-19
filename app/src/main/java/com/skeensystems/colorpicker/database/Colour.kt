@@ -2,9 +2,10 @@ package com.skeensystems.colorpicker.database
 
 import androidx.compose.ui.graphics.Color
 import com.skeensystems.colorpicker.calculateTextColour
-import com.skeensystems.colorpicker.getCMYKStringHelper
-import com.skeensystems.colorpicker.getHSLStringHelper
-import com.skeensystems.colorpicker.getHSVStringHelper
+import com.skeensystems.colorpicker.database.coloursystems.CMYK
+import com.skeensystems.colorpicker.database.coloursystems.HSL
+import com.skeensystems.colorpicker.database.coloursystems.HSV
+import com.skeensystems.colorpicker.rgbToHSV
 
 abstract class Colour {
     abstract val name: String
@@ -14,17 +15,24 @@ abstract class Colour {
 
     val textColour by lazy { getColour().calculateTextColour() }
 
+    private val hsvFloat by lazy {
+        rgbToHSV(r / 255f, g / 255f, b / 255f)
+    }
+    private val hsv by lazy { HSV(hsvFloat.first, hsvFloat.second, hsvFloat.third) }
+    private val hsl by lazy { HSL(hsvFloat.first, hsvFloat.second, hsvFloat.third) }
+    private val cmyk by lazy { CMYK(r / 255f, g / 255f, b / 255f) }
+
     fun getColour(): Color = Color(r, g, b)
 
-    fun getHEXString(): String = String.format("#%02x%02x%02x", r, g, b)
+    fun getHEXString(): String = String.format("#%02X%02X%02X", r, g, b)
 
     fun getRGBString(): String = "$r, $g, $b"
 
-    fun getHSVString(): String = getHSVStringHelper(r, g, b)
+    fun getHSVString(): String = "${hsv.h}\u00B0, ${hsv.s}%, ${hsv.v}%"
 
-    fun getHSLString(): String = getHSLStringHelper(r, g, b)
+    fun getHSLString(): String = "${hsl.h}°, ${hsl.s}%, ${hsl.l}%"
 
-    fun getCMYKString(): String = getCMYKStringHelper(r, g, b)
+    fun getCMYKString(): String = "${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%"
 
     fun generateCopyString(): String =
         name +
