@@ -12,11 +12,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
@@ -26,6 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.R
 import com.skeensystems.colorpicker.themeColour
+import com.skeensystems.colorpicker.ui.camera.CaptureColourButton
 import com.skeensystems.colorpicker.ui.picker.finedetails.FineDetailsContainer
 import com.skeensystems.colorpicker.ui.picker.slider.PickerSlider
 
@@ -52,7 +59,13 @@ fun PickerScreen(
         }
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
+        floatingActionButton = {
+            if (editingColour == null) {
+                CaptureColourButton(snackbarHostState = snackbarHostState, colour = currentColour, icon = Icons.Outlined.BookmarkAdd)
+            }
+        },
         modifier =
             Modifier.pointerInput(Unit) {
                 detectTapGestures { focusManager.clearFocus() }
@@ -93,6 +106,14 @@ fun PickerScreen(
                     Box(modifier = Modifier.fillMaxHeight().weight(1f).background(currentColour))
                 }
             }
+
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter),
+            )
         }
     }
 }

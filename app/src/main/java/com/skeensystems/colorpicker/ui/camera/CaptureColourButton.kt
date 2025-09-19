@@ -6,16 +6,15 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,12 +23,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CaptureColourButton(
-    mainViewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
-    localViewModel: CameraViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
     snackbarHostState: SnackbarHostState,
+    colour: Color,
+    icon: ImageVector,
 ) {
     val scope = rememberCoroutineScope()
-    val targetedColour by localViewModel.cameraColour.collectAsState()
     val localDensity = LocalDensity.current
 
     val bottomPadding by animateDpAsState(
@@ -47,10 +46,10 @@ fun CaptureColourButton(
         modifier = Modifier.windowInsetsPadding(WindowInsets(bottom = bottomPadding)),
         onClick = {
             val newColour =
-                mainViewModel.saveColour(
-                    (targetedColour.red * 255).toInt(),
-                    (targetedColour.green * 255).toInt(),
-                    (targetedColour.blue * 255).toInt(),
+                viewModel.saveColour(
+                    (colour.red * 255).toInt(),
+                    (colour.green * 255).toInt(),
+                    (colour.blue * 255).toInt(),
                 )
             scope.launch {
                 snackbarHostState.showSnackbar(
@@ -59,6 +58,6 @@ fun CaptureColourButton(
             }
         },
     ) {
-        Icon(Icons.Filled.Add, "Capture colour.")
+        Icon(icon, "Capture colour.")
     }
 }

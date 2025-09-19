@@ -2,17 +2,22 @@ package com.skeensystems.colorpicker.ui.camera
 
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.ui.camera.requestpermission.CameraPermissionDeniedScreen
 
 fun ComposeView.setCameraContent() {
@@ -31,7 +37,7 @@ fun ComposeView.setCameraContent() {
 }
 
 @Composable
-fun CameraScreen() {
+fun CameraScreen(viewModel: CameraViewModel = viewModel(LocalActivity.current as ComponentActivity)) {
     val context = LocalContext.current
     var hasPermission by remember {
         mutableStateOf(
@@ -55,10 +61,11 @@ fun CameraScreen() {
         }
     }
 
+    val targetedColour by viewModel.cameraColour.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         floatingActionButton = {
-            if (hasPermission) CaptureColourButton(snackbarHostState = snackbarHostState)
+            if (hasPermission) CaptureColourButton(snackbarHostState = snackbarHostState, colour = targetedColour, icon = Icons.Filled.Add)
         },
     ) { paddingValues ->
         if (hasPermission) {
