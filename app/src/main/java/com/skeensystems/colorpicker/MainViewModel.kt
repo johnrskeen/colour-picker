@@ -28,7 +28,8 @@ class MainViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            colourDAO.all
+            colourDAO
+                .getAll()
                 .forEach {
                     val (closestMatch, similarColours, complementaryColours) = calculateRelatedColours(it.r, it.g, it.b)
                     _savedColours.add(it.toSavedColour(closestMatch.name, similarColours, complementaryColours))
