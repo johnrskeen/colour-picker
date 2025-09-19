@@ -18,7 +18,7 @@ abstract class Colour {
     private val hsvFloat by lazy {
         rgbToHSV(r / 255f, g / 255f, b / 255f)
     }
-    private val hsv by lazy { HSV(hsvFloat.first, hsvFloat.second, hsvFloat.third) }
+    protected val hsv by lazy { HSV(hsvFloat.first, hsvFloat.second, hsvFloat.third) }
     private val hsl by lazy { HSL(hsvFloat.first, hsvFloat.second, hsvFloat.third) }
     private val cmyk by lazy { CMYK(r / 255f, g / 255f, b / 255f) }
 

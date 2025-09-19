@@ -1,6 +1,5 @@
 package com.skeensystems.colorpicker.database
 
-import android.graphics.Color
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -33,20 +32,7 @@ class SavedColour(
 
     fun getClosestMatchString(): String = "\u2248 $name"
 
-    fun getSortValue(): String {
-        val hsv = FloatArray(3)
-        Color.RGBToHSV(r, g, b, hsv)
-
-        val newH = hsv[0].toInt()
-        val newS = Math.round(hsv[1] * 100)
-        val newV = Math.round(hsv[2] * 100)
-
-        return (
-            String.format(Locale.getDefault(), "%03d", newH) +
-                String.format(Locale.getDefault(), "%03d", newS) +
-                String.format(Locale.getDefault(), "%03d", newV)
-        )
-    }
+    fun getSortValue(): String = String.format(Locale.getDefault(), "%03d%03d%03d", hsv.h, hsv.s, hsv.v)
 
     fun toSavedColourEntity(): SavedColourEntity = SavedColourEntity(id, r, g, b, favourite)
 
