@@ -2,12 +2,8 @@ package com.skeensystems.colorpicker.database
 
 import android.graphics.Color
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.skeensystems.colorpicker.DARK_TEXT_COLOUR
-import com.skeensystems.colorpicker.LIGHT_TEXT_COLOUR
-import com.skeensystems.colorpicker.backgroundRequiresLightText
 import java.util.Locale
 
 class SavedColour(

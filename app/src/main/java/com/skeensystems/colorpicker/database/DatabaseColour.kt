@@ -1,13 +1,8 @@
 package com.skeensystems.colorpicker.database
 
-import android.graphics.Color
-import com.skeensystems.colorpicker.DARK_TEXT_COLOUR
-import com.skeensystems.colorpicker.LIGHT_TEXT_COLOUR
-import com.skeensystems.colorpicker.backgroundRequiresLightText
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-// TODO tidying up is needed
 @Serializable
 class DatabaseColour(
     @SerialName("n") override val name: String,
