@@ -16,7 +16,6 @@ import com.skeensystems.colorpicker.ui.App
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.concurrent.thread
 
 class MainActivity : ComponentActivity() {
     private lateinit var colourDAO: ColourDAO
@@ -24,7 +23,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        thread {
+        CoroutineScope(Dispatchers.IO).launch {
             val db =
                 databaseBuilder(
                     applicationContext,
