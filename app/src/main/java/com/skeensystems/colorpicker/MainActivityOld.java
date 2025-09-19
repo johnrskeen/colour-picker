@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -23,7 +22,6 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.skeensystems.colorpicker.database.ColourDAO;
-import com.skeensystems.colorpicker.database.SavedColour;
 import com.skeensystems.colorpicker.database.SavedColourEntity;
 
 import java.io.BufferedReader;
@@ -38,7 +36,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivityOld extends AppCompatActivity {
 
     // True disables ads
     // False MUST be used for production
