@@ -2,61 +2,27 @@ package com.skeensystems.colorpicker;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.skeensystems.colorpicker.database.ColourDAO;
 import com.skeensystems.colorpicker.database.SavedColourEntity;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class MainActivityOld extends AppCompatActivity {
 
-    // True disables ads
-    // False MUST be used for production
-    // TODO compose camera doesn't work if this is set to true
-    private final boolean adsDisabled = false;
-
-    // Database object for reading/writing to the app database
-    public static ColourDAO colourDAO;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Get previous HSV values used in ManualPicker
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-
-        // Set these HSV values, so ManualPicker displays last colour when opened
-//        mainActivityViewModel.setH(sharedPref.getInt(getString(R.string.previousManualPickerH), 0), true);
-//        mainActivityViewModel.setS(sharedPref.getInt(getString(R.string.previousManualPickerS), 100), true);
-//        mainActivityViewModel.setV(sharedPref.getInt(getString(R.string.previousManualPickerV), 100), true);
 
         // Check for camera permission (and request if necessary)
         String[] Permissions = {Manifest.permission.CAMERA};
@@ -169,7 +135,7 @@ public class MainActivityOld extends AppCompatActivity {
 
         // Write all colours in the ArrayList to the database
         for (SavedColourEntity savedColour : oldSavedColours) {
-            colourDAO.insertAll(savedColour);
+            //colourDAO.insertAll(savedColour);
         }
     }
 
