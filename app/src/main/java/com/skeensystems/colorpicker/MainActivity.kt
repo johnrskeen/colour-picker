@@ -12,6 +12,7 @@ import androidx.room.Room.databaseBuilder
 import com.google.android.gms.ads.MobileAds
 import com.skeensystems.colorpicker.database.AppDatabase
 import com.skeensystems.colorpicker.database.ColourDAO
+import com.skeensystems.colorpicker.database.migrateToDatabase
 import com.skeensystems.colorpicker.ui.App
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
                     "colour_picker_database",
                 ).build()
             colourDAO = db.colourDAO()
+            migrateToDatabase(applicationContext, colourDAO)
         }
         CoroutineScope(Dispatchers.IO).launch {
             MobileAds.initialize(this@MainActivity) {}
