@@ -54,7 +54,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.androidx.datastore.preferences.rxjava3)
     implementation(libs.guava)
 
     implementation(libs.androidx.core.ktx)
@@ -69,17 +68,24 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
 
+    // Camera
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.compose)
 
+    // Ads
     implementation(libs.play.services.ads)
 
+    // Room database
     implementation(libs.androidx.room.runtime)
     ksp(libs.room.compiler)
 
+    // Serialization
     implementation(libs.kotlinx.serialization.json)
+
+    // Datastore
+    implementation(libs.androidx.datastore.preferences.rxjava3)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
