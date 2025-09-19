@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.skeensystems.colorpicker.ui.CaptureColourButton
 import com.skeensystems.colorpicker.ui.camera.requestpermission.CameraPermissionDeniedScreen
 
 fun ComposeView.setCameraContent() {

@@ -32,7 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.R
 import com.skeensystems.colorpicker.themeColour
-import com.skeensystems.colorpicker.ui.camera.CaptureColourButton
+import com.skeensystems.colorpicker.ui.CaptureColourButton
 import com.skeensystems.colorpicker.ui.picker.finedetails.FineDetailsContainer
 import com.skeensystems.colorpicker.ui.picker.slider.PickerSlider
 

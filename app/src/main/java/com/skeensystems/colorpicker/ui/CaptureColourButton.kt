@@ -1,4 +1,4 @@
-package com.skeensystems.colorpicker.ui.camera
+package com.skeensystems.colorpicker.ui
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
