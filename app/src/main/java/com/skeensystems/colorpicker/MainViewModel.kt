@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.skeensystems.colorpicker.database.Colour
 import com.skeensystems.colorpicker.database.ColourDAO
 import com.skeensystems.colorpicker.database.ColourDatabase
 import com.skeensystems.colorpicker.database.DatabaseColour
@@ -23,6 +22,9 @@ class MainViewModel(
 
     private val _editingColour = mutableStateOf<EditEvent?>(null)
     val editingColour: State<EditEvent?> = _editingColour
+
+    private val _onCamera = mutableStateOf(true)
+    val onCamera: State<Boolean> = _onCamera
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -108,6 +110,10 @@ class MainViewModel(
 
     fun setEditingColour(editEvent: EditEvent) {
         _editingColour.value = editEvent
+    }
+
+    fun setOnCamera(onCamera: Boolean) {
+        _onCamera.value = onCamera
     }
 }
 

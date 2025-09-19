@@ -22,18 +22,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.GetColour
+import com.skeensystems.colorpicker.MainViewModel
 import kotlinx.coroutines.awaitCancellation
 import java.util.concurrent.Executors
 
 @Composable
-fun CameraPreview(viewModel: CameraViewModel = viewModel(LocalActivity.current as ComponentActivity)) {
+fun CameraPreview(
+    mainViewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    localViewModel: CameraViewModel = viewModel(LocalActivity.current as ComponentActivity),
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     var surfaceRequest by remember { mutableStateOf<SurfaceRequest?>(null) }
+    val onCamera by mainViewModel.onCamera
 
     LaunchedEffect(Unit) {
-        var lastFrame = System.currentTimeMillis() - 100
+        var lastFrame = System.currentTimeMillis() - 200
         val cameraProvider = ProcessCameraProvider.getInstance(context).get()
 
         val preview =
@@ -54,15 +59,14 @@ fun CameraPreview(viewModel: CameraViewModel = viewModel(LocalActivity.current a
             val includeFrame = System.currentTimeMillis() >= lastFrame + 100
             if (includeFrame) lastFrame = System.currentTimeMillis()
 
-            // TODO tidy this up when full migration complete
-            if (includeFrame) { // MainActivity.onCamera && includeFrame) {
+            if (includeFrame && onCamera) {
                 val colour = GetColour.getColour(image)
 
                 val r = Math.toIntExact(Math.round(colour.component1()))
                 val g = Math.toIntExact(Math.round(colour.component2()))
                 val b = Math.toIntExact(Math.round(colour.component3()))
 
-                viewModel.updateColour(r, g, b)
+                localViewModel.updateColour(r, g, b)
             }
             image.close()
         }
