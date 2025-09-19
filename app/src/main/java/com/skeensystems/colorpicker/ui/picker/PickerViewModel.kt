@@ -6,19 +6,16 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.skeensystems.colorpicker.hsvToRGB
 import com.skeensystems.colorpicker.rgbToHSV
 import com.skeensystems.colorpicker.userpreferences.PreferenceKeys
-import com.skeensystems.colorpicker.userpreferences.dataStore
+import com.skeensystems.colorpicker.userpreferences.loadPreference
+import com.skeensystems.colorpicker.userpreferences.savePreference
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class PickerViewModel(
@@ -51,9 +48,9 @@ class PickerViewModel(
 
     init {
         viewModelScope.launch {
-            _r.floatValue = loadColourParameter(PreferenceKeys.PICKER_R, 1f)
-            _g.floatValue = loadColourParameter(PreferenceKeys.PICKER_G, 0f)
-            _b.floatValue = loadColourParameter(PreferenceKeys.PICKER_B, 0f)
+            _r.floatValue = context.loadPreference(PreferenceKeys.PICKER_R, 1f)
+            _g.floatValue = context.loadPreference(PreferenceKeys.PICKER_G, 0f)
+            _b.floatValue = context.loadPreference(PreferenceKeys.PICKER_B, 0f)
 
             R.updateOtherColourSystem()
             updateCornerColour()
@@ -76,15 +73,15 @@ class PickerViewModel(
             is V -> _v.floatValue = clampedValue
             is R -> {
                 _r.floatValue = clampedValue
-                saveColourParameter(PreferenceKeys.PICKER_R, clampedValue)
+                context.savePreference(PreferenceKeys.PICKER_R, clampedValue)
             }
             is G -> {
                 _g.floatValue = clampedValue
-                saveColourParameter(PreferenceKeys.PICKER_G, clampedValue)
+                context.savePreference(PreferenceKeys.PICKER_G, clampedValue)
             }
             is B -> {
                 _b.floatValue = clampedValue
-                saveColourParameter(PreferenceKeys.PICKER_B, clampedValue)
+                context.savePreference(PreferenceKeys.PICKER_B, clampedValue)
             }
         }
         componentType.updateOtherColourSystem()
@@ -114,9 +111,9 @@ class PickerViewModel(
                 _r.floatValue = r
                 _g.floatValue = g
                 _b.floatValue = b
-                saveColourParameter(PreferenceKeys.PICKER_R, r)
-                saveColourParameter(PreferenceKeys.PICKER_G, g)
-                saveColourParameter(PreferenceKeys.PICKER_B, b)
+                context.savePreference(PreferenceKeys.PICKER_R, r)
+                context.savePreference(PreferenceKeys.PICKER_G, g)
+                context.savePreference(PreferenceKeys.PICKER_B, b)
             }
             is R, is G, is B -> {
                 val (h, s, v) = rgbToHSV(_r.floatValue, _g.floatValue, _b.floatValue)
@@ -135,24 +132,5 @@ class PickerViewModel(
     private fun updateCornerColour() {
         val argb = HSVToColor(floatArrayOf(_h.floatValue, 1f, 1f))
         _cornerColour.value = Color(argb)
-    }
-
-    private suspend fun loadColourParameter(
-        key: Preferences.Key<Float>,
-        defaultValue: Float,
-    ): Float =
-        context.dataStore.data
-            .map { preferences -> preferences[key] ?: defaultValue }
-            .first()
-
-    private fun saveColourParameter(
-        key: Preferences.Key<Float>,
-        value: Float,
-    ) {
-        viewModelScope.launch {
-            context.dataStore.edit { preferences ->
-                preferences[key] = value
-            }
-        }
     }
 }

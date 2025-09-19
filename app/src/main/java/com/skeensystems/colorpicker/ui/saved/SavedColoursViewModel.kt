@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.skeensystems.colorpicker.database.SavedColour
@@ -14,14 +13,15 @@ import com.skeensystems.colorpicker.ui.saved.expandeddetails.VisibilityStatus
 import com.skeensystems.colorpicker.ui.saved.sortandfilter.FilterOptions
 import com.skeensystems.colorpicker.ui.saved.sortandfilter.SortOptions
 import com.skeensystems.colorpicker.userpreferences.PreferenceKeys
-import com.skeensystems.colorpicker.userpreferences.dataStore
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import com.skeensystems.colorpicker.userpreferences.loadPreference
+import com.skeensystems.colorpicker.userpreferences.savePreference
 import kotlinx.coroutines.launch
 
 class SavedColoursViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
+    private val context = getApplication<Application>()
+
     private val _selectingMode = mutableStateOf(false)
     val selectingMode: State<Boolean> = _selectingMode
 
@@ -44,27 +44,17 @@ class SavedColoursViewModel(
     var screenHeight = 0.dp
     var colourViewDimension = 0.dp
 
-    private val context = getApplication<Application>()
-
     init {
         viewModelScope.launch {
             _sortStatus.value =
-                when (
-                    context.dataStore.data
-                        .map { prefs -> prefs[PreferenceKeys.SORT_STATUS] ?: "Newest first" }
-                        .first()
-                ) {
+                when (context.loadPreference(PreferenceKeys.SORT_STATUS, "Newest first")) {
                     "Newest first" -> SortOptions.NEWEST_FIRST
                     "Oldest first" -> SortOptions.OLDEST_FIRST
                     else -> SortOptions.BY_COLOUR
                 }
 
             _filterStatus.value =
-                when (
-                    context.dataStore.data
-                        .map { prefs -> prefs[PreferenceKeys.FILTER_STATUS] ?: "No filter" }
-                        .first()
-                ) {
+                when (context.loadPreference(PreferenceKeys.FILTER_STATUS, "No filter")) {
                     "No filter" -> FilterOptions.NO_FILTER
                     else -> FilterOptions.FAVOURITES
                 }
@@ -96,19 +86,11 @@ class SavedColoursViewModel(
 
     fun setSortStatus(sortStatus: SortOptions) {
         _sortStatus.value = sortStatus
-        viewModelScope.launch {
-            context.dataStore.edit { preferences ->
-                preferences[PreferenceKeys.SORT_STATUS] = sortStatus.label
-            }
-        }
+        context.savePreference(PreferenceKeys.SORT_STATUS, sortStatus.label)
     }
 
     fun setFilterStatus(filterStatus: FilterOptions) {
         _filterStatus.value = filterStatus
-        viewModelScope.launch {
-            context.dataStore.edit { preferences ->
-                preferences[PreferenceKeys.FILTER_STATUS] = filterStatus.label
-            }
-        }
+        context.savePreference(PreferenceKeys.FILTER_STATUS, filterStatus.label)
     }
 }
