@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.skeensystems.colorpicker.GetColour
 import com.skeensystems.colorpicker.MainViewModel
 import kotlinx.coroutines.awaitCancellation
 import java.util.concurrent.Executors
@@ -60,12 +59,7 @@ fun CameraPreview(
             if (includeFrame) lastFrame = System.currentTimeMillis()
 
             if (includeFrame && onCamera) {
-                val colour = GetColour.getColour(image)
-
-                val r = Math.toIntExact(Math.round(colour.component1()))
-                val g = Math.toIntExact(Math.round(colour.component2()))
-                val b = Math.toIntExact(Math.round(colour.component3()))
-
+                val (r, g, b) = image.getColour()
                 localViewModel.updateColour(r, g, b)
             }
             image.close()
