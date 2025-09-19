@@ -9,9 +9,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.room.Room.databaseBuilder
+import com.google.android.gms.ads.MobileAds
 import com.skeensystems.colorpicker.database.AppDatabase
 import com.skeensystems.colorpicker.database.ColourDAO
 import com.skeensystems.colorpicker.ui.App
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
 class MainActivity : ComponentActivity() {
@@ -29,6 +33,9 @@ class MainActivity : ComponentActivity() {
                 ).build()
             colourDAO = db.colourDAO()
         }
+        CoroutineScope(Dispatchers.IO).launch {
+            MobileAds.initialize(this@MainActivity) {}
+        }
 
         enableEdgeToEdge()
         setContent {
@@ -41,8 +48,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    fun loadAd() {
     }
 }
