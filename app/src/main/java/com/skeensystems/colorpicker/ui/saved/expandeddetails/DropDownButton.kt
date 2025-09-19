@@ -82,7 +82,6 @@ fun DropDownButton(
         }
 
         if (displayingContent) {
-            // TODO use same method as in SavedColour for DatabaseColour details
             ColourCodeItem(type = "HEX", value = colour.getHEXString(), textColour = colour.textColour, smallText = true)
             ColourCodeItem(type = "RGB", value = colour.getRGBString(), textColour = colour.textColour, smallText = true)
             ColourCodeItem(type = "HSV", value = colour.getHSVString(), textColour = colour.textColour, smallText = true)
