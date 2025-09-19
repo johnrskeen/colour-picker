@@ -1,18 +1,31 @@
 package com.skeensystems.colorpicker.ui.picker
 
+import android.app.Application
 import android.graphics.Color.HSVToColor
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.ViewModel
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.skeensystems.colorpicker.hsvToRGB
 import com.skeensystems.colorpicker.rgbToHSV
+import com.skeensystems.colorpicker.userpreferences.PreferenceKeys
+import com.skeensystems.colorpicker.userpreferences.dataStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
-class PickerViewModel : ViewModel() {
+class PickerViewModel(
+    application: Application,
+) : AndroidViewModel(application) {
+    private val context = getApplication<Application>()
+
     private val _pickerColour = MutableStateFlow(Color.Black)
     val pickerColour: StateFlow<Color> = _pickerColour.asStateFlow()
 
@@ -36,6 +49,18 @@ class PickerViewModel : ViewModel() {
     private val _b = mutableFloatStateOf(0f)
     val b: State<Float> = _b
 
+    init {
+        viewModelScope.launch {
+            _r.floatValue = loadColourParameter(PreferenceKeys.PICKER_R, 1f)
+            _g.floatValue = loadColourParameter(PreferenceKeys.PICKER_G, 0f)
+            _b.floatValue = loadColourParameter(PreferenceKeys.PICKER_B, 0f)
+
+            R.updateOtherColourSystem()
+            updateCornerColour()
+            updateColour()
+        }
+    }
+
     fun setLastUpdateId(value: String) {
         _lastUpdateId.value = value
     }
@@ -49,9 +74,18 @@ class PickerViewModel : ViewModel() {
             is H -> _h.floatValue = clampedValue
             is S -> _s.floatValue = clampedValue
             is V -> _v.floatValue = clampedValue
-            is R -> _r.floatValue = clampedValue
-            is G -> _g.floatValue = clampedValue
-            is B -> _b.floatValue = clampedValue
+            is R -> {
+                _r.floatValue = clampedValue
+                saveColourParameter(PreferenceKeys.PICKER_R, clampedValue)
+            }
+            is G -> {
+                _g.floatValue = clampedValue
+                saveColourParameter(PreferenceKeys.PICKER_G, clampedValue)
+            }
+            is B -> {
+                _b.floatValue = clampedValue
+                saveColourParameter(PreferenceKeys.PICKER_B, clampedValue)
+            }
         }
         componentType.updateOtherColourSystem()
         updateCornerColour()
@@ -80,6 +114,9 @@ class PickerViewModel : ViewModel() {
                 _r.floatValue = r
                 _g.floatValue = g
                 _b.floatValue = b
+                saveColourParameter(PreferenceKeys.PICKER_R, r)
+                saveColourParameter(PreferenceKeys.PICKER_G, g)
+                saveColourParameter(PreferenceKeys.PICKER_B, b)
             }
             is R, is G, is B -> {
                 val (h, s, v) = rgbToHSV(_r.floatValue, _g.floatValue, _b.floatValue)
@@ -98,5 +135,24 @@ class PickerViewModel : ViewModel() {
     private fun updateCornerColour() {
         val argb = HSVToColor(floatArrayOf(_h.floatValue, 1f, 1f))
         _cornerColour.value = Color(argb)
+    }
+
+    private suspend fun loadColourParameter(
+        key: Preferences.Key<Float>,
+        defaultValue: Float,
+    ): Float =
+        context.dataStore.data
+            .map { preferences -> preferences[key] ?: defaultValue }
+            .first()
+
+    private fun saveColourParameter(
+        key: Preferences.Key<Float>,
+        value: Float,
+    ) {
+        viewModelScope.launch {
+            context.dataStore.edit { preferences ->
+                preferences[key] = value
+            }
+        }
     }
 }
