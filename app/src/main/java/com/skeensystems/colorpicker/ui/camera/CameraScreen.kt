@@ -1,5 +1,9 @@
 package com.skeensystems.colorpicker.ui.camera
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,10 +12,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import com.skeensystems.colorpicker.ui.camera.requestpermission.CameraPermissionDeniedScreen
 
 fun ComposeView.setCameraContent() {
     setContent {
@@ -21,26 +32,55 @@ fun ComposeView.setCameraContent() {
 
 @Composable
 fun CameraScreen() {
+    val context = LocalContext.current
+    var hasPermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.CAMERA,
+            ) == PackageManager.PERMISSION_GRANTED,
+        )
+    }
+
+    val launcher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+        ) { isGranted: Boolean ->
+            hasPermission = isGranted
+        }
+
+    LaunchedEffect(Unit) {
+        if (!hasPermission) {
+            launcher.launch(Manifest.permission.CAMERA)
+        }
+    }
+
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         floatingActionButton = {
-            CaptureColourButton(snackbarHostState = snackbarHostState)
+            if (hasPermission) CaptureColourButton(snackbarHostState = snackbarHostState)
         },
     ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            CameraPreview()
+        if (hasPermission) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CameraPreview()
 
-            CameraPickerTarget(modifier = Modifier.align(Alignment.Center))
+                CameraPickerTarget(modifier = Modifier.align(Alignment.Center))
 
-            CameraTargetedColourDetails(modifier = Modifier.padding(paddingValues).align(Alignment.TopCenter))
+                CameraTargetedColourDetails(
+                    modifier = Modifier.padding(paddingValues).align(Alignment.TopCenter),
+                )
 
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter),
-            )
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter),
+                )
+            }
+        } else {
+            CameraPermissionDeniedScreen(context = context)
         }
     }
 }
