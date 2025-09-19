@@ -2,7 +2,10 @@ package com.skeensystems.colorpicker.ui
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -27,6 +30,7 @@ import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.MainViewModelFactory
 import com.skeensystems.colorpicker.database.ColourDAO
 import com.skeensystems.colorpicker.database.ColourDatabase
+import com.skeensystems.colorpicker.ui.ads.AdContainer
 import com.skeensystems.colorpicker.ui.camera.CameraScreen
 import com.skeensystems.colorpicker.ui.picker.PickerScreen
 import com.skeensystems.colorpicker.ui.saved.SavedColoursScreen
@@ -87,15 +91,21 @@ fun App(colourDAO: ColourDAO) {
             }
         },
     ) { innerPadding ->
-        HorizontalPager(
-            modifier = Modifier.fillMaxSize().padding(bottom = innerPadding.calculateBottomPadding()),
-            state = pagerState,
-            beyondViewportPageCount = 3,
-        ) { page ->
-            when (page) {
-                0 -> SavedColoursScreen()
-                1 -> CameraScreen()
-                else -> PickerScreen()
+        BoxWithConstraints(modifier = Modifier.fillMaxSize().padding(bottom = innerPadding.calculateBottomPadding())) {
+            val width = maxWidth
+            Column(modifier = Modifier.fillMaxSize()) {
+                HorizontalPager(
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    state = pagerState,
+                    beyondViewportPageCount = 3,
+                ) { page ->
+                    when (page) {
+                        0 -> SavedColoursScreen()
+                        1 -> CameraScreen()
+                        else -> PickerScreen()
+                    }
+                }
+                AdContainer(width = width)
             }
         }
     }
