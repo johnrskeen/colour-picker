@@ -92,5 +92,6 @@ class SavedColoursViewModel(
     fun setFilterStatus(filterStatus: FilterOptions) {
         _filterStatus.value = filterStatus
         context.savePreference(PreferenceKeys.FILTER_STATUS, filterStatus.label)
+        exitSelectingMode()
     }
 }
