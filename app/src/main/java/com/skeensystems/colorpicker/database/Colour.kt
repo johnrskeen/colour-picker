@@ -30,7 +30,7 @@ abstract class Colour {
 
     fun getHSVString(): String = "${hsv.h}\u00B0, ${hsv.s}%, ${hsv.v}%"
 
-    fun getHSLString(): String = "${hsl.h}°, ${hsl.s}%, ${hsl.l}%"
+    fun getHSLString(): String = "${hsl.h}\u00B0, ${hsl.s}%, ${hsl.l}%"
 
     fun getCMYKString(): String = "${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%"
 
