@@ -7,7 +7,6 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,11 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.skeensystems.colorpicker.R
-import com.skeensystems.colorpicker.themeColour
 import kotlin.enums.EnumEntries
 
-// TODO the theming done here might be extractable to a main theme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> DropDownMenu(
@@ -51,11 +47,6 @@ fun <T> DropDownMenu(
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
-            colors =
-                OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = themeColour(R.attr.defaultTextColour),
-                    focusedLabelColor = themeColour(R.attr.defaultTextColour),
-                ),
             modifier =
                 Modifier
                     .menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true)
