@@ -40,7 +40,6 @@ fun ConfirmDelete(
             dismissButton = {
                 TextButton(
                     onClick = { exitConfirmingDeleteMode() },
-                    colors = ButtonDefaults.textButtonColors(contentColor = themeColour(R.attr.defaultTextColour)),
                 ) { Text("Cancel") }
             },
             title = { Text(title) },
