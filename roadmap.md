@@ -3,14 +3,15 @@
 ## Saved Colours page
 
 ### Upcoming features
-- sharing colours (not sure if this is really needed, copying kind of carries out this function)
 - some form of colour groupings defined by the user (i.e. like albums for photos)
 - exporting all saved colours in some format
 - allow number of columns colours are displayed in to be changed by the user
 - view colour database
 - some sort of search (don't really know how best to implement this at the moment)
-- make inspect colour preview have rounded corners when expanding from rounded corner saved colour button (saved colour buttons are no longer square but are rounded square)
-- (bug introduced in v2.2.0) sometimes favorite colour indicator doesn't show for all colours
+
+### v3.0.0
+- compose migration
+- complete migration to kotlin
 
 ### v2.2.1
 - (bug introduced in v2.2.0) fix un-clickable favorite colours bug (after some buttons have been selected)
@@ -38,6 +39,10 @@
 ### Upcoming features
 - some sort of better preview (i.e. zoom in mode when selecting pixels)
 
+### v3.0.0
+- compose migration
+- complete migration to kotlin
+
 ### v2.2.0
 - improve smoothness of pixel colour detection
 - improve most recent colour info
@@ -53,8 +58,12 @@
 - see complementary colours when manually picking
 - allow picking by HSL and CMYK
 
+### v3.0.0
+- compose migration
+- complete migration to kotlin
+
 ### v2.2.1
-- clean up LiveData<String>, this should be LiveData<Integer>
+- clean up LiveData objects holding strings instead of integers
 
 ### v2.0.1
 - make colour saved notification toast into a snack-bar
@@ -70,6 +79,10 @@
 - add loading screen while camera is loading (not needed for fast devices but would improve user experience on slower devices)
 - add support for RYB, Pantone colours? (and any other colour systems)
 - pick from picture in phone (then new bottom navigation: Colour Database - Saved Colours - Camera Picker - Image Picker - Manual Picker, or some other order but this is probably the most appropriate)
+
+### v3.0.0
+- compose migration
+- complete migration to kotlin
 
 ### v2.3.0
 - add landscape support
