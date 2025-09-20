@@ -31,8 +31,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
-import com.skeensystems.colorpicker.R
-import com.skeensystems.colorpicker.themeColour
 import com.skeensystems.colorpicker.ui.CaptureColourButton
 import com.skeensystems.colorpicker.ui.picker.finedetails.FineDetailsContainer
 import com.skeensystems.colorpicker.ui.picker.slider.PickerSlider
@@ -78,7 +76,6 @@ fun PickerScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(themeColour(R.attr.mainColour))
                     .padding(top = paddingValues.calculateTopPadding()),
         ) {
             Column(modifier = Modifier.fillMaxSize()) {

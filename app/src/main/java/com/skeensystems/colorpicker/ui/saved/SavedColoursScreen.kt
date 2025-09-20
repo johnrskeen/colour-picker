@@ -3,7 +3,6 @@ package com.skeensystems.colorpicker.ui.saved
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -31,9 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
-import com.skeensystems.colorpicker.R
 import com.skeensystems.colorpicker.copyToClipboard
-import com.skeensystems.colorpicker.themeColour
 import com.skeensystems.colorpicker.ui.saved.expandeddetails.ColourDetails
 import com.skeensystems.colorpicker.ui.saved.selectionmode.SelectionModeActionBar
 import com.skeensystems.colorpicker.ui.saved.sortandfilter.DropDownMenu
@@ -75,7 +72,6 @@ fun SavedColoursScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(themeColour(R.attr.mainColour))
                     .padding(top = topPaddingDp),
         ) {
             localViewModel.screenWidth = maxWidth
@@ -88,7 +84,6 @@ fun SavedColoursScreen(
                             .padding(20.dp),
                     text = "Saved Colours",
                     textAlign = TextAlign.Center,
-                    color = themeColour(R.attr.defaultTextColour),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Medium,
                 )
