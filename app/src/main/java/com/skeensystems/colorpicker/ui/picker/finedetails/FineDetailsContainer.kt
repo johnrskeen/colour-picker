@@ -13,11 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.skeensystems.colorpicker.R
-import com.skeensystems.colorpicker.themeColour
 import kotlinx.coroutines.launch
 
+// TODO add temporary colours to replace R.attr as buttons will be replaced with tabs
 @Composable
 fun FineDetailsContainer(modifier: Modifier = Modifier) {
     val pagerState = rememberPagerState(pageCount = { 3 })
@@ -33,9 +33,9 @@ fun FineDetailsContainer(modifier: Modifier = Modifier) {
                                 if (pagerState.currentPage ==
                                     index
                                 ) {
-                                    themeColour(R.attr.reversedColourAccent)
+                                    Color.LightGray // themeColour(R.attr.reversedColourAccent)
                                 } else {
-                                    themeColour(R.attr.mainColourAccent)
+                                    Color.DarkGray // themeColour(R.attr.mainColourAccent)
                                 },
                         ),
                     modifier =
@@ -43,7 +43,7 @@ fun FineDetailsContainer(modifier: Modifier = Modifier) {
                             .weight(1f)
                             .padding(4.dp),
                 ) {
-                    Text(title.name, color = themeColour(R.attr.defaultTextColour), maxLines = 1)
+                    Text(title.name, maxLines = 1)
                 }
             }
         }
