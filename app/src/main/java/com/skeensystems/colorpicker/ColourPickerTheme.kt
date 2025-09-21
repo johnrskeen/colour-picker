@@ -51,10 +51,18 @@ fun ColourPickerTheme(
             darkTheme ->
                 darkColorScheme().copy(
                     primary = Color.LightGray,
-                    background = Color.DarkGray,
+                    primaryContainer = Color(30, 30, 30),
+                    onPrimaryContainer = Color.White,
+                    background = Color(30, 30, 30),
                 )
 
-            else -> lightColorScheme().copy(primary = Color.Black, background = Color.LightGray)
+            else ->
+                lightColorScheme().copy(
+                    primary = Color.Black,
+                    primaryContainer = Color.LightGray,
+                    onPrimaryContainer = Color.Black,
+                    background = Color.LightGray,
+                )
         }
 
     MaterialTheme(
