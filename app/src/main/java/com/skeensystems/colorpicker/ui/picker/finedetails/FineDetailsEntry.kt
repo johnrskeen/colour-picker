@@ -5,7 +5,6 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -14,8 +13,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.skeensystems.colorpicker.R
-import com.skeensystems.colorpicker.themeColour
 import com.skeensystems.colorpicker.ui.picker.PickerViewModel
 import com.skeensystems.colorpicker.ui.picker.adjust
 import com.skeensystems.colorpicker.ui.picker.format
@@ -27,7 +24,6 @@ fun FineDetailsEntry(
     details: FineDetailsEntrySpec,
     colourSystem: ColourSystem,
 ) {
-    val textColour = themeColour(R.attr.defaultTextColour)
     val id = colourSystem.toString() + details.componentType.toString()
     OutlinedTextField(
         modifier =
@@ -50,13 +46,6 @@ fun FineDetailsEntry(
                     it.toString()
                 }
             },
-        colors =
-            OutlinedTextFieldDefaults.colors(
-                focusedTextColor = textColour,
-                unfocusedTextColor = textColour,
-                focusedBorderColor = textColour,
-                focusedLabelColor = textColour,
-            ),
         textStyle = TextStyle(textAlign = TextAlign.Center),
         onValueChange = { input ->
             viewModel.setLastUpdateId(id)
