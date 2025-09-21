@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -19,12 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.EditEvent
 import com.skeensystems.colorpicker.MainViewModel
-import com.skeensystems.colorpicker.R
 import com.skeensystems.colorpicker.copyToClipboard
 import com.skeensystems.colorpicker.database.SavedColour
-import com.skeensystems.colorpicker.themeColour
 import kotlinx.coroutines.launch
 
+// TODO combine this with EditingModeActionBar
 @Composable
 fun CopyEditColourActionBar(
     viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
@@ -36,8 +36,7 @@ fun CopyEditColourActionBar(
     Row(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
         ExtendedFloatingActionButton(
             modifier = Modifier.weight(1f).padding(5.dp),
-            containerColor = themeColour(R.attr.mainColour),
-            contentColor = themeColour(R.attr.defaultTextColour),
+            containerColor = MaterialTheme.colorScheme.background,
             onClick = {
                 scope.launch {
                     inspectedColour.copyToClipboard(clipboardManager = clipboardManager)
@@ -48,8 +47,7 @@ fun CopyEditColourActionBar(
         )
         ExtendedFloatingActionButton(
             modifier = Modifier.weight(1f).padding(5.dp),
-            containerColor = themeColour(R.attr.mainColour),
-            contentColor = themeColour(R.attr.defaultTextColour),
+            containerColor = MaterialTheme.colorScheme.background,
             onClick = { viewModel.setEditingColour(EditEvent(colour = inspectedColour)) },
             icon = { Icon(Icons.Filled.Edit, "Edit colour details.") },
             text = { Text("Edit") },

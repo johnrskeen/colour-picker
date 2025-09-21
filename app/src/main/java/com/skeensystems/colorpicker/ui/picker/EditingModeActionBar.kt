@@ -20,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.database.SavedColour
 
+// TODO combine this with CopyEditColourActionBar
 @Composable
 fun EditingModeActionBar(
     modifier: Modifier = Modifier,
