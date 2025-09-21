@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.skeensystems.colorpicker.themeColour
 import com.skeensystems.colorpicker.ui.picker.PickerViewModel
 
 @Composable
@@ -28,7 +27,6 @@ fun FineDetailsPage(
 ) {
     val columns = getFineDetailsColumns(colourSystem = colourSystem)
 
-    val textColour = themeColour(com.skeensystems.colorpicker.R.attr.defaultTextColour)
     Row(modifier = modifier.fillMaxSize()) {
         columns.forEach { column ->
             Column(modifier = Modifier.fillMaxHeight().weight(1f), verticalArrangement = Arrangement.Center) {
@@ -38,7 +36,6 @@ fun FineDetailsPage(
                 ) {
                     Text(
                         text = column.componentType.toString(),
-                        color = textColour,
                         style = MaterialTheme.typography.labelLarge,
                     )
                 }
