@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -16,9 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.skeensystems.colorpicker.R
 import com.skeensystems.colorpicker.measureTextWidth
-import com.skeensystems.colorpicker.themeColour
 import com.skeensystems.colorpicker.ui.IconAndTextButton
 
 @Composable
@@ -47,7 +46,7 @@ fun SelectionModeActionBar(
                 icon = it.icon,
                 text = it.text,
                 contentDescription = it.contentDescription,
-                colour = themeColour(R.attr.defaultTextColour),
+                colour = MaterialTheme.colorScheme.onSurface,
                 afterOnClickPadding = PaddingValues(10.dp),
             )
         }
