@@ -11,8 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.skeensystems.colorpicker.R
-import com.skeensystems.colorpicker.themeColour
 
 @Composable
 fun ConfirmDelete(
@@ -44,7 +42,6 @@ fun ConfirmDelete(
             },
             title = { Text(title) },
             text = { Text("This action cannot be undone.") },
-            containerColor = themeColour(R.attr.mainColour),
         )
     }
 }
