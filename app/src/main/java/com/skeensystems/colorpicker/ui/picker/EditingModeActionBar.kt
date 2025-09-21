@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.outlined.ChangeCircle
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,9 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.skeensystems.colorpicker.MainViewModel
-import com.skeensystems.colorpicker.R
 import com.skeensystems.colorpicker.database.SavedColour
-import com.skeensystems.colorpicker.themeColour
 
 @Composable
 fun EditingModeActionBar(
@@ -32,8 +31,7 @@ fun EditingModeActionBar(
     Row(modifier = modifier.fillMaxWidth().padding(10.dp)) {
         ExtendedFloatingActionButton(
             modifier = Modifier.weight(1f).padding(5.dp),
-            containerColor = themeColour(R.attr.mainColour),
-            contentColor = themeColour(R.attr.defaultTextColour),
+            containerColor = MaterialTheme.colorScheme.background,
             onClick = {
                 val newColour =
                     viewModel.saveColour(
@@ -48,8 +46,7 @@ fun EditingModeActionBar(
         )
         ExtendedFloatingActionButton(
             modifier = Modifier.weight(1f).padding(5.dp),
-            containerColor = themeColour(R.attr.mainColour),
-            contentColor = themeColour(R.attr.defaultTextColour),
+            containerColor = MaterialTheme.colorScheme.background,
             onClick = {
                 viewModel.deleteColour(editingColour)
                 val newColour =
