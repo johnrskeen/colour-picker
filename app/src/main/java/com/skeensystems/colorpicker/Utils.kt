@@ -1,11 +1,9 @@
 package com.skeensystems.colorpicker
 
 import android.content.ClipData
-import android.util.TypedValue
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.Clipboard
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.text.TextStyle
@@ -34,14 +32,6 @@ fun Color.getClosestColour(viewModel: MainViewModel): String =
     )
 
 fun Color.getHexString(): String = String.format("#%02X%02X%02X", (red * 255).toInt(), (green * 255).toInt(), (blue * 255).toInt())
-
-@Composable
-fun themeColour(attrResId: Int): Color {
-    val context = LocalContext.current
-    val typedValue = TypedValue()
-    context.theme.resolveAttribute(attrResId, typedValue, true)
-    return Color(typedValue.data)
-}
 
 suspend fun Colour.copyToClipboard(clipboardManager: Clipboard) {
     val clip = ClipData.newPlainText("Colour", generateCopyString()).toClipEntry()
