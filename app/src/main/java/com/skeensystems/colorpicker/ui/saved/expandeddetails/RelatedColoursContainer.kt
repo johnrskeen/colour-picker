@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,9 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.skeensystems.colorpicker.R
 import com.skeensystems.colorpicker.database.SavedColour
-import com.skeensystems.colorpicker.themeColour
 
 @Composable
 fun RelatedColoursContainer(inspectedColour: SavedColour) {
@@ -24,14 +23,13 @@ fun RelatedColoursContainer(inspectedColour: SavedColour) {
             Modifier
                 .fillMaxSize()
                 .padding(10.dp)
-                .background(color = themeColour(R.attr.mainColour), shape = RoundedCornerShape(20.dp))
+                .background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(20.dp))
                 .padding(10.dp),
     ) {
         Text(
             modifier = Modifier.fillMaxWidth().padding(20.dp),
             text = "Similar Colours",
             textAlign = TextAlign.Center,
-            color = themeColour(R.attr.defaultTextColour),
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
         )
@@ -43,7 +41,6 @@ fun RelatedColoursContainer(inspectedColour: SavedColour) {
             modifier = Modifier.fillMaxWidth().padding(20.dp),
             text = "Complementary Colours",
             textAlign = TextAlign.Center,
-            color = themeColour(R.attr.defaultTextColour),
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
         )
