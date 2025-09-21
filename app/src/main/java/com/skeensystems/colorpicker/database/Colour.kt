@@ -1,26 +1,44 @@
 package com.skeensystems.colorpicker.database
 
-interface Colour {
+import androidx.compose.ui.graphics.Color
+import com.skeensystems.colorpicker.calculateTextColour
+import com.skeensystems.colorpicker.database.coloursystems.CMYK
+import com.skeensystems.colorpicker.database.coloursystems.HSL
+import com.skeensystems.colorpicker.database.coloursystems.HSV
+import com.skeensystems.colorpicker.rgbToHSV
 
-    fun getColour(): Int
+abstract class Colour {
+    abstract val name: String
+    abstract val r: Int
+    abstract val g: Int
+    abstract val b: Int
 
-    fun getName(): String
+    val textColour by lazy { getColour().calculateTextColour() }
 
-    fun getR(): Int
+    private val hsvFloat by lazy {
+        rgbToHSV(r / 255f, g / 255f, b / 255f)
+    }
+    protected val hsv by lazy { HSV(hsvFloat.first, hsvFloat.second, hsvFloat.third) }
+    private val hsl by lazy { HSL(hsvFloat.first, hsvFloat.second, hsvFloat.third) }
+    private val cmyk by lazy { CMYK(r / 255f, g / 255f, b / 255f) }
 
-    fun getG(): Int
+    fun getColour(): Color = Color(r, g, b)
 
-    fun getB(): Int
+    fun getHEXString(): String = String.format("#%02X%02X%02X", r, g, b)
 
-    fun getTextColour(): Int
+    fun getRGBString(): String = "$r, $g, $b"
 
-    fun getHEXString(): String
+    fun getHSVString(): String = "${hsv.h}\u00B0, ${hsv.s}%, ${hsv.v}%"
 
-    fun getRGBString(): String
+    fun getHSLString(): String = "${hsl.h}\u00B0, ${hsl.s}%, ${hsl.l}%"
 
-    fun getHSVString(): String
+    fun getCMYKString(): String = "${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%"
 
-    fun getHSLString(): String
-
-    fun getCMYKString(): String
+    fun generateCopyString(): String =
+        name +
+            "\nHEX ${getHEXString()}" +
+            "\nHEX ${getRGBString()}" +
+            "\nHSV ${getHSVString()}" +
+            "\nHSL ${getHSLString()}" +
+            "\nCMYK ${getCMYKString()}"
 }

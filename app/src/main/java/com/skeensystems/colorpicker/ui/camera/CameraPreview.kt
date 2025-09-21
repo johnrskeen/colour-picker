@@ -1,0 +1,88 @@
+package com.skeensystems.colorpicker.ui.camera
+
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
+import androidx.camera.compose.CameraXViewfinder
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.Preview
+import androidx.camera.core.SurfaceRequest
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.viewfinder.core.ImplementationMode
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.skeensystems.colorpicker.MainViewModel
+import kotlinx.coroutines.awaitCancellation
+import java.util.concurrent.Executors
+
+@Composable
+fun CameraPreview(
+    mainViewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity),
+    localViewModel: CameraViewModel = viewModel(LocalActivity.current as ComponentActivity),
+) {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    var surfaceRequest by remember { mutableStateOf<SurfaceRequest?>(null) }
+    val onCamera by mainViewModel.onCamera
+
+    LaunchedEffect(Unit) {
+        var lastFrame = System.currentTimeMillis() - 200
+        val cameraProvider = ProcessCameraProvider.getInstance(context).get()
+
+        val preview =
+            Preview.Builder().build().also { preview ->
+                preview.setSurfaceProvider { request ->
+                    surfaceRequest = request
+                }
+            }
+
+        val imageAnalyzer =
+            ImageAnalysis
+                .Builder()
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .build()
+
+        imageAnalyzer.setAnalyzer(Executors.newSingleThreadExecutor()) { image ->
+
+            val includeFrame = System.currentTimeMillis() >= lastFrame + 100
+            if (includeFrame) lastFrame = System.currentTimeMillis()
+
+            if (includeFrame && onCamera) {
+                val (r, g, b) = image.getColour()
+                localViewModel.updateColour(r, g, b)
+            }
+            image.close()
+        }
+
+        cameraProvider.unbindAll()
+        cameraProvider.bindToLifecycle(
+            lifecycleOwner,
+            CameraSelector.DEFAULT_BACK_CAMERA,
+            preview,
+            imageAnalyzer,
+        )
+
+        awaitCancellation()
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        surfaceRequest?.let { request ->
+            CameraXViewfinder(
+                surfaceRequest = request,
+                implementationMode = ImplementationMode.EMBEDDED,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+    }
+}
