@@ -13,13 +13,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalClipboard
@@ -63,91 +68,123 @@ fun SavedColoursScreen(
     val filterStatus by localViewModel.filterStatus
 
     val clipboardManager = LocalClipboard.current
+    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    Scaffold { paddingValues ->
-        val topPaddingDp = paddingValues.calculateTopPadding()
-        val topPaddingPx = with(LocalDensity.current) { topPaddingDp.toPx() }
-        BoxWithConstraints(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(top = topPaddingDp),
-        ) {
-            localViewModel.screenWidth = maxWidth
-            localViewModel.screenHeight = maxHeight
-            Column {
-                Text(
+    CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
+        Scaffold { paddingValues ->
+            val topPaddingDp = paddingValues.calculateTopPadding()
+            val topPaddingPx = with(LocalDensity.current) { topPaddingDp.toPx() }
+            BoxWithConstraints(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(top = topPaddingDp),
+            ) {
+                localViewModel.screenWidth = maxWidth
+                localViewModel.screenHeight = maxHeight
+                Column {
+                    Text(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                        text = "Saved Colours",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Medium,
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        DropDownMenu(
+                            modifier = Modifier.weight(1f),
+                            title = "Sort",
+                            options = SortOptions.entries,
+                            onOptionSelected = { selectedOption ->
+                                localViewModel.setSortStatus(
+                                    selectedOption,
+                                )
+                            },
+                            selectedOption = sortStatus,
+                        )
+                        DropDownMenu(
+                            modifier = Modifier.weight(1f),
+                            title = "Filter",
+                            options = FilterOptions.entries,
+                            onOptionSelected = { selectedOption ->
+                                localViewModel.setFilterStatus(
+                                    selectedOption,
+                                )
+                            },
+                            selectedOption = filterStatus,
+                        )
+                    }
+
+                    SavedColoursGrid(
+                        modifier = Modifier.fillMaxWidth().weight(1f).padding(end = 1.dp),
+                        sortStatus = sortStatus,
+                        filterStatus = filterStatus,
+                    )
+
+                    Box(modifier = Modifier.animateContentSize()) {
+                        if (selectionMode) {
+                            SelectionModeActionBar(
+                                onCancel = {
+                                    localViewModel.exitSelectingMode()
+                                },
+                                onCopy = {
+                                    scope.launch {
+                                        selectedItems.copyToClipboard(clipboardManager = clipboardManager)
+                                        localViewModel.exitSelectingMode()
+                                    }
+                                },
+                                onSetFavouriteStatus = { favouriteStatus ->
+                                    selectedItems.map {
+                                        mainViewModel.setFavouriteStatus(
+                                            it,
+                                            favouriteStatus,
+                                        )
+                                    }
+                                    localViewModel.exitSelectingMode()
+                                },
+                                onDelete = {
+                                    confirmingDelete = true
+                                },
+                            )
+                        }
+                    }
+                }
+
+                ColourDetails(
+                    topPaddingPx = topPaddingPx,
+                )
+
+                ConfirmDelete(
+                    title = "Delete all currently selected colours?",
+                    confirmingDelete = confirmingDelete,
+                    onDelete = {
+                        selectedItems.forEach { mainViewModel.deleteColour(it) }
+                        localViewModel.exitSelectingMode()
+                    },
+                    exitConfirmingDeleteMode = { confirmingDelete = false },
+                )
+
+                SnackbarHost(
+                    hostState = snackbarHostState,
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(20.dp),
-                    text = "Saved Colours",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Medium,
+                            .align(Alignment.BottomCenter),
                 )
-
-                Row(modifier = Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    DropDownMenu(
-                        modifier = Modifier.weight(1f),
-                        title = "Sort",
-                        options = SortOptions.entries,
-                        onOptionSelected = { selectedOption -> localViewModel.setSortStatus(selectedOption) },
-                        selectedOption = sortStatus,
-                    )
-                    DropDownMenu(
-                        modifier = Modifier.weight(1f),
-                        title = "Filter",
-                        options = FilterOptions.entries,
-                        onOptionSelected = { selectedOption -> localViewModel.setFilterStatus(selectedOption) },
-                        selectedOption = filterStatus,
-                    )
-                }
-
-                SavedColoursGrid(
-                    modifier = Modifier.fillMaxWidth().weight(1f).padding(end = 1.dp),
-                    sortStatus = sortStatus,
-                    filterStatus = filterStatus,
-                )
-
-                Box(modifier = Modifier.animateContentSize()) {
-                    if (selectionMode) {
-                        SelectionModeActionBar(
-                            onCancel = {
-                                localViewModel.exitSelectingMode()
-                            },
-                            onCopy = {
-                                scope.launch {
-                                    selectedItems.copyToClipboard(clipboardManager = clipboardManager)
-                                    localViewModel.exitSelectingMode()
-                                }
-                            },
-                            onSetFavouriteStatus = { favouriteStatus ->
-                                selectedItems.map { mainViewModel.setFavouriteStatus(it, favouriteStatus) }
-                                localViewModel.exitSelectingMode()
-                            },
-                            onDelete = {
-                                confirmingDelete = true
-                            },
-                        )
-                    }
-                }
             }
-
-            ColourDetails(
-                topPaddingPx = topPaddingPx,
-            )
-
-            ConfirmDelete(
-                title = "Delete all currently selected colours?",
-                confirmingDelete = confirmingDelete,
-                onDelete = {
-                    selectedItems.forEach { mainViewModel.deleteColour(it) }
-                    localViewModel.exitSelectingMode()
-                },
-                exitConfirmingDeleteMode = { confirmingDelete = false },
-            )
         }
     }
 }
+
+val LocalSnackbarHostState =
+    staticCompositionLocalOf<SnackbarHostState> {
+        error("No SnackbarHostState provided")
+    }
