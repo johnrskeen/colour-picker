@@ -5,6 +5,7 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -24,7 +25,8 @@ fun FineDetailsEntry(
     details: FineDetailsEntrySpec,
     colourSystem: ColourSystem,
 ) {
-    val id = colourSystem.toString() + details.componentType.toString()
+    val name = details.componentType.toString()
+    val id = colourSystem.toString() + name
     OutlinedTextField(
         modifier =
             modifier.onFocusChanged { focusState ->
@@ -46,6 +48,7 @@ fun FineDetailsEntry(
                     it.toString()
                 }
             },
+        label = { Text(name) },
         textStyle = TextStyle(textAlign = TextAlign.Center),
         onValueChange = { input ->
             viewModel.setLastUpdateId(id)

@@ -3,17 +3,11 @@ package com.skeensystems.colorpicker.ui.picker.finedetails
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -27,29 +21,17 @@ fun FineDetailsPage(
 ) {
     val columns = getFineDetailsColumns(colourSystem = colourSystem)
 
-    Row(modifier = modifier.fillMaxSize()) {
+    Row(modifier = modifier.padding(10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         columns.forEach { column ->
-            Column(modifier = Modifier.fillMaxHeight().weight(1f), verticalArrangement = Arrangement.Center) {
-                Box(
-                    modifier = Modifier.fillMaxWidth().weight(1f),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = column.componentType.toString(),
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                }
-                Column(modifier = Modifier.fillMaxWidth().weight(2f).padding(10.dp)) {
-                    AdjustButtons(
-                        modifier = Modifier.weight(0.5f),
-                        onAdjust = { change -> viewModel.changeValue(column.componentType, change) },
-                    )
-                    FineDetailsEntry(
-                        modifier = Modifier.weight(1f),
-                        details = column,
-                        colourSystem = colourSystem,
-                    )
-                }
+            Column(modifier = Modifier.fillMaxHeight().weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                AdjustButtons(
+                    onAdjust = { change -> viewModel.changeValue(column.componentType, change) },
+                )
+                FineDetailsEntry(
+                    modifier = Modifier.weight(1f),
+                    details = column,
+                    colourSystem = colourSystem,
+                )
             }
         }
     }
