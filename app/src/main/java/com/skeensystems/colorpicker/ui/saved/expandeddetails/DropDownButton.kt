@@ -37,6 +37,7 @@ import com.skeensystems.colorpicker.MainViewModel
 import com.skeensystems.colorpicker.copyToClipboard
 import com.skeensystems.colorpicker.database.Colour
 import com.skeensystems.colorpicker.ui.IconAndTextButton
+import com.skeensystems.colorpicker.ui.saved.LocalSnackbarHostState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -47,6 +48,7 @@ fun DropDownButton(
     var displayingContent by remember { mutableStateOf(false) }
 
     val clipboardManager = LocalClipboard.current
+    val snackbarHostState = LocalSnackbarHostState.current
     val scope = rememberCoroutineScope()
 
     Column(
@@ -104,7 +106,14 @@ fun DropDownButton(
                 )
                 IconAndTextButton(
                     modifier = Modifier.weight(1f),
-                    onClick = { viewModel.saveColour(colour.r, colour.g, colour.b) },
+                    onClick = {
+                        val newColour = viewModel.saveColour(colour.r, colour.g, colour.b)
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                "Saved colour ${newColour.getHEXString()} (${newColour.getClosestMatchString()})",
+                            )
+                        }
+                    },
                     icon = Icons.Outlined.BookmarkAdd,
                     text = "Save",
                     contentDescription = "Save colour.",
