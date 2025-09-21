@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -62,8 +63,8 @@ fun DropDownButton(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(20.dp)
-                    .clickable { displayingContent = !displayingContent },
+                    .clickable { displayingContent = !displayingContent }
+                    .padding(20.dp),
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
@@ -89,7 +90,7 @@ fun DropDownButton(
             ColourCodeItem(type = "CMYK", value = colour.getCMYKString(), textColour = colour.textColour, smallText = true)
             Row(modifier = Modifier.fillMaxWidth()) {
                 IconAndTextButton(
-                    modifier = Modifier.weight(1f).padding(20.dp),
+                    modifier = Modifier.weight(1f),
                     onClick = {
                         scope.launch {
                             colour.copyToClipboard(clipboardManager = clipboardManager)
@@ -99,14 +100,16 @@ fun DropDownButton(
                     text = "Copy",
                     contentDescription = "Copy colour details.",
                     colour = colour.textColour,
+                    afterOnClickPadding = PaddingValues(20.dp),
                 )
                 IconAndTextButton(
-                    modifier = Modifier.weight(1f).padding(20.dp),
+                    modifier = Modifier.weight(1f),
                     onClick = { viewModel.saveColour(colour.r, colour.g, colour.b) },
                     icon = Icons.Outlined.BookmarkAdd,
                     text = "Save",
                     contentDescription = "Save colour.",
                     colour = colour.textColour,
+                    afterOnClickPadding = PaddingValues(20.dp),
                 )
             }
         }
