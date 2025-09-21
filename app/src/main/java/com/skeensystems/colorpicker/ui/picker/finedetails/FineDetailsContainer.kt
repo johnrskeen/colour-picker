@@ -1,6 +1,7 @@
 package com.skeensystems.colorpicker.ui.picker.finedetails
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -16,7 +17,7 @@ fun FineDetailsContainer(modifier: Modifier = Modifier) {
     var selectedTab by remember { mutableIntStateOf(0) }
 
     Column(modifier = modifier) {
-        TabRow(selectedTabIndex = selectedTab) {
+        TabRow(selectedTabIndex = selectedTab, containerColor = MaterialTheme.colorScheme.background) {
             listOf(
                 ColourSystem.RGB,
                 ColourSystem.HEX,
