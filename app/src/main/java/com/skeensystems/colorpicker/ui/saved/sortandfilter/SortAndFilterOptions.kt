@@ -9,7 +9,10 @@ enum class SortOptions(
 ) : SortAndFilterOptions {
     NEWEST_FIRST("Newest first"),
     OLDEST_FIRST("Oldest first"),
-    BY_COLOUR("By Colour"),
+    BY_COLOUR("By colour"),
+    BY_R_VALUE("By red value"),
+    BY_G_VALUE("By green value"),
+    BY_B_VALUE("By blue value"),
 }
 
 enum class FilterOptions(
