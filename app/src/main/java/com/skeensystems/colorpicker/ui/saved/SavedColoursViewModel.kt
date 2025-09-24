@@ -50,13 +50,18 @@ class SavedColoursViewModel(
                 when (context.loadPreference(PreferenceKeys.SORT_STATUS, "Newest first")) {
                     "Newest first" -> SortOptions.NEWEST_FIRST
                     "Oldest first" -> SortOptions.OLDEST_FIRST
-                    else -> SortOptions.BY_COLOUR
+                    "By colour" -> SortOptions.BY_COLOUR
+                    "By red value" -> SortOptions.BY_R_VALUE
+                    "By green value" -> SortOptions.BY_G_VALUE
+                    "By blue value" -> SortOptions.BY_B_VALUE
+                    else -> SortOptions.NEWEST_FIRST
                 }
 
             _filterStatus.value =
                 when (context.loadPreference(PreferenceKeys.FILTER_STATUS, "No filter")) {
                     "No filter" -> FilterOptions.NO_FILTER
-                    else -> FilterOptions.FAVOURITES
+                    "Favourites" -> FilterOptions.FAVOURITES
+                    else -> FilterOptions.NO_FILTER
                 }
         }
     }
