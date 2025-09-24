@@ -3,6 +3,7 @@ package com.skeensystems.colorpicker.database
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.skeensystems.colorpicker.ui.saved.sortandfilter.SortOptions
 import java.util.Locale
 
 class SavedColour(
@@ -28,7 +29,13 @@ class SavedColour(
 
     fun getClosestMatchString(): String = "\u2248 $name"
 
-    fun getSortValue(): String = String.format(Locale.getDefault(), "%03d%03d%03d", hsv.h, hsv.s, hsv.v)
+    fun getSortValue(sortStatus: SortOptions): Float =
+        when (sortStatus) {
+            SortOptions.BY_R_VALUE -> r - 0.5f * (g + b)
+            SortOptions.BY_G_VALUE -> g - 0.5f * (r + b)
+            SortOptions.BY_B_VALUE -> b - 0.5f * (r + g)
+            else -> String.format(Locale.getDefault(), "%03d%03d%03d", hsv.h, hsv.s, hsv.v).toFloat()
+        }
 
     fun toSavedColourEntity(): SavedColourEntity = SavedColourEntity(id, r, g, b, favourite)
 

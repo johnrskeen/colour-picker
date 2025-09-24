@@ -54,5 +54,8 @@ fun List<SavedColour>.sort(sortStatus: SortOptions): List<SavedColour> =
     when (sortStatus) {
         SortOptions.NEWEST_FIRST -> sortedByDescending { it.id }
         SortOptions.OLDEST_FIRST -> sortedBy { it.id }
-        SortOptions.BY_COLOUR -> sortedByDescending { it.getSortValue() }
+        SortOptions.BY_COLOUR -> sortedByDescending { it.getSortValue(sortStatus) }
+        SortOptions.BY_R_VALUE -> sortedByDescending { it.getSortValue(sortStatus) }
+        SortOptions.BY_G_VALUE -> sortedByDescending { it.getSortValue(sortStatus) }
+        SortOptions.BY_B_VALUE -> sortedByDescending { it.getSortValue(sortStatus) }
     }
