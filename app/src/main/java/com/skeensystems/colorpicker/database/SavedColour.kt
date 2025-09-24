@@ -15,10 +15,6 @@ class SavedColour(
     val similarColours: Set<DatabaseColour>,
     val complementaryColours: Set<DatabaseColour>,
 ) : Colour() {
-    // override var r by mutableIntStateOf(r)
-    // override var g by mutableIntStateOf(g)
-    // override var b by mutableIntStateOf(b)
-
     var favourite by mutableStateOf(favourite)
 
     fun getDetailsList(): List<Pair<String, String>> =
